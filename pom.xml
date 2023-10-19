@@ -78,7 +78,7 @@
 	</mailingLists>
 	<properties>
 		<!-- metaschema dependencies -->
-		<dependency.metaschema-framework.version>1.0.0-SNAPSHOT</dependency.metaschema-framework.version>
+		<dependency.metaschema-framework.version>1.0.0-M2-SNAPSHOT</dependency.metaschema-framework.version>
 		<dependency.liboscal-java.version>3.0.3-SNAPSHOT</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
