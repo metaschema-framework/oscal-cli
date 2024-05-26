@@ -47,7 +47,7 @@ public abstract class AbstractOscalConvertSubcommand
     return new OscalCommandExecutor(callingContext, commandLine);
   }
 
-  private class OscalCommandExecutor
+  private final class OscalCommandExecutor
       extends AbstractConversionCommandExecutor {
 
     private OscalCommandExecutor(

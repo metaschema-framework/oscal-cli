@@ -281,10 +281,11 @@ public class ResolveSubcommand
       // this is a profile
       URI sourceUri = ObjectUtils.notNull(source.toUri());
 
-      DynamicContext dynamicContext = StaticContext.builder()
-          .baseUri(sourceUri)
-          .build()
-          .dynamicContext();
+      DynamicContext dynamicContext = new DynamicContext(
+          StaticContext.builder()
+              .baseUri(sourceUri)
+              .defaultModelNamespace(document.getNamespace())
+              .build());
       dynamicContext.setDocumentLoader(loader);
       ProfileResolver resolver = new ProfileResolver();
       resolver.setDynamicContext(dynamicContext);
@@ -308,7 +309,7 @@ public class ResolveSubcommand
           = OscalBindingContext.instance().newSerializer(toFormat, Catalog.class);
       try {
         if (destination == null) {
-          @SuppressWarnings("resource") PrintStream stdOut = ObjectUtils.notNull(System.out);
+          @SuppressWarnings({ "resource", "PMD.CloseResource" }) PrintStream stdOut = ObjectUtils.notNull(System.out);
           serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), stdOut);
         } else {
           serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), destination);
