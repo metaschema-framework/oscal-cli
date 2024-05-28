@@ -274,49 +274,58 @@ public class ResolveSubcommand
       return ExitCode.IO_ERROR.exit().withThrowable(ex);
     }
     Object object = document.getValue();
+    if (object == null) {
+      return ExitCode.INVALID_ARGUMENTS.exitMessage("The target profile contained no data");
+    }
+
     if (object instanceof Catalog) {
       // this is a catalog
-      return ExitCode.INVALID_ARGUMENTS.exitMessage("The target file is already a catalog");
-    } else if (object instanceof Profile) {
-      // this is a profile
-      URI sourceUri = ObjectUtils.notNull(source.toUri());
+      return ExitCode.INVALID_ARGUMENTS.exitMessage("The target is already a catalog");
+    }
 
-      DynamicContext dynamicContext = new DynamicContext(
-          StaticContext.builder()
-              .baseUri(sourceUri)
-              .defaultModelNamespace(document.getNamespace())
-              .build());
-      dynamicContext.setDocumentLoader(loader);
-      ProfileResolver resolver = new ProfileResolver();
-      resolver.setDynamicContext(dynamicContext);
+    if (!(object instanceof Profile)) {
+      // this is something else
+      return ExitCode.INVALID_ARGUMENTS.exitMessage("The target is not a profile");
+    }
 
-      IDocumentNodeItem resolvedProfile;
-      try {
-        resolvedProfile = resolver.resolve(document);
-      } catch (IOException | ProfileResolutionException ex) {
-        return ExitCode.PROCESSING_ERROR
-            .exitMessage(
-                String.format("Unable to resolve profile '%s'. %s", document.getDocumentUri(), ex.getMessage()))
-            .withThrowable(ex);
+    // this is a profile
+    URI sourceUri = ObjectUtils.notNull(source.toUri());
+
+    DynamicContext dynamicContext = new DynamicContext(
+        StaticContext.builder()
+            .baseUri(sourceUri)
+            .defaultModelNamespace(document.getNamespace())
+            .build());
+    dynamicContext.setDocumentLoader(loader);
+    ProfileResolver resolver = new ProfileResolver();
+    resolver.setDynamicContext(dynamicContext);
+
+    IDocumentNodeItem resolvedProfile;
+    try {
+      resolvedProfile = resolver.resolve(document);
+    } catch (IOException | ProfileResolutionException ex) {
+      return ExitCode.PROCESSING_ERROR
+          .exitMessage(
+              String.format("Unable to resolve profile '%s'. %s", document.getDocumentUri(), ex.getMessage()))
+          .withThrowable(ex);
+    }
+
+    // DefaultConstraintValidator validator = new
+    // DefaultConstraintValidator(dynamicContext);
+    // ((IBoundXdmNodeItem)resolvedProfile).validate(validator);
+    // validator.finalizeValidation();
+
+    ISerializer<Catalog> serializer
+        = OscalBindingContext.instance().newSerializer(toFormat, Catalog.class);
+    try {
+      if (destination == null) {
+        @SuppressWarnings({ "resource", "PMD.CloseResource" }) PrintStream stdOut = ObjectUtils.notNull(System.out);
+        serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), stdOut);
+      } else {
+        serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), destination);
       }
-
-      // DefaultConstraintValidator validator = new
-      // DefaultConstraintValidator(dynamicContext);
-      // ((IBoundXdmNodeItem)resolvedProfile).validate(validator);
-      // validator.finalizeValidation();
-
-      ISerializer<Catalog> serializer
-          = OscalBindingContext.instance().newSerializer(toFormat, Catalog.class);
-      try {
-        if (destination == null) {
-          @SuppressWarnings({ "resource", "PMD.CloseResource" }) PrintStream stdOut = ObjectUtils.notNull(System.out);
-          serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), stdOut);
-        } else {
-          serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), destination);
-        }
-      } catch (IOException ex) {
-        return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
-      }
+    } catch (IOException ex) {
+      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
     }
     return ExitCode.OK.exit();
   }

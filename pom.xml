@@ -201,11 +201,7 @@
 			<!-- For console log color -->
 			<groupId>org.fusesource.jansi</groupId>
 			<artifactId>jansi</artifactId>
-<<<<<<< HEAD
 			<version>2.4.1</version>
-=======
-			<version>${dependency.jansi.version}</version>
->>>>>>> 549a44e (Fixed PMD errors)
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
