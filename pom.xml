@@ -81,7 +81,7 @@
 	<properties>
 		<!-- metaschema dependencies -->
 		<dependency.metaschema-framework.version>1.0.0-M2-SNAPSHOT</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>3.0.3-SNAPSHOT</dependency.liboscal-java.version>
+		<dependency.liboscal-java.version>3.0.4-SNAPSHOT</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
 		<site.url>https://pages.nist.gov/metaschema-java/</site.url>
