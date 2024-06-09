@@ -99,6 +99,7 @@ public class CLITest {
 
       for (Format format : Format.values()) {
         String sourceExtension = format.getDefaultExtension();
+        // test command path-specific commands
         values.add(
             Arguments.of(
                 new String[] {
@@ -118,8 +119,27 @@ public class CLITest {
                 ExitCode.OK,
                 null));
 
+        // test general commands
+        values.add(
+            Arguments.of(
+                new String[] {
+                    "validate",
+                    Paths.get("src/test/resources/cli/example_" + cmd + "_invalid" + sourceExtension).toString()
+                },
+                ExitCode.FAIL,
+                null));
+        values.add(
+            Arguments.of(
+                new String[] {
+                    "validate",
+                    Paths.get("src/test/resources/cli/example_" + cmd + "_valid" + sourceExtension).toString()
+                },
+                ExitCode.OK,
+                null));
+
         for (Format targetFormat : formatEntries.get(format)) {
           Path path = Paths.get("src/test/resources/cli/example_" + cmd + "_valid" + sourceExtension);
+          // test command path-specific command
           values.add(
               Arguments.of(
                   new String[] {
@@ -132,8 +152,20 @@ public class CLITest {
                   },
                   ExitCode.OK,
                   null));
+          // test general command
+          values.add(
+              Arguments.of(
+                  new String[] {
+                      "convert",
+                      "--to=" + targetFormat.name().toLowerCase(),
+                      path.toString(),
+                      generateOutputPath(path, targetFormat),
+                      "--overwrite"
+                  },
+                  ExitCode.OK,
+                  null));
 
-          // TODO: Update when usnistgov/oscal#217 fix merged.
+          // test command path-specific command
           path = Paths.get("src/test/resources/cli/example_" + cmd + "_invalid" + sourceExtension);
           values.add(
               Arguments.of(
@@ -147,12 +179,25 @@ public class CLITest {
                   },
                   ExitCode.OK,
                   null));
-        }
-        if (cmd == "profile") {
+          // test general command
           values.add(
               Arguments.of(
                   new String[] {
-                      cmd,
+                      "convert",
+                      "--to=" + targetFormat.name().toLowerCase(),
+                      path.toString(),
+                      generateOutputPath(path, targetFormat),
+                      "--overwrite"
+                  },
+                  ExitCode.OK,
+                  null));
+        }
+        if (cmd == "profile") {
+          // test command path-specific command
+          values.add(
+              Arguments.of(
+                  new String[] {
+                      "profile",
                       "resolve",
                       "--to=" + format.name().toLowerCase(),
                       Paths.get("src/test/resources/cli/example_profile_valid" + sourceExtension).toString()
@@ -164,6 +209,25 @@ public class CLITest {
                   new String[] {
                       "profile",
                       "resolve",
+                      "--to=" + format.name().toLowerCase(),
+                      Paths.get("src/test/resources/cli/example_profile_invalid" + sourceExtension).toString()
+                  },
+                  ExitCode.PROCESSING_ERROR,
+                  ProfileResolutionException.class));
+          // test general command
+          values.add(
+              Arguments.of(
+                  new String[] {
+                      "resolve-profile",
+                      "--to=" + format.name().toLowerCase(),
+                      Paths.get("src/test/resources/cli/example_profile_valid" + sourceExtension).toString()
+                  },
+                  ExitCode.OK,
+                  null));
+          values.add(
+              Arguments.of(
+                  new String[] {
+                      "resolve-profile",
                       "--to=" + format.name().toLowerCase(),
                       Paths.get("src/test/resources/cli/example_profile_invalid" + sourceExtension).toString()
                   },

@@ -24,7 +24,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.secauto.oscal.tools.cli.core.commands.oscal;
+package gov.nist.secauto.oscal.tools.cli.core.commands;
 
 import gov.nist.secauto.metaschema.cli.commands.AbstractValidateContentCommand;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
@@ -39,6 +39,7 @@ import org.apache.commons.cli.CommandLine;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
@@ -60,10 +61,10 @@ public abstract class AbstractOscalValidationSubcommand
     return new OscalCommandExecutor(callingContext, commandLine);
   }
 
-  private final class OscalCommandExecutor
+  protected class OscalCommandExecutor
       extends AbstractValidationCommandExecutor {
 
-    private OscalCommandExecutor(
+    protected OscalCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
@@ -85,13 +86,13 @@ public abstract class AbstractOscalValidationSubcommand
 
     @Override
     @NonNull
-    public List<Source> getXmlSchemas() throws IOException {
+    public List<Source> getXmlSchemas(URL targetResource) throws IOException {
       return getOscalXmlSchemas();
     }
 
     @Override
     @NonNull
-    public JSONObject getJsonSchema() throws IOException {
+    public JSONObject getJsonSchema(JSONObject json) throws IOException {
       return getOscalJsonSchema();
     }
   }

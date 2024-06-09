@@ -28,8 +28,6 @@ package gov.nist.secauto.oscal.tools.cli.core.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gov.nist.secauto.oscal.tools.cli.core.commands.oscal.AbstractOscalConvertSubcommand;
-
 import org.junit.jupiter.api.Test;
 
 class Issue96ClassLoaderTest {

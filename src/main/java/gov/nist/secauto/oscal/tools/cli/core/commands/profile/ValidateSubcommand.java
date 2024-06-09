@@ -31,7 +31,7 @@ import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
-import gov.nist.secauto.oscal.tools.cli.core.commands.oscal.AbstractOscalValidationSubcommand;
+import gov.nist.secauto.oscal.tools.cli.core.commands.oscal.AbstractDeprecatedOscalValidationSubcommand;
 
 import org.json.JSONObject;
 
@@ -43,7 +43,7 @@ import java.util.List;
 import javax.xml.transform.Source;
 
 public class ValidateSubcommand
-    extends AbstractOscalValidationSubcommand {
+    extends AbstractDeprecatedOscalValidationSubcommand {
   @Override
   public String getDescription() {
     return "Check that the specified OSCAL Profile is well-formed and valid to the Profile model.";
