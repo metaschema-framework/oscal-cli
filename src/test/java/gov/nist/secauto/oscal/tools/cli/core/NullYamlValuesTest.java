@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-public class NullYamlValuesTest {
+class NullYamlValuesTest {
   private static OscalBindingContext bindingContext;
   private static IBoundLoader loader;
 

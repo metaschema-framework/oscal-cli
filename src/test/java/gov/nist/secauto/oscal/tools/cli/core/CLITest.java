@@ -47,12 +47,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class CLITest {
+class CLITest {
   void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode) {
     status.generateMessage(true);
     assertAll(
@@ -145,7 +146,7 @@ public class CLITest {
                   new String[] {
                       cmd,
                       "convert",
-                      "--to=" + targetFormat.name().toLowerCase(),
+                      "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
                       generateOutputPath(path, targetFormat),
                       "--overwrite"
@@ -157,7 +158,7 @@ public class CLITest {
               Arguments.of(
                   new String[] {
                       "convert",
-                      "--to=" + targetFormat.name().toLowerCase(),
+                      "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
                       generateOutputPath(path, targetFormat),
                       "--overwrite"
@@ -172,7 +173,7 @@ public class CLITest {
                   new String[] {
                       cmd,
                       "convert",
-                      "--to=" + targetFormat.name().toLowerCase(),
+                      "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
                       generateOutputPath(path, targetFormat),
                       "--overwrite"
@@ -184,7 +185,7 @@ public class CLITest {
               Arguments.of(
                   new String[] {
                       "convert",
-                      "--to=" + targetFormat.name().toLowerCase(),
+                      "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
                       generateOutputPath(path, targetFormat),
                       "--overwrite"
@@ -192,14 +193,14 @@ public class CLITest {
                   ExitCode.OK,
                   null));
         }
-        if (cmd == "profile") {
+        if ("profile".equals(cmd)) {
           // test command path-specific command
           values.add(
               Arguments.of(
                   new String[] {
                       "profile",
                       "resolve",
-                      "--to=" + format.name().toLowerCase(),
+                      "--to=" + format.name().toLowerCase(Locale.ROOT),
                       Paths.get("src/test/resources/cli/example_profile_valid" + sourceExtension).toString()
                   },
                   ExitCode.OK,
@@ -209,7 +210,7 @@ public class CLITest {
                   new String[] {
                       "profile",
                       "resolve",
-                      "--to=" + format.name().toLowerCase(),
+                      "--to=" + format.name().toLowerCase(Locale.ROOT),
                       Paths.get("src/test/resources/cli/example_profile_invalid" + sourceExtension).toString()
                   },
                   ExitCode.PROCESSING_ERROR,
@@ -219,7 +220,7 @@ public class CLITest {
               Arguments.of(
                   new String[] {
                       "resolve-profile",
-                      "--to=" + format.name().toLowerCase(),
+                      "--to=" + format.name().toLowerCase(Locale.ROOT),
                       Paths.get("src/test/resources/cli/example_profile_valid" + sourceExtension).toString()
                   },
                   ExitCode.OK,
@@ -228,7 +229,7 @@ public class CLITest {
               Arguments.of(
                   new String[] {
                       "resolve-profile",
-                      "--to=" + format.name().toLowerCase(),
+                      "--to=" + format.name().toLowerCase(Locale.ROOT),
                       Paths.get("src/test/resources/cli/example_profile_invalid" + sourceExtension).toString()
                   },
                   ExitCode.PROCESSING_ERROR,

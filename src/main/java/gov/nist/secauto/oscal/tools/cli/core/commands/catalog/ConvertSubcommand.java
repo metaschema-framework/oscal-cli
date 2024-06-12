@@ -26,6 +26,7 @@
 
 package gov.nist.secauto.oscal.tools.cli.core.commands.catalog;
 
+import gov.nist.secauto.metaschema.databind.model.IBoundObject;
 import gov.nist.secauto.oscal.lib.model.Catalog;
 import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalConvertSubcommand;
 
@@ -38,7 +39,7 @@ public class ConvertSubcommand
   }
 
   @Override
-  public Class<?> getOscalClass() {
+  public Class<? extends IBoundObject> getOscalClass() {
     return Catalog.class;
   }
 }

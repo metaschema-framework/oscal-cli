@@ -35,6 +35,7 @@ import gov.nist.secauto.metaschema.databind.io.FormatDetector;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
 import gov.nist.secauto.metaschema.databind.io.ISerializer;
 import gov.nist.secauto.metaschema.databind.io.ModelDetector;
+import gov.nist.secauto.metaschema.databind.model.IBoundObject;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
 
 import org.apache.commons.cli.CommandLine;
@@ -77,8 +78,8 @@ public class ConvertCommand
     protected void handleConversion(URI source, Format toFormat, Writer writer, IBoundLoader loader)
         throws FileNotFoundException, IOException {
 
-      Class<?> boundClass;
-      Object object;
+      Class<? extends IBoundObject> boundClass;
+      IBoundObject object;
       try (InputStream is = source.toURL().openStream()) {
         FormatDetector.Result formatResult = loader.detectFormat(is);
         Format sourceformat = formatResult.getFormat();
@@ -90,8 +91,7 @@ public class ConvertCommand
           }
         }
       }
-
-      ISerializer<Object> serializer = getBindingContext().newSerializer(toFormat, boundClass);
+      ISerializer<?> serializer = getBindingContext().newSerializer(toFormat, boundClass);
       serializer.serialize(object, writer);
     }
   }

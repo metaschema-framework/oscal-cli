@@ -134,7 +134,7 @@ public abstract class AbstractResolveCommand
             String.format("Invalid '%s' argument. The format must be one of: %s.",
                 OptionUtils.toArgument(AS_OPTION),
                 Arrays.asList(Format.values()).stream()
-                    .map(format -> format.name())
+                    .map(Enum::name)
                     .collect(CustomCollectors.joiningWithOxfordComma("and"))));
         newEx.setOption(AS_OPTION);
         newEx.addSuppressed(ex);
@@ -150,7 +150,7 @@ public abstract class AbstractResolveCommand
         InvalidArgumentException newEx
             = new InvalidArgumentException("Invalid '--to' argument. The format must be one of: "
                 + Arrays.asList(Format.values()).stream()
-                    .map(format -> format.name())
+                    .map(Enum::name)
                     .collect(CustomCollectors.joiningWithOxfordComma("and")));
         newEx.setOption(AS_OPTION);
         newEx.addSuppressed(ex);
@@ -199,7 +199,7 @@ public abstract class AbstractResolveCommand
       } catch (IllegalArgumentException ex) {
         return ExitCode.INVALID_ARGUMENTS
             .exitMessage("Invalid '--as' argument. The format must be one of: " + Arrays.stream(Format.values())
-                .map(format -> format.name())
+                .map(Enum::name)
                 .collect(CustomCollectors.joiningWithOxfordComma("or")));
       }
     } else {
@@ -215,7 +215,7 @@ public abstract class AbstractResolveCommand
         return ExitCode.INVALID_ARGUMENTS.exitMessage(
             "Source file has unrecognizable format. Use '--as' to specify the format. The format must be one of: "
                 + Arrays.stream(Format.values())
-                    .map(format -> format.name())
+                    .map(Enum::name)
                     .collect(CustomCollectors.joiningWithOxfordComma("or")));
       }
     }

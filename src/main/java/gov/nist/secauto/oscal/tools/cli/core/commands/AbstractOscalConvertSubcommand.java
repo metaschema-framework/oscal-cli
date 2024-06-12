@@ -33,6 +33,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
+import gov.nist.secauto.metaschema.databind.model.IBoundObject;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
 
 import org.apache.commons.cli.CommandLine;
@@ -51,7 +52,7 @@ public abstract class AbstractOscalConvertSubcommand
   private static final Logger LOGGER = LogManager.getLogger(AbstractOscalConvertSubcommand.class);
 
   @NonNull
-  public abstract Class<?> getOscalClass();
+  public abstract Class<? extends IBoundObject> getOscalClass();
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
@@ -82,7 +83,7 @@ public abstract class AbstractOscalConvertSubcommand
     @Override
     protected void handleConversion(URI source, Format toFormat, Writer writer, IBoundLoader loader)
         throws FileNotFoundException, IOException {
-      Class<?> clazz = getOscalClass();
+      Class<? extends IBoundObject> clazz = getOscalClass();
       loader.convert(source, writer, toFormat, clazz);
     }
   }
