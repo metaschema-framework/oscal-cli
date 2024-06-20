@@ -46,7 +46,8 @@ import gov.nist.secauto.oscal.tools.cli.core.commands.poam.PlanOfActionsAndMiles
 import gov.nist.secauto.oscal.tools.cli.core.commands.profile.ProfileCommand;
 import gov.nist.secauto.oscal.tools.cli.core.commands.ssp.SystemSecurityPlanCommand;
 
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -62,13 +63,16 @@ public final class CLI {
 
   @NonNull
   public static ExitStatus runCli(String... args) {
-    List<IVersionInfo> versions = ObjectUtils.notNull(
-        List.of(
-            new OscalCliVersion(),
-            new LibOscalVersion(),
-            new OscalVersion(),
-            new MetaschemaJavaVersion(),
-            new MetaschemaVersion()));
+    @SuppressWarnings("serial") Map<String, IVersionInfo> versions = ObjectUtils.notNull(
+        new LinkedHashMap<>() {
+          {
+            put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());
+            put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());
+            put("https://github.com/usnistgov/OSCAL", new OscalVersion());
+            put("https://github.com/usnistgov/metaschema-java", new MetaschemaJavaVersion());
+            put("https://github.com/usnistgov/metaschema", new MetaschemaVersion());
+          }
+        });
     CLIProcessor processor = new CLIProcessor("oscal-cli", versions);
     processor.addCommandHandler(new CatalogCommand());
     processor.addCommandHandler(new ProfileCommand());

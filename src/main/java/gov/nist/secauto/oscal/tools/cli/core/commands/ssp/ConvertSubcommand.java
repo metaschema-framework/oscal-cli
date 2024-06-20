@@ -26,7 +26,7 @@
 
 package gov.nist.secauto.oscal.tools.cli.core.commands.ssp;
 
-import gov.nist.secauto.metaschema.databind.model.IBoundObject;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.oscal.lib.model.SystemSecurityPlan;
 import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalConvertSubcommand;
 

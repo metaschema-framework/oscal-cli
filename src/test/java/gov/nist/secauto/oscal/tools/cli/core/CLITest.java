@@ -106,6 +106,8 @@ class CLITest {
                 new String[] {
                     cmd,
                     "validate",
+                    "-o",
+                    "target/" + cmd + "-invalid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
                     Paths.get("src/test/resources/cli/example_" + cmd + "_invalid" + sourceExtension).toString()
                 },
                 ExitCode.FAIL,
@@ -115,6 +117,8 @@ class CLITest {
                 new String[] {
                     cmd,
                     "validate",
+                    "-o",
+                    "target/" + cmd + "-valid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
                     Paths.get("src/test/resources/cli/example_" + cmd + "_valid" + sourceExtension).toString()
                 },
                 ExitCode.OK,
@@ -125,6 +129,8 @@ class CLITest {
             Arguments.of(
                 new String[] {
                     "validate",
+                    "-o",
+                    "target/" + cmd + "-invalid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
                     Paths.get("src/test/resources/cli/example_" + cmd + "_invalid" + sourceExtension).toString()
                 },
                 ExitCode.FAIL,
@@ -133,6 +139,8 @@ class CLITest {
             Arguments.of(
                 new String[] {
                     "validate",
+                    "-o",
+                    "target/" + cmd + "-valid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
                     Paths.get("src/test/resources/cli/example_" + cmd + "_valid" + sourceExtension).toString()
                 },
                 ExitCode.OK,

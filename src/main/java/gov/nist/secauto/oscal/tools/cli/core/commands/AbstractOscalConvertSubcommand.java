@@ -30,10 +30,10 @@ import gov.nist.secauto.metaschema.cli.commands.AbstractConvertSubcommand;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
+import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
-import gov.nist.secauto.metaschema.databind.model.IBoundObject;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
 
 import org.apache.commons.cli.CommandLine;
