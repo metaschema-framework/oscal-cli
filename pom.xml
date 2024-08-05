@@ -23,7 +23,7 @@
 		<url>${scm.url}/tree/develop</url>
 		<connection>scm:git:git@github.com/metaschema-framework/oscal-cli.git</connection>
 		<developerConnection>scm:git:git@github.com:metaschema-framework/oscal-cli.git</developerConnection>
-		<tag>v2.0.0</tag>
+		<tag>v0.2.0</tag>
 	</scm>
 	<distributionManagement>
 		<repository>
