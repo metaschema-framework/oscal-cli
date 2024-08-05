@@ -92,7 +92,7 @@
 		<dependency.log4j2.version>2.23.1</dependency.log4j2.version>
 		<dependency.pmd.version>7.4.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.8.3</dependency.spotbugs-annotations.version>
-		<dependency.saxon-he.version>12.4</dependency.saxon-he.version>
+		<dependency.saxon-he.version>12.5</dependency.saxon-he.version>
 		<dependency.xmlbeans.version>5.2.1</dependency.xmlbeans.version>
 		<dependency.xmlresolver.version>6.0.4</dependency.xmlresolver.version>
 
