@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>PlanOfActionsAndMilestonesCommand xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../../../stylesheet.css" />
+</head>
+<body>
+<pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * SPDX-FileCopyrightText: none</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * SPDX-License-Identifier: CC0-1.0</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.oscal.tools.cli.core.commands.poam;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.cli.processor.command.AbstractParentCommand;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="PlanOfActionsAndMilestonesCommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/poam/PlanOfActionsAndMilestonesCommand.html#PlanOfActionsAndMilestonesCommand">PlanOfActionsAndMilestonesCommand</a>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>      <strong class="jxr_keyword">extends</strong> AbstractParentCommand {
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String COMMAND = <span class="jxr_string">"poam"</span>;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>    <strong class="jxr_keyword">public</strong> <a name="PlanOfActionsAndMilestonesCommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/poam/PlanOfActionsAndMilestonesCommand.html#PlanOfActionsAndMilestonesCommand">PlanOfActionsAndMilestonesCommand</a>() {
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">super</strong>(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>      addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ValidateSubcommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/poam/ValidateSubcommand.html#ValidateSubcommand">ValidateSubcommand</a>());
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>      <em class="jxr_comment">// addCommandHandler(new RenderSubcommand());</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>      addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ConvertSubcommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/poam/ConvertSubcommand.html#ConvertSubcommand">ConvertSubcommand</a>());
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>    }
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>    @Override
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>    <strong class="jxr_keyword">public</strong> String getName() {
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>      <strong class="jxr_keyword">return</strong> COMMAND;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>    }
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>    @Override
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">public</strong> String getDescription() {
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Perform an operation on an OSCAL Plan of Actions and Milestones"</span>;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>    }
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+</body>
+</html>
