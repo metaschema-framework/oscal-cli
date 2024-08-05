@@ -14,5 +14,5 @@ jobs:
     steps:
       - uses: actions/add-to-project@31b3f3ccdc584546fc445612dec3f38ff5edb41c
         with:
-          project-url: https://github.com/orgs/usnistgov/projects/25
+          project-url: https://github.com/orgs/metaschema-framework/projects/1
           github-token: ${{ secrets.COMMIT_TOKEN }}

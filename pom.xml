@@ -4,56 +4,52 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>gov.nist.secauto</groupId>
+		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>28-SNAPSHOT</version>
+		<version>4</version>
 	</parent>
-	<groupId>gov.nist.secauto.oscal.tools.oscal-cli</groupId>
-	<artifactId>cli-core</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<groupId>dev.metaschema.oscal</groupId>
+	<artifactId>oscal-cli-enhanced</artifactId>
+	<version>2.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
 	<name>OSCAL CLI</name>
 	<url>${site.url}</url>
+
 	<issueManagement>
-		<url>https://github.com/usnistgov/oscal-cli/issues</url>
+		<url>https://github.com/metaschema-framework/oscal-cli/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 	<scm>
-		<url>https://github.com/usnistgov/oscal-cli/tree/main</url>
-		<connection>scm:git:git@github.com/usnistgov/oscal-cli.git</connection>
-		<developerConnection>scm:git:git@github.com:usnistgov/oscal-cli.git</developerConnection>
+		<url>${scm.url}/tree/develop</url>
+		<connection>scm:git:git@github.com/metaschema-framework/oscal-cli.git</connection>
+		<developerConnection>scm:git:git@github.com:metaschema-framework/oscal-cli.git</developerConnection>
 		<tag>v0.2.0</tag>
 	</scm>
 	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
+		<repository>
+			<id>central</id>
+			<url>https://central.sonatype.com</url>
+		</repository>
 		<site>
-			<id>nist-pages</id>
+			<id>pages</id>
 			<url>${site.url}</url>
 		</site>
 	</distributionManagement>
 	<licenses>
 		<license>
-			<name>NIST License</name>
-			<url>https://www.nist.gov/director/licensing</url>
+			<name>CC0-1.0</name>
+			<url>https://creativecommons.org/publicdomain/zero/1.0/</url>
 			<distribution>repo</distribution>
-			<comments>NIST software License</comments>
 		</license>
 	</licenses>
-	<organization>
-		<name>National Institute of Standards and Technology</name>
-		<url>https://www.nist.gov</url>
-	</organization>
 	<developers>
 		<developer>
-			<id>david.waltermire@nist.gov</id>
+			<id>david.waltermire@gsa.gov</id>
 			<name>David Waltermire</name>
-			<email>david.waltermire@nist.gov</email>
-			<organization>National Institute of Standards and Technology</organization>
+			<email>david.waltermire@gsa.gov</email>
+			<organization>General Services Administration</organization>
 			<roles>
 				<role>architect</role>
 				<role>developer</role>
@@ -61,40 +57,16 @@
 			</roles>
 		</developer>
 	</developers>
-	<mailingLists>
-		<mailingList>
-			<name>OSCAL NIST Team</name>
-			<post>oscal@nist.gov</post>
-		</mailingList>
-		<mailingList>
-			<name>OSCAL Project Development Discussion</name>
-			<post>oscal-dev@nist.gov</post>
-			<subscribe>oscal-dev-join@nist.gov</subscribe>
-			<unsubscribe>oscal-dev-leave@nist.gov</unsubscribe>
-		</mailingList>
-		<mailingList>
-			<name>OSCAL Project Updates</name>
-			<subscribe>oscal-updates-join@nist.gov</subscribe>
-			<unsubscribe>oscal-updates-leave@nist.gov</unsubscribe>
-		</mailingList>
-	</mailingLists>
+	
 	<properties>
 		<!-- metaschema dependencies -->
-		<dependency.metaschema-framework.version>1.0.0-M2-SNAPSHOT</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>3.0.4-SNAPSHOT</dependency.liboscal-java.version>
+		<dependency.metaschema-framework.version>1.0.1</dependency.metaschema-framework.version>
+		<dependency.liboscal-java.version>4.0.0</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
-		<site.url>https://pages.nist.gov/metaschema-java/</site.url>
-		<scm.url>https://github.com/usnistgov/metaschema-java</scm.url>
-		<issueManagement.url>https://github.com/usnistgov/metaschema-java/issues</issueManagement.url>
-		<anchorJsVesrion>3.2.2</anchorJsVesrion>
-		<bootstrapVersion>4.4.1</bootstrapVersion>
-		<bootswatchVersion>4.4.1</bootswatchVersion>
-		<highlightJsVersion>9.15.7</highlightJsVersion>
-		<highlightJsTheme>github</highlightJsTheme>
-		<jqueryVersion>3.4.1</jqueryVersion>
-		<fontawesomeVersion>5.12.1</fontawesomeVersion>
-		<popperVersion>1.16.0</popperVersion>
+		<site.url>https://oscal-cli.metaschema.dev</site.url>
+		<scm.url>https://github.com/metaschema-framework/oscal-cli</scm.url>
+		<issueManagement.url>https://github.com/metaschema-framework/oscal-cli/issues</issueManagement.url>
 
 		<!-- build timestamp settings for versions -->
 		<timestamp>${maven.build.timestamp}</timestamp>
@@ -118,63 +90,32 @@
 		<dependency.jline.version>3.21.0</dependency.jline.version>
 		<dependency.json.version>20240303</dependency.json.version>
 		<dependency.log4j2.version>2.23.1</dependency.log4j2.version>
-		<dependency.pmd.version>7.1.0</dependency.pmd.version>
+		<dependency.pmd.version>7.4.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.8.3</dependency.spotbugs-annotations.version>
 		<dependency.saxon-he.version>12.4</dependency.saxon-he.version>
-		<dependency.xmlbeans.version>5.2.0</dependency.xmlbeans.version>
-		<dependency.xmlresolver.version>5.2.2</dependency.xmlresolver.version>
+		<dependency.xmlbeans.version>5.2.1</dependency.xmlbeans.version>
+		<dependency.xmlresolver.version>6.0.4</dependency.xmlresolver.version>
 
-		<plugin.license.version>4.2</plugin.license.version>
-		<plugin.maven-toolchains.version>3.1.0</plugin.maven-toolchains.version>
-		<plugin.pmd.version>3.22.0</plugin.pmd.version>
-		<plugin.spotbugs.version>4.8.4.0</plugin.spotbugs.version>
+		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
 	</properties>
-	<repositories>
-		<repository>
-			<name>Nexus Snapshots</name>
-			<id>snapshots-repo</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-				<checksumPolicy>fail</checksumPolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>apache.snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 	<dependencies>
 		<dependency>
-			<groupId>gov.nist.secauto.oscal</groupId>
+			<groupId>dev.metaschema.oscal</groupId>
 			<artifactId>liboscal-java</artifactId>
 			<version>${dependency.liboscal-java.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.nist.secauto.metaschema</groupId>
+			<groupId>dev.metaschema.java</groupId>
 			<artifactId>cli-processor</artifactId>
 			<version>${dependency.metaschema-framework.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.nist.secauto.metaschema</groupId>
+			<groupId>dev.metaschema.java</groupId>
 			<artifactId>metaschema-cli</artifactId>
 			<version>${dependency.metaschema-framework.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>gov.nist.secauto.metaschema</groupId>
+			<groupId>dev.metaschema.java</groupId>
 			<artifactId>metaschema-schema-generator</artifactId>
 			<version>${dependency.metaschema-framework.version}</version>
 		</dependency>
@@ -295,12 +236,14 @@
 						</toolchains>
 					</configuration>
 				</plugin>
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<configuration>
-						<topSiteURL>${site.url}</topSiteURL>
+						<!-- deploy is handled by the scm plugin -->
+						<skipDeploy>true</skipDeploy>
+						<relativizeSiteLinks>true</relativizeSiteLinks>
+						<generateReports>true</generateReports>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -326,19 +269,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<version>${plugin.pmd.version}</version>
-					<dependencies>
-						<dependency>
-							<groupId>net.sourceforge.pmd</groupId>
-							<artifactId>pmd-core</artifactId>
-							<version>${dependency.pmd.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>net.sourceforge.pmd</groupId>
-							<artifactId>pmd-java</artifactId>
-							<version>${dependency.pmd.version}</version>
-						</dependency>
-					</dependencies>
 					<executions>
 						<execution>
 							<id>pmd-verify</id>
@@ -511,15 +441,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<inherited>false</inherited>
-				<executions>
-					<execution>
-						<id>attach-descriptor</id>
-						<goals>
-							<goal>attach-descriptor</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -527,4 +448,20 @@
 			</plugin>
 		</plugins>
 	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+            <id>default</id>
+						<configuration>
+							<linkJavadoc>false</linkJavadoc>
+						</configuration>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

@@ -1,6 +1,6 @@
 # OSCAL Java Command Line Tool
 
-A Java tool, providing a command line interface, that performs common operations on [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/) (OSCAL) and [Metaschema](https://github.com/usnistgov/metaschema) content.
+A Java tool, providing a command line interface, that performs common operations on [Open Security Controls Assessment Language](https://pages.nist.gov/OSCAL/) (OSCAL) and [Metaschema](https://github.com/metaschema-framework/metaschema) content.
 
 This open-source, tool offers a convenient way to manipulate OSCAL and Metaschema based content supporting the following operations:
 
@@ -12,9 +12,7 @@ This open-source, tool offers a convenient way to manipulate OSCAL and Metaschem
 
 This work is intended to make it easier for OSCAL and Metaschema content authors to work with related content.
 
-This tool is based on the [Metaschema Java Tools](https://github.com/usnistgov/metaschema-java) and [OSCAL Java Library](https://github.com/usnistgov/liboscal-java/) projects.
-
-This effort is part of the National Institute of Standards and Technology (NIST) OSCAL Program.
+This tool is based on the [Metaschema Java Tools](https://github.com/metaschema-framework/metaschema-java) and [OSCAL Java Library](https://github.com/metaschema-framework/liboscal-java/) projects.
 
 ## Contributing to this code base
 
@@ -22,8 +20,7 @@ Thank you for interest in contributing to the Metaschema Java framework. For com
 
 ## Public domain
 
-This project is in the worldwide [public domain](LICENSE.md). As stated in [CONTRIBUTING.md](CONTRIBUTING.md).
-
+This project is in the worldwide [public domain](LICENSE.md) and as stated in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Building
 
@@ -53,14 +50,7 @@ mkdir -p /opt/oscal-cli && cd /opt/oscal-cli
 ```
 NOTE: 
 
-2. Download the zipped oscal-cli Java package. Download your preferred version, but we recommend [the latest stable release on the Maven Central repository](https://repo1.maven.org/maven2/gov/nist/secauto/oscal/tools/oscal-cli/cli-core/). You may also download [development snapshots](https://oss.sonatype.org/content/repositories/snapshots/gov/nist/secauto/oscal/tools/oscal-cli/) to evaluate new features or bug fixes merged into develop before they are finalized in a published release.
-
-```
-wget -q https://repo1.maven.org/maven2/gov/nist/secauto/oscal/tools/oscal-cli/cli-core/1.0.1/cli-core-1.0.1-oscal-cli.zip.asc # download the release signature
-wget -q https://repo1.maven.org/maven2/gov/nist/secauto/oscal/tools/oscal-cli/cli-core/1.0.1/cli-core-1.0.1-oscal-cli.zip # download the release archive
-gpg --keyserver hkps://pgp.mit.edu:443 --recv-keys 6387E83B4828A504 # import or re-import the NIST OSCAL Release Engineering Key
-gpg --verify cli-core-1.0.1-oscal-cli.zip.asc # verify the signature for the release with signing key
-```
+2. Download the zipped oscal-cli Java package. Download your preferred version, but we recommend [the latest stable release on the Maven Central repository](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli/).
 
 3. Extract oscal-cli into the directory.
 ```
@@ -89,10 +79,7 @@ oscal-cli --help
 ```
 
 
-## Contact us
+## Relationship to prior work
 
-Maintainer: [NIST OSCAL Team](https://pages.nist.gov/OSCAL/contact/) - [NIST](https://www.nist.gov/) [Information Technology Labratory](https://www.nist.gov/itl), [Computer Security Division](https://www.nist.gov/itl/csd)
+The contents of this repository is based on work from the [Metaschema Java repository](https://github.com/usnistgov/oscal-cli/) maintained by the National Institute of Standards and Technology (NIST), the [contents of which have been dedicated in the worldwide public domain](https://github.com/usnistgov/oscal-cli/blob/1d4f38d6b73ec34469063e2a90be69367f8d8996/LICENSE.md) using the [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) public domain dedication. This repository builds on this prior work, maintaining the [CCO license](https://github.com/metaschema-framework/oscal-cli/blob/main/LICENSE.md) on any new works in this repository.
 
-Email us: [oscal@nist.gov](mailto:oscal@nist.gov)
-
-Chat with us: [Gitter usnistgov-OSCAL/Lobby](https://gitter.im/usnistgov-OSCAL/Lobby)

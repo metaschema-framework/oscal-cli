@@ -1,0 +1,12 @@
+# ${project.name}
+
+This open-source, tool offers a convenient way to manipulate OSCAL and Metaschema based
+content supporting the following operations:
+
+- Converting OSCAL content between the OSCAL XML, JSON, and YAML formats.
+- Validating an OSCAL resources to ensure it is well-formed and valid.
+- Resolving OSCAL Profiles.
+- Validating a Metaschema model definition to ensure it is well-formed and valid.
+- Generating XML and JSON Schemas from a Metaschema model definition.
+
+For usage instructions, please goto https://github.com/metaschema-framework/oscal-cli.
