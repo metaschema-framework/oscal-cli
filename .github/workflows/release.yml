@@ -86,4 +86,5 @@ jobs:
     - name: Run deploy script
       run: |
         touch target/staging/.nojekyll
+        echo "oscal-cli.metaschema.dev" > target/staging/CNAME
         bash .github/workflows/deploy.sh --push-only -v -m "Deploying website [ci skip]"
