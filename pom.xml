@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
-	<version>2.0.0</version>
+	<version>2.0.1-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
@@ -59,7 +59,7 @@
 	<properties>
 		<!-- metaschema dependencies -->
 		<dependency.metaschema-framework.version>1.0.1</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>4.0.0</dependency.liboscal-java.version>
+		<dependency.liboscal-java.version>4.0.1</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
 		<site.url>https://oscal-cli.metaschema.dev</site.url>
