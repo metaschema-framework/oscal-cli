@@ -92,7 +92,7 @@
 		<dependency.spotbugs-annotations.version>4.8.3</dependency.spotbugs-annotations.version>
 		<dependency.saxon-he.version>12.5</dependency.saxon-he.version>
 		<dependency.xmlbeans.version>5.2.1</dependency.xmlbeans.version>
-		<dependency.xmlresolver.version>6.0.8</dependency.xmlresolver.version>
+		<dependency.xmlresolver.version>6.0.9</dependency.xmlresolver.version>
 
 		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
 	</properties>
