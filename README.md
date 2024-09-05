@@ -27,32 +27,54 @@ This project is in the worldwide [public domain](LICENSE.md) and as stated in [C
 ### Installing pre-built Java package
 
 1.  Make a directory to install oscal-cli and cd into it. The example below uses the directory `/opt/oscal-cli`. Use your preferred directory.
-```
-mkdir -p /opt/oscal-cli && cd /opt/oscal-cli
-```
-NOTE: 
 
-2. Download the zipped oscal-cli Java package. Download your preferred version, but we recommend [the latest stable release on the Maven Central repository](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli/).
-
-3. Extract oscal-cli into the directory.
+```sh
+mkdir -p /opt/oscal-cli
 ```
-unzip cli-core-1.0.1-oscal-cli.zip
+
+2. Download the zipped oscal-cli Java package to the install directory. Download your preferred version, but we recommend [the latest stable release on the Maven Central repository](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli/). You can use [the Maven tool](https://maven.apache.org/) instead of in place of additional command line tools (i.e. `curl`; `wget`; etc.) or browser to craft URLs for a specific version.
+
+```sh
+mvn \
+  org.apache.maven.plugins:maven-dependency-plugin:LATEST:copy \
+  -DoutputDirectory=/opt/oscal-cli \
+  -DremoteRepositories=https://repo1.maven.org/maven2 \
+  -Dartifact=dev.metaschema.oscal:oscal-cli-enhanced:LATEST:zip:oscal-cli
+```
+
+3. Move, extract oscal-cli, and delete the zipped package from the install directory.
+
+```sh
+cd /opt/oscal-cli
+unzip *.zip
+rm *.zip
 ```
 
 4. (Recommended) Add oscal-cli's directory to your path.
-```
+
+```sh
 # temporarily add oscal-cli to your terminal's instance path
 PATH=$PATH:/opt/oscal-cli/bin
 
 # add oscal-cli to your environment (e.g., all terminals)
 export PATH=$PATH:/opt/oscal-cli/bin
 ```
-NOTE: You can also add oscal-cli's directory to your path in shell profile to make oscal-cli permanently available.
+
+5. You can optionally add oscal-cli's directory to your path in shell profile (i.e. [`$HOME/.bashrc`](https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html); [`$HOME/.zshrc`](https://zsh.sourceforge.io/Guide/zshguide02.html); etc.) to make oscal-cli permanently available.
+
+```sh
+# You do not need to use both, pick one.
+# Use the command below for bash shells.
+echo 'export PATH=$PATH:/opt/oscal-cli/bin' >> ~/.bashrc
+# Use this command for zsh shells.
+echo 'export PATH=$PATH:/opt/oscal-cli/bin' >> ~/.zshrc
+```
 
 ## Running 
 
-Run help to make sure everything work
-```
+Run help to make sure everything works.
+
+```sh
 # if oscal-cli directory added to your path
 oscal-cli --help
 
