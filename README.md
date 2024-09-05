@@ -22,24 +22,6 @@ Thank you for interest in contributing to the Metaschema Java framework. For com
 
 This project is in the worldwide [public domain](LICENSE.md) and as stated in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Building
-
-This project can be built with [Apache Maven](https://maven.apache.org/) version 3.8.4 or greater.
-
-The following instructions can be used to clone and build this project.
-
-1. Clone the GitHub repository.
-
-```bash
-git clone --recurse-submodules https://github.com/usnistgov/oscal-cli.git 
-```
-
-2. Build the project with Maven
-
-```bash
-mvn install
-```
-
 ## Installing
 
 ### Installing pre-built Java package
@@ -78,6 +60,23 @@ oscal-cli --help
 /opt/oscal-cli/bin/oscal-cli --help
 ```
 
+## Building
+
+This project can be built with [Apache Maven](https://maven.apache.org/) version 3.8.4 or greater.
+
+The following instructions can be used to clone and build this project.
+
+1. Clone the GitHub repository.
+
+```bash
+git clone --recurse-submodules https://github.com/usnistgov/oscal-cli.git 
+```
+
+2. Build the project with Maven
+
+```bash
+mvn install
+```
 
 ## Relationship to prior work
 
