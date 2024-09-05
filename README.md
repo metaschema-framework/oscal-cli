@@ -47,7 +47,7 @@ PATH=$PATH:/opt/oscal-cli/bin
 # add oscal-cli to your environment (e.g., all terminals)
 export PATH=$PATH:/opt/oscal-cli/bin
 ```
-NOTE: You can also add oscal-cli's directory to your path in shell profile to make oscal-cli permamently available.
+NOTE: You can also add oscal-cli's directory to your path in shell profile to make oscal-cli permanently available.
 
 ## Running 
 
