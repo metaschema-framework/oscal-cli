@@ -15,6 +15,7 @@ https://logging.apache.org/log4j/2.x/log4j/.*
 http://objenesis.org/objenesis
 https://pmd.github.io/latest/pmd_userdocs_cpd.html
 https://www.antlr.org/antlr4-runtime/
+http://www.jdom.org/
 http://www.mojohaus.org/.*
 http://www.mozilla.org/MPL/2.0/
 # prone to long timeouts
@@ -22,3 +23,4 @@ http://nexus.sonatype.org/oss-repository-hosting.html/.*
 # fix later
 https://oscal-cli.metaschema.dev/.*
 https://defense.gov/
+http://www.cafeconleche.org/jaxen/jaxen
