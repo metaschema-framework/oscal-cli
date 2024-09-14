@@ -8,7 +8,7 @@ package gov.nist.secauto.oscal.tools.cli.core.commands.oscal;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
-import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalValidationSubcommand;
+import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalValidationCommand;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public abstract class AbstractDeprecatedOscalValidationSubcommand
-    extends AbstractOscalValidationSubcommand {
+    extends AbstractOscalValidationCommand {
   private static final Logger LOGGER = LogManager.getLogger(AbstractDeprecatedOscalValidationSubcommand.class);
 
   @Override
@@ -26,7 +26,7 @@ public abstract class AbstractDeprecatedOscalValidationSubcommand
   }
 
   protected final class DeprecatedOscalCommandExecutor
-      extends AbstractOscalValidationSubcommand.OscalCommandExecutor {
+      extends AbstractOscalValidationCommand.OscalCommandExecutor {
 
     private DeprecatedOscalCommandExecutor(
         @NonNull CallingContext callingContext,

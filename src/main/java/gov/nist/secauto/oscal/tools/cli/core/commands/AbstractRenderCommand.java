@@ -34,9 +34,9 @@ import javax.xml.transform.TransformerException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public abstract class AbstractRenderSubcommand
+public abstract class AbstractRenderCommand
     extends AbstractTerminalCommand {
-  private static final Logger LOGGER = LogManager.getLogger(AbstractRenderSubcommand.class);
+  private static final Logger LOGGER = LogManager.getLogger(AbstractRenderCommand.class);
 
   @NonNull
   private static final String COMMAND = "render";

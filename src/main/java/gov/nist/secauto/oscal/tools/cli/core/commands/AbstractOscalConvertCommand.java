@@ -26,9 +26,9 @@ import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public abstract class AbstractOscalConvertSubcommand
+public abstract class AbstractOscalConvertCommand
     extends AbstractConvertSubcommand {
-  private static final Logger LOGGER = LogManager.getLogger(AbstractOscalConvertSubcommand.class);
+  private static final Logger LOGGER = LogManager.getLogger(AbstractOscalConvertCommand.class);
 
   @NonNull
   public abstract Class<? extends IBoundObject> getOscalClass();

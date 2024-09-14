@@ -7,10 +7,10 @@ package gov.nist.secauto.oscal.tools.cli.core.commands.componentdefinition;
 
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.oscal.lib.model.ComponentDefinition;
-import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalConvertSubcommand;
+import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalConvertCommand;
 
 public class ConvertSubcommand
-    extends AbstractOscalConvertSubcommand {
+    extends AbstractOscalConvertCommand {
   @Override
   public String getDescription() {
     return "Convert the specified OSCAL Component Definition to a different format";

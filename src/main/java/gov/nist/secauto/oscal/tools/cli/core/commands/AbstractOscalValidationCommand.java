@@ -26,7 +26,7 @@ import javax.xml.transform.Source;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public abstract class AbstractOscalValidationSubcommand
+public abstract class AbstractOscalValidationCommand
     extends AbstractValidateContentCommand {
 
   @NonNull
