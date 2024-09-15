@@ -14,6 +14,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.oscal.lib.LibOscalVersion;
 import gov.nist.secauto.oscal.lib.OscalVersion;
 import gov.nist.secauto.oscal.tools.cli.core.commands.ConvertCommand;
+import gov.nist.secauto.oscal.tools.cli.core.commands.ListAllowedValuesCommand;
 import gov.nist.secauto.oscal.tools.cli.core.commands.ResolveCommand;
 import gov.nist.secauto.oscal.tools.cli.core.commands.ValidateCommand;
 import gov.nist.secauto.oscal.tools.cli.core.commands.assessmentplan.AssessmentPlanCommand;
@@ -64,6 +65,7 @@ public final class CLI {
     processor.addCommandHandler(new ValidateCommand());
     processor.addCommandHandler(new ConvertCommand());
     processor.addCommandHandler(new ResolveCommand());
+    processor.addCommandHandler(new ListAllowedValuesCommand());
     return processor.process(args);
   }
 
