@@ -5,7 +5,7 @@
 
 package gov.nist.secauto.oscal.tools.cli.core.commands.profile;
 
-import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractRenderSubcommand;
+import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractRenderCommand;
 import gov.nist.secauto.oscal.tools.cli.core.operations.XMLOperations;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import javax.xml.transform.TransformerException;
 
 public class RenderSubcommand
-    extends AbstractRenderSubcommand {
+    extends AbstractRenderCommand {
   @Override
   public String getDescription() {
     return "Render the specified OSCAL Profile as HTML";

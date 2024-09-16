@@ -23,7 +23,7 @@ import javax.xml.transform.Source;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 public class ValidateCommand
-    extends AbstractOscalValidationSubcommand {
+    extends AbstractOscalValidationCommand {
   @Override
   public String getDescription() {
     return "Check that the specified OSCAL instance is well-formed and valid to an OSCAL model.";

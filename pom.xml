@@ -58,8 +58,8 @@
 	
 	<properties>
 		<!-- metaschema dependencies -->
-		<dependency.metaschema-framework.version>1.0.2</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>4.0.2</dependency.liboscal-java.version>
+		<dependency.metaschema-framework.version>1.1.0</dependency.metaschema-framework.version>
+		<dependency.liboscal-java.version>4.1.0</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
 		<site.url>https://oscal-cli.metaschema.dev</site.url>
@@ -89,7 +89,7 @@
 		<dependency.json.version>20240303</dependency.json.version>
 		<dependency.log4j2.version>2.23.1</dependency.log4j2.version>
 		<dependency.pmd.version>7.4.0</dependency.pmd.version>
-		<dependency.spotbugs-annotations.version>4.8.3</dependency.spotbugs-annotations.version>
+		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
 		<dependency.saxon-he.version>12.5</dependency.saxon-he.version>
 		<dependency.xmlbeans.version>5.2.1</dependency.xmlbeans.version>
 		<dependency.xmlresolver.version>6.0.9</dependency.xmlresolver.version>
@@ -297,8 +297,7 @@
 				<configuration>
 					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
-					<generateGitPropertiesFilename>
-						${project.build.directory}/git.properties</generateGitPropertiesFilename>
+					<generateGitPropertiesFilename>${project.build.directory}/git.properties</generateGitPropertiesFilename>
 					<verbose>true</verbose>
 					<useNativeGit>false</useNativeGit>
 					<prefix>git</prefix>
@@ -323,8 +322,7 @@
 							<addClasspath>true</addClasspath>
 							<!-- <classpathPrefix>lib/</classpathPrefix> -->
 							<classpathLayoutType>custom</classpathLayoutType>
-							<customClasspathLayout>
-								${artifact.groupId}.${artifact.artifactId}-$${artifact.version}.${artifact.extension}</customClasspathLayout>
+							<customClasspathLayout>${artifact.groupId}.${artifact.artifactId}-$${artifact.version}.${artifact.extension}</customClasspathLayout>
 						</manifest>
 					</archive>
 				</configuration>
@@ -343,10 +341,8 @@
 					<generateRepository>false</generateRepository>
 					<repositoryLayout>flat</repositoryLayout>
 					<repositoryName>lib</repositoryName>
-					<outputFileNameMapping>
-						@{groupId}@.@{artifactId}@-@{version}@.@{extension}@</outputFileNameMapping>
-					<extraJvmArguments>-Dsun.stdout.encoding=UTF-8
-						-Dsun.stderr.encoding=UTF-8</extraJvmArguments>
+					<outputFileNameMapping>@{groupId}@.@{artifactId}@-@{version}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
+					<extraJvmArguments>-Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8</extraJvmArguments>
 					<projectArtifactFirstInClassPath>true</projectArtifactFirstInClassPath>
 					<includeConfigurationDirectoryInClasspath>false</includeConfigurationDirectoryInClasspath>
 				</configuration>
@@ -424,8 +420,7 @@
 							<goal>add-third-party</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>
-								${project.build.directory}/generated-distro</outputDirectory>
+							<outputDirectory>${project.build.directory}/generated-distro</outputDirectory>
 							<thirdPartyFilename>LICENSE-THIRD-PARTY.txt</thirdPartyFilename>
 							<licenseMerges>
 								<licenseMerge>The Apache Software License,
@@ -453,7 +448,7 @@
 				<artifactId>maven-jxr-plugin</artifactId>
 				<reportSets>
 					<reportSet>
-            <id>default</id>
+                        <id>default</id>
 						<configuration>
 							<linkJavadoc>false</linkJavadoc>
 						</configuration>
