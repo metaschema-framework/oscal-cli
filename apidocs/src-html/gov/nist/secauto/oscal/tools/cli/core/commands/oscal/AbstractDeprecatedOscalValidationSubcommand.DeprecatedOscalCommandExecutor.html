@@ -21,7 +21,7 @@
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.cli.processor.ExitStatus;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalValidationSubcommand;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalValidationCommand;</span>
 <span class="source-line-no">012</span><span id="line-12"></span>
 <span class="source-line-no">013</span><span id="line-13">import org.apache.commons.cli.CommandLine;</span>
 <span class="source-line-no">014</span><span id="line-14">import org.apache.logging.log4j.LogManager;</span>
@@ -30,7 +30,7 @@
 <span class="source-line-no">017</span><span id="line-17">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">018</span><span id="line-18"></span>
 <span class="source-line-no">019</span><span id="line-19">public abstract class AbstractDeprecatedOscalValidationSubcommand</span>
-<span class="source-line-no">020</span><span id="line-20">    extends AbstractOscalValidationSubcommand {</span>
+<span class="source-line-no">020</span><span id="line-20">    extends AbstractOscalValidationCommand {</span>
 <span class="source-line-no">021</span><span id="line-21">  private static final Logger LOGGER = LogManager.getLogger(AbstractDeprecatedOscalValidationSubcommand.class);</span>
 <span class="source-line-no">022</span><span id="line-22"></span>
 <span class="source-line-no">023</span><span id="line-23">  @Override</span>
@@ -39,7 +39,7 @@
 <span class="source-line-no">026</span><span id="line-26">  }</span>
 <span class="source-line-no">027</span><span id="line-27"></span>
 <span class="source-line-no">028</span><span id="line-28">  protected final class DeprecatedOscalCommandExecutor</span>
-<span class="source-line-no">029</span><span id="line-29">      extends AbstractOscalValidationSubcommand.OscalCommandExecutor {</span>
+<span class="source-line-no">029</span><span id="line-29">      extends AbstractOscalValidationCommand.OscalCommandExecutor {</span>
 <span class="source-line-no">030</span><span id="line-30"></span>
 <span class="source-line-no">031</span><span id="line-31">    private DeprecatedOscalCommandExecutor(</span>
 <span class="source-line-no">032</span><span id="line-32">        @NonNull CallingContext callingContext,</span>
