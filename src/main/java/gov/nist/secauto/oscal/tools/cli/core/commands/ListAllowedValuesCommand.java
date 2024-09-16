@@ -20,9 +20,7 @@ import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.ISequence;
 import gov.nist.secauto.metaschema.core.metapath.MetapathException;
-import gov.nist.secauto.metaschema.core.metapath.MetapathExpression;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
@@ -261,13 +259,14 @@ public class ListAllowedValuesCommand
 
     IModuleNodeItem moduleNodeItem = INodeItemFactory.instance().newModuleNodeItem(module);
 
-    if (metapath != null) {
-      MetapathExpression filter = MetapathExpression.compile(metapath, staticContext);
-
-      DynamicContext dynamicContext = new DynamicContext(staticContext);
-      ISequence<?> sequence = filter.evaluate(moduleNodeItem, dynamicContext);
-      assert sequence != null;
-    }
+    // if (metapath != null) {
+    // MetapathExpression filter = MetapathExpression.compile(metapath,
+    // staticContext);
+    //
+    // DynamicContext dynamicContext = new DynamicContext(staticContext);
+    // ISequence<?> sequence = filter.evaluate(moduleNodeItem, dynamicContext);
+    // assert sequence != null;
+    // }
 
     DynamicContext dynamicContext = new DynamicContext(staticContext);
     dynamicContext.disablePredicateEvaluation();
@@ -361,7 +360,7 @@ public class ListAllowedValuesCommand
 
     generator.writeStartObject(); // constraint
 
-    generator.writeStringField("type", "allowed-value");
+    generator.writeStringField("type", "allowed-values");
 
     IAllowedValuesConstraint constraint = record.getAllowedValues();
     if (constraint.getId() != null) {
