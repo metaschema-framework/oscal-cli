@@ -17,7 +17,7 @@ jobs:
       actions: read
       contents: read
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       with:
         submodules: recursive
     # -------------------------
@@ -60,7 +60,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
       run: echo "GH_TOKEN=${GITHUB_TOKEN}" >> $GITHUB_ENV
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+    - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
       with:
         token: ${{ env.GH_TOKEN }}
         submodules: recursive
