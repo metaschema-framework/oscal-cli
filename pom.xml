@@ -87,7 +87,7 @@
 		<dependency.jansi.version>2.4.1</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
 		<dependency.json.version>20240303</dependency.json.version>
-		<dependency.log4j2.version>2.23.1</dependency.log4j2.version>
+		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
 		<dependency.pmd.version>7.4.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
 		<dependency.saxon-he.version>12.5</dependency.saxon-he.version>
