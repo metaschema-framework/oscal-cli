@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
-	<version>2.1.1-SNAPSHOT</version>
+	<version>2.2.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
@@ -58,8 +58,8 @@
 	
 	<properties>
 		<!-- metaschema dependencies -->
-		<dependency.metaschema-framework.version>1.1.0</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>4.1.0</dependency.liboscal-java.version>
+		<dependency.metaschema-framework.version>1.2.0</dependency.metaschema-framework.version>
+		<dependency.liboscal-java.version>4.2.0</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
 		<site.url>https://oscal-cli.metaschema.dev</site.url>
@@ -87,7 +87,8 @@
 		<dependency.jansi.version>2.4.1</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
 		<dependency.json.version>20240303</dependency.json.version>
-		<dependency.log4j2.version>2.23.1</dependency.log4j2.version>
+		<dependency.junit5.version>5.11.1</dependency.junit5.version>
+		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
 		<dependency.pmd.version>7.4.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
 		<dependency.saxon-he.version>12.5</dependency.saxon-he.version>
@@ -96,6 +97,25 @@
 
 		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>${dependency.log4j2.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${dependency.junit5.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>dev.metaschema.oscal</groupId>
@@ -128,12 +148,10 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>${dependency.log4j2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-jul</artifactId>
-			<version>${dependency.log4j2.version}</version>
 		</dependency>
 
 		<dependency>
@@ -160,8 +178,8 @@
 		<dependency>
 			<groupId>org.xmlresolver</groupId>
 			<artifactId>xmlresolver</artifactId>
-			<classifier>data</classifier>
 			<version>${dependency.xmlresolver.version}</version>
+			<classifier>data</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>
