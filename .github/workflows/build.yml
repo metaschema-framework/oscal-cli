@@ -121,6 +121,10 @@ jobs:
           org.opencontainers.image.title="oscal-cli-extended"
           org.opencontainers.image.description="Metaschema-powered CLI tool for processing OSCAL""
           org.opencontainers.image.licenses="CC0-1.0"
+    - run: |
+          pwd
+          ls -lha
+          find '.'
     - if: github.repository == env.HOME_REPO && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature'))
       name: Container image registry push
       id: image_registry_push
