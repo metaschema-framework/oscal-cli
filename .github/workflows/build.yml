@@ -25,6 +25,13 @@ on:
         type: boolean
 name: Build and Test
 env:
+  HOME_REPO: metaschema-framework/oscal-cli
+  IMAGE_NAME: metaschema-framework/oscal-cli-extended
+  REGISTRY: ghcr.io
+  # Docs: github.com/docker/metadata-action/?tab=readme-ov-file#typesha
+  DOCKER_METADATA_PR_HEAD_SHA: true
+  # https://github.com/docker/metadata-action?tab=readme-ov-file#annotations
+  DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index  
   INPUT_FAIL_ON_ERROR: ${{ github.event.inputs.linkcheck_fail_on_error || 'true' }}
   INPUT_ISSUE_ON_ERROR: ${{ github.event.inputs.linkcheck_create_issue || 'false' }}
   MAVEN_VERSION: 3.9.8
@@ -73,6 +80,67 @@ jobs:
       uses: github/codeql-action/analyze@662472033e021d55d94146f66f6058822b0b39fd
       with:
         upload: ${{ github.ref_name == 'develop' && 'always' || 'never' }}
+    - if: github.repository == env.HOME_REPO
+      name: Container image QEMU setup for cross-arch builds
+      id: image_setup_qemu
+      uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf
+    - if: github.repository == env.HOME_REPO
+      name: Container image buildx setup for cross-arch builds
+      id: image_setup_buildx
+      with:
+        platforms: linux/amd64
+      uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db
+    - if: github.repository == env.HOME_REPO
+      name: Container image login
+      id: image_login
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - if: github.repository == env.HOME_REPO
+      name: Container image metadata and tag generation
+      id: image_metadata
+      uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
+      with:
+        images:
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=sha,prefix=,suffix=,format=long
+          type=ref,event=branch
+          type=ref,event=tag
+          type=ref,event=pr
+        # flavor: |
+        #   latest=true
+        annotations: |
+          maintainers="Metaschema Community Admin <admin@metaschema.dev>"
+          org.opencontainers.image.authors="Metaschema Community Admin <admin@metaschema.dev>"
+          org.opencontainers.image.documentation="https://metaschema.dev"
+          org.opencontainers.image.source="https://github.com/metaschema-framework/oscal-cli"
+          org.opencontainers.image.vendor="Metaschema Community"
+          org.opencontainers.image.title="oscal-cli-extended"
+          org.opencontainers.image.description="Metaschema-powered CLI tool for processing OSCAL""
+          org.opencontainers.image.licenses="CC0-1.0"
+    - if: github.repository == env.HOME_REPO && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature'))
+      name: Container image registry push
+      id: image_registry_push
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      with:
+        build-args: |
+          USE_PREBUILT_ZIP=yes        
+        push: true
+        tags: ${{ steps.image_metadata.outputs.tags }}
+        labels: ${{ steps.image_metadata.outputs.annotations }}
+        platforms: linux/amd64
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    - if: github.repository == env.HOME_REPO && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature'))
+      name: Container image push attestations
+      uses: actions/attest-build-provenance@1c608d11d69870c2092266b3f9a6f3abbf17002c
+      with:
+        subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+        subject-digest: ${{ steps.image_registry_push.outputs.digest }}
+        push-to-registry: false        
   build-website:
     name: Website
     runs-on: ubuntu-20.04
