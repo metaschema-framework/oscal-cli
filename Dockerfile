@@ -5,7 +5,7 @@ ARG RUNNER_IMAGE=eclipse-temurin:17-alpine
 # the container.
 ARG USE_PREBUILT_ZIP
 
-FROM ${BUILDER_IMAGE} as builder
+FROM ${BUILDER_IMAGE} AS builder
 ARG USE_PREBUILT_ZIP
 ARG BUILDER_JDK_VENDOR=temurin
 ARG BUILDER_JDK_MAJOR_VERSION=17
@@ -47,7 +47,7 @@ COPY pom.xml ./target/*.zi[p] /tmp
 WORKDIR /tmp
 RUN unzip *.zip -d /opt/oscal-cli-extended
 
-FROM ${RUNNER_IMAGE} as runner
+FROM ${RUNNER_IMAGE} AS runner
 COPY --from=builder /opt/oscal-cli-extended /opt/oscal-cli-extended
 WORKDIR /opt/oscal-cli-extended
 RUN /opt/oscal-cli-extended/bin/oscal-cli --version
