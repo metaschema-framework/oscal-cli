@@ -25,8 +25,8 @@ on:
         type: boolean
 name: Build and Test
 env:
-  HOME_REPO: metaschema-framework/oscal-cli
-  IMAGE_NAME: metaschema-framework/oscal-cli-extended
+  HOME_REPO: aj-stein-gsa/oscal-cli
+  IMAGE_NAME: aj-stein-gsa/oscal-cli-extended
   REGISTRY: ghcr.io
   # Docs: github.com/docker/metadata-action/?tab=readme-ov-file#typesha
   DOCKER_METADATA_PR_HEAD_SHA: true
@@ -214,3 +214,5 @@ jobs:
       with:
         script: |
           core.setFailed('Link checker detected broken or invalid links, read attached report.')
+
+          
