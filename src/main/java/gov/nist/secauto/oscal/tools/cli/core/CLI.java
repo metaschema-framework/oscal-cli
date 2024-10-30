@@ -9,8 +9,8 @@ import gov.nist.secauto.metaschema.cli.processor.CLIProcessor;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;
 import gov.nist.secauto.metaschema.core.model.MetaschemaVersion;
+import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.IVersionInfo;
-import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.oscal.lib.LibOscalVersion;
 import gov.nist.secauto.oscal.lib.OscalVersion;
 import gov.nist.secauto.oscal.tools.cli.core.commands.ConvertCommand;
@@ -43,17 +43,14 @@ public final class CLI {
 
   @NonNull
   public static ExitStatus runCli(String... args) {
-    @SuppressWarnings("serial") Map<String, IVersionInfo> versions = ObjectUtils.notNull(
-        new LinkedHashMap<>() {
-          {
-            put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());
-            put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());
-            put("https://github.com/usnistgov/OSCAL", new OscalVersion());
-            put("https://github.com/usnistgov/metaschema-java", new MetaschemaJavaVersion());
-            put("https://github.com/usnistgov/metaschema", new MetaschemaVersion());
-          }
-        });
-    CLIProcessor processor = new CLIProcessor("oscal-cli", versions);
+    @SuppressWarnings("PMD.UseConcurrentHashMap") Map<String, IVersionInfo> versions = new LinkedHashMap<>();
+    versions.put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());
+    versions.put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());
+    versions.put("https://github.com/usnistgov/OSCAL", new OscalVersion());
+    versions.put("https://github.com/usnistgov/metaschema-java", new MetaschemaJavaVersion());
+    versions.put("https://github.com/usnistgov/metaschema", new MetaschemaVersion());
+
+    CLIProcessor processor = new CLIProcessor("oscal-cli", CollectionUtil.unmodifiableMap(versions));
     processor.addCommandHandler(new CatalogCommand());
     processor.addCommandHandler(new ProfileCommand());
     processor.addCommandHandler(new ComponentDefinitionCommand());

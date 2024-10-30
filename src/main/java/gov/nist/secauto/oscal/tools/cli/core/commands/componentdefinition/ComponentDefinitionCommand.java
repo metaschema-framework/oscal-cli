@@ -27,5 +27,4 @@ public class ComponentDefinitionCommand
   public String getDescription() {
     return "Perform an operation on an OSCAL Component Definition";
   }
-
 }

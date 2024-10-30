@@ -28,5 +28,4 @@ public class ProfileCommand
   public String getDescription() {
     return "Perform an operation on an OSCAL Profile";
   }
-
 }

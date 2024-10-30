@@ -31,13 +31,11 @@ import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.model.xml.ExternalConstraintsModulePostProcessor;
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
-import gov.nist.secauto.metaschema.databind.model.metaschema.BindingConstraintLoader;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
 import gov.nist.secauto.oscal.lib.model.OscalCompleteModule;
 import gov.nist.secauto.oscal.lib.model.util.AllowedValueCollectingNodeItemVisitor;
@@ -141,6 +139,7 @@ public class ListAllowedValuesCommand
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
+      "PMD.AvoidCatchingGenericException"
   })
   protected ExitStatus executeCommand(
       @NonNull CallingContext callingContext,
@@ -181,7 +180,7 @@ public class ListAllowedValuesCommand
 
     Set<IConstraintSet> constraintSets;
     if (cmdLine.hasOption(CONSTRAINTS_OPTION)) {
-      IConstraintLoader constraintLoader = new BindingConstraintLoader(IBindingContext.instance());
+      IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
       constraintSets = new LinkedHashSet<>();
       String[] args = cmdLine.getOptionValues(CONSTRAINTS_OPTION);
       for (String arg : args) {
@@ -199,14 +198,9 @@ public class ListAllowedValuesCommand
 
     IBindingContext bindingContext;
     try {
-      if (constraintSets.isEmpty()) {
-        bindingContext = OscalBindingContext.instance();
-      } else {
-        ExternalConstraintsModulePostProcessor postProcessor
-            = new ExternalConstraintsModulePostProcessor(constraintSets);
-
-        bindingContext = new OscalBindingContext(CollectionUtil.singletonList(postProcessor));
-      }
+      bindingContext = OscalBindingContext.builder()
+          .constraintSet(constraintSets)
+          .build();
     } catch (Exception ex) {
       return ExitCode.PROCESSING_ERROR
           .exitMessage("Unable to get binding context. " + ex.getMessage())
@@ -397,6 +391,6 @@ public class ListAllowedValuesCommand
 
   private static String metapath(@NonNull String path) {
     // remove position 1 predicates
-    return path.replaceAll("\\[1\\]", "");
+    return path.replace("[1]", "");
   }
 }
