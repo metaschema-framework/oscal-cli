@@ -60,6 +60,7 @@ public class ConvertCommand
       Class<? extends IBoundObject> boundClass;
       IBoundObject object;
       try (InputStream is = source.toURL().openStream()) {
+        assert is != null;
         FormatDetector.Result formatResult = loader.detectFormat(is);
         Format sourceformat = formatResult.getFormat();
         try (InputStream fis = formatResult.getDataStream()) {

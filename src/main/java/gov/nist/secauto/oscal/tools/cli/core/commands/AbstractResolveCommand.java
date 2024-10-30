@@ -19,6 +19,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.CustomCollectors;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.metaschema.databind.io.IBoundLoader;
@@ -164,7 +165,8 @@ public abstract class AbstractResolveCommand
     List<String> extraArgs = cmdLine.getArgList();
     Path source = resolvePathAgainstCWD(ObjectUtils.notNull(Paths.get(extraArgs.get(0))));
 
-    IBoundLoader loader = OscalBindingContext.instance().newBoundLoader();
+    IBindingContext bindingContext = OscalBindingContext.instance();
+    IBoundLoader loader = bindingContext.newBoundLoader();
     loader.disableFeature(DeserializationFeature.DESERIALIZE_VALIDATE_CONSTRAINTS);
 
     Format asFormat;
@@ -258,8 +260,7 @@ public abstract class AbstractResolveCommand
     // this is a profile
     DynamicContext dynamicContext = new DynamicContext(document.getStaticContext());
     dynamicContext.setDocumentLoader(loader);
-    ProfileResolver resolver = new ProfileResolver();
-    resolver.setDynamicContext(dynamicContext);
+    ProfileResolver resolver = new ProfileResolver(dynamicContext);
 
     IDocumentNodeItem resolvedProfile;
     try {
@@ -276,8 +277,7 @@ public abstract class AbstractResolveCommand
     // ((IBoundXdmNodeItem)resolvedProfile).validate(validator);
     // validator.finalizeValidation();
 
-    ISerializer<Catalog> serializer
-        = OscalBindingContext.instance().newSerializer(toFormat, Catalog.class);
+    ISerializer<Catalog> serializer = bindingContext.newSerializer(toFormat, Catalog.class);
     try {
       if (destination == null) {
         @SuppressWarnings({ "resource", "PMD.CloseResource" }) PrintStream stdOut = ObjectUtils.notNull(System.out);

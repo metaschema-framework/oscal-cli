@@ -27,5 +27,4 @@ public class PlanOfActionsAndMilestonesCommand
   public String getDescription() {
     return "Perform an operation on an OSCAL Plan of Actions and Milestones";
   }
-
 }
