@@ -5,13 +5,9 @@
 
 package gov.nist.secauto.oscal.tools.cli.core.commands.metaschema;
 
-import com.google.auto.service.AutoService;
-
 import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractParentCommand;
-import gov.nist.secauto.metaschema.cli.processor.command.ICommand;
 
-@AutoService(ICommand.class)
 public class MetaschemaCommand
     extends AbstractParentCommand {
   private static final String COMMAND = "metaschema";

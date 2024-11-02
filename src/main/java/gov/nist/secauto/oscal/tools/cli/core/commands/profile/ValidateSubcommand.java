@@ -12,7 +12,7 @@ import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidat
 import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
-import gov.nist.secauto.oscal.tools.cli.core.commands.oscal.AbstractDeprecatedOscalValidationSubcommand;
+import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractDeprecatedOscalValidationSubcommand;
 
 import org.xml.sax.SAXException;
 
@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.xml.transform.Source;
 
-public class ValidateSubcommand
+class ValidateSubcommand
     extends AbstractDeprecatedOscalValidationSubcommand {
   @Override
   public String getDescription() {

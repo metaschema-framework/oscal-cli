@@ -5,12 +5,12 @@
 
 package gov.nist.secauto.oscal.tools.cli.core.commands;
 
+import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
-import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
@@ -23,9 +23,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 
@@ -94,36 +93,32 @@ public abstract class AbstractRenderCommand
       "PMD.OnlyOneReturn", // readability
       "unused"
   })
-  protected ExitStatus executeCommand(
+  protected void executeCommand(
       @NonNull CallingContext callingContext,
-      @NonNull CommandLine cmdLine) {
+      @NonNull CommandLine cmdLine) throws CommandExecutionException {
     List<String> extraArgs = cmdLine.getArgList();
-    Path destination = resolvePathAgainstCWD(ObjectUtils.notNull(Paths.get(extraArgs.get(1)))); // .toAbsolutePath();
-
-    if (Files.exists(destination)) {
-      if (!cmdLine.hasOption(OVERWRITE_OPTION)) {
-        return ExitCode.INVALID_ARGUMENTS.exitMessage(
-            String.format("The provided destination '%s' already exists and the '%s' option was not provided.",
-                destination,
-                OptionUtils.toArgument(OVERWRITE_OPTION)));
-      }
-      if (!Files.isWritable(destination)) {
-        return ExitCode.IO_ERROR.exitMessage("The provided destination '" + destination + "' is not writable.");
-      }
+    Path destination = null;
+    if (extraArgs.size() > 1) {
+      destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(1)), cmdLine);
     }
 
-    Path input = resolvePathAgainstCWD(ObjectUtils.notNull(Paths.get(extraArgs.get(0))));
+    URI source = MetaschemaCommands.handleSource(
+        ObjectUtils.requireNonNull(extraArgs.get(0)),
+        ObjectUtils.notNull(getCurrentWorkingDirectory().toUri()));
+
     try {
-      performRender(input, destination);
-    } catch (IOException | TransformerException ex) {
-      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
+      performRender(source, destination);
+    } catch (IOException ex) {
+      throw new CommandExecutionException(ExitCode.IO_ERROR, ex);
+    } catch (TransformerException ex) {
+      throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, ex);
     }
 
-    if (LOGGER.isInfoEnabled()) {
+    if (destination != null && LOGGER.isInfoEnabled()) {
       LOGGER.info("Generated HTML file: " + destination.toString());
     }
-    return ExitCode.OK.exit();
   }
 
-  protected abstract void performRender(Path input, Path result) throws IOException, TransformerException;
+  protected abstract void performRender(@NonNull URI input, Path result)
+      throws IOException, TransformerException;
 }

@@ -7,9 +7,9 @@ package gov.nist.secauto.oscal.tools.cli.core.commands;
 
 import gov.nist.secauto.metaschema.cli.commands.AbstractValidateContentCommand;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
@@ -39,14 +39,14 @@ public abstract class AbstractOscalValidationCommand
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-    return new AbstractOscalValidationCommand.OscalCommandExecutor(callingContext, commandLine);
+    return new AbstractOscalValidationCommand.OscalValidationCommandExecutor(callingContext, commandLine);
   }
 
-  protected class OscalCommandExecutor
+  protected class OscalValidationCommandExecutor
       extends AbstractValidateContentCommand.AbstractValidationCommandExecutor
       implements ISchemaValidationProvider {
 
-    protected OscalCommandExecutor(
+    protected OscalValidationCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
@@ -73,6 +73,7 @@ public abstract class AbstractOscalValidationCommand
       return getOscalJsonSchema();
     }
 
+    @Override
     @NonNull
     protected ISchemaValidationProvider getSchemaValidationProvider(
         @NonNull IModule module,
@@ -83,7 +84,7 @@ public abstract class AbstractOscalValidationCommand
 
     @Override
     protected IModule getModule(CommandLine commandLine, IBindingContext bindingContext)
-        throws IOException, MetaschemaException {
+        throws CommandExecutionException {
       return bindingContext.registerModule(OscalCompleteModule.class);
     }
   }
