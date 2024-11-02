@@ -7,7 +7,7 @@ package gov.nist.secauto.oscal.tools.cli.core.commands;
 
 import gov.nist.secauto.metaschema.cli.commands.AbstractConvertSubcommand;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
@@ -35,13 +35,13 @@ public abstract class AbstractOscalConvertCommand
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-    return new OscalCommandExecutor(callingContext, commandLine);
+    return new CommandExecutor(callingContext, commandLine);
   }
 
-  private final class OscalCommandExecutor
+  private final class CommandExecutor
       extends AbstractConversionCommandExecutor {
 
-    private OscalCommandExecutor(
+    private CommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
@@ -53,10 +53,10 @@ public abstract class AbstractOscalConvertCommand
     }
 
     @Override
-    public ExitStatus execute() {
+    public void execute() throws CommandExecutionException {
       LOGGER.atWarn().log("This command path is deprecated. Please use 'convert'.");
 
-      return super.execute();
+      super.execute();
     }
 
     @Override

@@ -36,13 +36,13 @@ public class ConvertCommand
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-    return new OscalCommandExecutor(callingContext, commandLine);
+    return new CommandExecutor(callingContext, commandLine);
   }
 
-  private static final class OscalCommandExecutor
+  private static final class CommandExecutor
       extends AbstractConversionCommandExecutor {
 
-    private OscalCommandExecutor(
+    private CommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);

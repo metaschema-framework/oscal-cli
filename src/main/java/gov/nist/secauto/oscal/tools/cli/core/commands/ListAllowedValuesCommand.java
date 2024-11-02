@@ -12,28 +12,21 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
-import gov.nist.secauto.metaschema.cli.processor.OptionUtils;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
-import gov.nist.secauto.metaschema.core.metapath.MetapathException;
 import gov.nist.secauto.metaschema.core.metapath.StaticContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
-import gov.nist.secauto.metaschema.core.model.IConstraintLoader;
 import gov.nist.secauto.metaschema.core.model.IModule;
-import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
-import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
-import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.model.IBoundModule;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
@@ -51,15 +44,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -78,7 +68,8 @@ public class ListAllowedValuesCommand
   @NonNull
   private static final String COMMAND = "list-allowed-values";
   @NonNull
-  private static final List<ExtraArgument> EXTRA_ARGUMENTS;
+  private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
+      new DefaultExtraArgument("destination-file", false)));
   @NonNull
   private static final Option CONSTRAINTS_OPTION = ObjectUtils.notNull(
       Option.builder("c")
@@ -86,11 +77,6 @@ public class ListAllowedValuesCommand
           .argName("URL")
           .desc("additional constraint definitions")
           .build());
-
-  static {
-    EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-        new DefaultExtraArgument("destination-file", false)));
-  }
 
   @Override
   public String getName() {
@@ -116,14 +102,6 @@ public class ListAllowedValuesCommand
   }
 
   @Override
-  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-    List<String> extraArgs = cmdLine.getArgList();
-    if (extraArgs.size() > 1) {
-      throw new InvalidArgumentException("Illegal number of arguments.");
-    }
-  }
-
-  @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine cmdLine) {
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
@@ -135,76 +113,41 @@ public class ListAllowedValuesCommand
    *          information about the calling context
    * @param cmdLine
    *          the parsed command line details
-   * @return the execution result
+   * @throws CommandExecutionException
+   *           if an error occurred while executing the command
    */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
-      "PMD.AvoidCatchingGenericException"
+      "PMD.AvoidCatchingGenericException",
+      "PMD.CognitiveComplexity",
+      "PMD.CyclomaticComplexity"
   })
-  protected ExitStatus executeCommand(
+  protected void executeCommand(
       @NonNull CallingContext callingContext,
-      @NonNull CommandLine cmdLine) {
+      @NonNull CommandLine cmdLine) throws CommandExecutionException {
 
     List<String> extraArgs = cmdLine.getArgList();
 
     Path destination = null;
-    if (extraArgs.size() > 1) {
-      destination = Paths.get(extraArgs.get(1)).toAbsolutePath();
+    if (!extraArgs.isEmpty()) {
+      destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(0)), cmdLine);
     }
 
-    if (destination != null) {
-      if (Files.exists(destination)) {
-        if (!cmdLine.hasOption(MetaschemaCommands.OVERWRITE_OPTION)) {
-          return ExitCode.INVALID_ARGUMENTS.exitMessage( // NOPMD readability
-              String.format("The provided destination '%s' already exists and the '%s' option was not provided.",
-                  destination,
-                  OptionUtils.toArgument(MetaschemaCommands.OVERWRITE_OPTION)));
-        }
-        if (!Files.isWritable(destination)) {
-          return ExitCode.IO_ERROR.exitMessage( // NOPMD readability
-              "The provided destination '" + destination + "' is not writable.");
-        }
-      } else {
-        Path parent = destination.getParent();
-        if (parent != null) {
-          try {
-            Files.createDirectories(parent);
-          } catch (IOException ex) {
-            return ExitCode.INVALID_TARGET.exit().withThrowable(ex); // NOPMD readability
-          }
-        }
-      }
-    }
-
-    URI cwd = ObjectUtils.notNull(Paths.get("").toAbsolutePath().toUri());
-
-    Set<IConstraintSet> constraintSets;
-    if (cmdLine.hasOption(CONSTRAINTS_OPTION)) {
-      IConstraintLoader constraintLoader = IBindingContext.getConstraintLoader();
-      constraintSets = new LinkedHashSet<>();
-      String[] args = cmdLine.getOptionValues(CONSTRAINTS_OPTION);
-      for (String arg : args) {
-        assert arg != null;
-        try {
-          URI constraintUri = ObjectUtils.requireNonNull(UriUtils.toUri(arg, cwd));
-          constraintSets.addAll(constraintLoader.load(constraintUri));
-        } catch (IOException | MetaschemaException | MetapathException | URISyntaxException ex) {
-          return ExitCode.IO_ERROR.exitMessage("Unable to load constraint set '" + arg + "'.").withThrowable(ex);
-        }
-      }
-    } else {
-      constraintSets = CollectionUtil.emptySet();
-    }
+    URI currentWorkingDirectory = ObjectUtils.notNull(getCurrentWorkingDirectory().toUri());
+    Set<IConstraintSet> constraintSets = MetaschemaCommands.loadConstraintSets(
+        cmdLine,
+        CONSTRAINTS_OPTION,
+        currentWorkingDirectory);
 
     IBindingContext bindingContext;
     try {
       bindingContext = OscalBindingContext.builder()
           .constraintSet(constraintSets)
           .build();
-    } catch (Exception ex) {
-      return ExitCode.PROCESSING_ERROR
-          .exitMessage("Unable to get binding context. " + ex.getMessage())
-          .withThrowable(ex);
+    } catch (RuntimeException ex) {
+      throw new CommandExecutionException(ExitCode.RUNTIME_ERROR,
+          String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()),
+          ex);
     }
 
     IBoundModule module = bindingContext.registerModule(OscalCompleteModule.class);
@@ -232,19 +175,17 @@ public class ListAllowedValuesCommand
           }
         }
       }
-
-      return ExitCode.OK.exit();
     } catch (IOException ex) {
-      return ExitCode.IO_ERROR.exit().withThrowable(ex);
-    } catch (Exception ex) {
-      return ExitCode.PROCESSING_ERROR.exit().withThrowable(ex);
+      throw new CommandExecutionException(ExitCode.IO_ERROR, ex);
+    } catch (RuntimeException ex) {
+      throw new CommandExecutionException(ExitCode.RUNTIME_ERROR, ex);
     }
   }
 
   private static void generateAllowedValuesList(
       @NonNull IModule module,
       @NonNull PrintWriter writer,
-      @Nullable String metapath) throws IOException {
+      @SuppressWarnings("unused") @Nullable String metapath) throws IOException {
     AllowedValueCollectingNodeItemVisitor walker = new AllowedValueCollectingNodeItemVisitor();
 
     StaticContext staticContext = StaticContext.builder()

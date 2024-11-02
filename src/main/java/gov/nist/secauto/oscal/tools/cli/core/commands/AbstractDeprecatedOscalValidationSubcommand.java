@@ -3,12 +3,11 @@
  * SPDX-License-Identifier: CC0-1.0
  */
 
-package gov.nist.secauto.oscal.tools.cli.core.commands.oscal;
+package gov.nist.secauto.oscal.tools.cli.core.commands;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
-import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalValidationCommand;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.LogManager;
@@ -22,23 +21,23 @@ public abstract class AbstractDeprecatedOscalValidationSubcommand
 
   @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-    return new DeprecatedOscalCommandExecutor(callingContext, commandLine);
+    return new CommandExecutor(callingContext, commandLine);
   }
 
-  protected final class DeprecatedOscalCommandExecutor
-      extends AbstractOscalValidationCommand.OscalCommandExecutor {
+  protected final class CommandExecutor
+      extends AbstractOscalValidationCommand.OscalValidationCommandExecutor {
 
-    private DeprecatedOscalCommandExecutor(
+    private CommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {
       super(callingContext, commandLine);
     }
 
     @Override
-    public ExitStatus execute() {
+    public void execute() throws CommandExecutionException {
       LOGGER.atWarn().log("This command path is deprecated. Please use 'validate'.");
 
-      return super.execute();
+      super.execute();
     }
   }
 }

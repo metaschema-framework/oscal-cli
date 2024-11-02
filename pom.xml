@@ -80,7 +80,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<!-- other dependencies -->
-		<dependency.auto-service.version>1.1.1</dependency.auto-service.version>
 		<dependency.commons-cli.version>1.7.0</dependency.commons-cli.version>
 		<dependency.commons-io.version>2.17.0</dependency.commons-io.version>
 		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
@@ -141,13 +140,6 @@
 			<groupId>dev.metaschema.java</groupId>
 			<artifactId>metaschema-schema-generator</artifactId>
 			<version>${dependency.metaschema-framework.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.auto.service</groupId>
-			<artifactId>auto-service</artifactId>
-			<version>${dependency.auto-service.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

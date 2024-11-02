@@ -6,7 +6,7 @@
 package gov.nist.secauto.oscal.tools.cli.core.commands.profile;
 
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
-import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
+import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractResolveCommand;
 
 import org.apache.commons.cli.CommandLine;
@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
-public class ResolveSubcommand
+class ResolveSubcommand
     extends AbstractResolveCommand {
   private static final Logger LOGGER = LogManager.getLogger(ResolveSubcommand.class);
 
@@ -28,9 +28,9 @@ public class ResolveSubcommand
   }
 
   @Override
-  protected ExitStatus executeCommand(CallingContext callingContext, CommandLine cmdLine) {
+  protected void executeCommand(CallingContext callingContext, CommandLine cmdLine) throws CommandExecutionException {
     LOGGER.atWarn().log("This command path is deprecated. Please use 'resolve-profile'.");
 
-    return super.executeCommand(callingContext, cmdLine);
+    super.executeCommand(callingContext, cmdLine);
   }
 }

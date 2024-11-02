@@ -9,7 +9,7 @@ import gov.nist.secauto.metaschema.core.model.IBoundObject;
 import gov.nist.secauto.oscal.lib.model.Profile;
 import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractOscalConvertCommand;
 
-public class ConvertSubcommand
+class ConvertSubcommand
     extends AbstractOscalConvertCommand {
   @Override
   public String getDescription() {
