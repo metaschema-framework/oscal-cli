@@ -15,6 +15,7 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.metaschema.databind.io.Format;
 import gov.nist.secauto.oscal.lib.profile.resolver.ProfileResolutionException;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -241,5 +242,21 @@ class CLITest {
     } else {
       evaluateResult(CLI.runCli(args), expectedExitCode, expectedThrownClass);
     }
+  }
+  
+  @Test
+  void testSystemSecurityPlanQuietlyFailing() {
+	  Throwable NO_THROWABLE_RESULT = null;
+	  String[] args= new String[] {
+			  "convert",
+			  "--to=yaml",
+			  "src/test/resources/cli/quietly_failing_ssp.xml",
+			  "target/oscal-cli-convert/quietly_failing_ssp_converted.json",
+			  "--show-stack-trace"
+	  };
+	  ExitStatus status = CLI.runCli(args);
+	  Throwable thrown = status.getThrowable();
+	  assertAll(() -> assertEquals(ExitCode.OK, status.getExitCode()),
+			    ()-> assertEquals(NO_THROWABLE_RESULT, thrown));
   }
 }
