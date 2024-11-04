@@ -17,8 +17,8 @@
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.cli.processor.ExitStatus;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.model.MetaschemaVersion;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.IVersionInfo;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.ObjectUtils;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.CollectionUtil;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.core.util.IVersionInfo;
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.oscal.lib.LibOscalVersion;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.oscal.lib.OscalVersion;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.oscal.tools.cli.core.commands.ConvertCommand;
@@ -51,36 +51,33 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    @NonNull
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> ExitStatus runCli(String... args) {
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      @SuppressWarnings(<span class="jxr_string">"serial"</span>) Map&lt;String, IVersionInfo&gt; versions = ObjectUtils.notNull(
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">new</strong> LinkedHashMap&lt;&gt;() {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>            {
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>              put(CLIProcessor.COMMAND_VERSION, <strong class="jxr_keyword">new</strong> OscalCliVersion());
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>              put(<span class="jxr_string">"https://github.com/usnistgov/liboscal-java"</span>, <strong class="jxr_keyword">new</strong> LibOscalVersion());
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>              put(<span class="jxr_string">"https://github.com/usnistgov/OSCAL"</span>, <strong class="jxr_keyword">new</strong> OscalVersion());
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>              put(<span class="jxr_string">"https://github.com/usnistgov/metaschema-java"</span>, <strong class="jxr_keyword">new</strong> MetaschemaJavaVersion());
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>              put(<span class="jxr_string">"https://github.com/usnistgov/metaschema"</span>, <strong class="jxr_keyword">new</strong> MetaschemaVersion());
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>            }
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>          });
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      CLIProcessor processor = <strong class="jxr_keyword">new</strong> CLIProcessor(<span class="jxr_string">"oscal-cli"</span>, versions);
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="CatalogCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/catalog/CatalogCommand.html#CatalogCommand">CatalogCommand</a>());
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ProfileCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/profile/ProfileCommand.html#ProfileCommand">ProfileCommand</a>());
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ComponentDefinitionCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/componentdefinition/ComponentDefinitionCommand.html#ComponentDefinitionCommand">ComponentDefinitionCommand</a>());
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="SystemSecurityPlanCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ssp/SystemSecurityPlanCommand.html#SystemSecurityPlanCommand">SystemSecurityPlanCommand</a>());
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="AssessmentPlanCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/assessmentplan/AssessmentPlanCommand.html#AssessmentPlanCommand">AssessmentPlanCommand</a>());
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="AssessmentResultsCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/assessmentresults/AssessmentResultsCommand.html#AssessmentResultsCommand">AssessmentResultsCommand</a>());
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="PlanOfActionsAndMilestonesCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/poam/PlanOfActionsAndMilestonesCommand.html#PlanOfActionsAndMilestonesCommand">PlanOfActionsAndMilestonesCommand</a>());
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="MetaschemaCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/metaschema/MetaschemaCommand.html#MetaschemaCommand">MetaschemaCommand</a>());
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ValidateCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ValidateCommand.html#ValidateCommand">ValidateCommand</a>());
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ConvertCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ConvertCommand.html#ConvertCommand">ConvertCommand</a>());
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ResolveCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ResolveCommand.html#ResolveCommand">ResolveCommand</a>());
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ListAllowedValuesCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ListAllowedValuesCommand.html#ListAllowedValuesCommand">ListAllowedValuesCommand</a>());
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">return</strong> processor.process(args);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">private</strong> <a name="CLI" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/CLI.html#CLI">CLI</a>() {
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <em class="jxr_comment">// disable construction</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      @SuppressWarnings(<span class="jxr_string">"PMD.UseConcurrentHashMap"</span>) Map&lt;String, IVersionInfo&gt; versions = <strong class="jxr_keyword">new</strong> LinkedHashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      versions.put(CLIProcessor.COMMAND_VERSION, <strong class="jxr_keyword">new</strong> OscalCliVersion());
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      versions.put(<span class="jxr_string">"https://github.com/usnistgov/liboscal-java"</span>, <strong class="jxr_keyword">new</strong> LibOscalVersion());
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      versions.put(<span class="jxr_string">"https://github.com/usnistgov/OSCAL"</span>, <strong class="jxr_keyword">new</strong> OscalVersion());
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      versions.put(<span class="jxr_string">"https://github.com/usnistgov/metaschema-java"</span>, <strong class="jxr_keyword">new</strong> MetaschemaJavaVersion());
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      versions.put(<span class="jxr_string">"https://github.com/usnistgov/metaschema"</span>, <strong class="jxr_keyword">new</strong> MetaschemaVersion());
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      CLIProcessor processor = <strong class="jxr_keyword">new</strong> CLIProcessor(<span class="jxr_string">"oscal-cli"</span>, CollectionUtil.unmodifiableMap(versions));
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="CatalogCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/catalog/CatalogCommand.html#CatalogCommand">CatalogCommand</a>());
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ProfileCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/profile/ProfileCommand.html#ProfileCommand">ProfileCommand</a>());
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ComponentDefinitionCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/componentdefinition/ComponentDefinitionCommand.html#ComponentDefinitionCommand">ComponentDefinitionCommand</a>());
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="SystemSecurityPlanCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ssp/SystemSecurityPlanCommand.html#SystemSecurityPlanCommand">SystemSecurityPlanCommand</a>());
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="AssessmentPlanCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/assessmentplan/AssessmentPlanCommand.html#AssessmentPlanCommand">AssessmentPlanCommand</a>());
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="AssessmentResultsCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/assessmentresults/AssessmentResultsCommand.html#AssessmentResultsCommand">AssessmentResultsCommand</a>());
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="PlanOfActionsAndMilestonesCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/poam/PlanOfActionsAndMilestonesCommand.html#PlanOfActionsAndMilestonesCommand">PlanOfActionsAndMilestonesCommand</a>());
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="MetaschemaCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/metaschema/MetaschemaCommand.html#MetaschemaCommand">MetaschemaCommand</a>());
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ValidateCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ValidateCommand.html#ValidateCommand">ValidateCommand</a>());
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ConvertCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ConvertCommand.html#ConvertCommand">ConvertCommand</a>());
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ResolveCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ResolveCommand.html#ResolveCommand">ResolveCommand</a>());
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      processor.addCommandHandler(<strong class="jxr_keyword">new</strong> <a name="ListAllowedValuesCommand" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/ListAllowedValuesCommand.html#ListAllowedValuesCommand">ListAllowedValuesCommand</a>());
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">return</strong> processor.process(args);
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">private</strong> <a name="CLI" href="../../../../../../../gov/nist/secauto/oscal/tools/cli/core/CLI.html#CLI">CLI</a>() {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <em class="jxr_comment">// disable construction</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2024. All rights reserved.</div>

@@ -13,32 +13,28 @@
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">package</strong> gov.nist.secauto.oscal.tools.cli.core.commands.metaschema;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> com.google.auto.service.AutoService;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.cli.processor.command.AbstractParentCommand;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.cli.processor.command.ICommand;
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  @AutoService(ICommand.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="MetaschemaCommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/metaschema/MetaschemaCommand.html#MetaschemaCommand">MetaschemaCommand</a>
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">extends</strong> AbstractParentCommand {
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String COMMAND = <span class="jxr_string">"metaschema"</span>;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>    <strong class="jxr_keyword">public</strong> <a name="MetaschemaCommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/metaschema/MetaschemaCommand.html#MetaschemaCommand">MetaschemaCommand</a>() {
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>      <strong class="jxr_keyword">super</strong>(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>      MetaschemaCommands.COMMANDS.forEach(<strong class="jxr_keyword">this</strong>::addCommandHandler);
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>    }
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>    @Override
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>    <strong class="jxr_keyword">public</strong> String getName() {
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      <strong class="jxr_keyword">return</strong> COMMAND;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>    }
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>    @Override
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>    <strong class="jxr_keyword">public</strong> String getDescription() {
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Perform an operation on a Module"</span>;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    }
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  }
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> gov.nist.secauto.metaschema.cli.processor.command.AbstractParentCommand;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="MetaschemaCommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/metaschema/MetaschemaCommand.html#MetaschemaCommand">MetaschemaCommand</a>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">extends</strong> AbstractParentCommand {
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String COMMAND = <span class="jxr_string">"metaschema"</span>;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>    <strong class="jxr_keyword">public</strong> <a name="MetaschemaCommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/metaschema/MetaschemaCommand.html#MetaschemaCommand">MetaschemaCommand</a>() {
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">super</strong>(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>      MetaschemaCommands.COMMANDS.forEach(<strong class="jxr_keyword">this</strong>::addCommandHandler);
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>    }
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>    @Override
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>    <strong class="jxr_keyword">public</strong> String getName() {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">return</strong> COMMAND;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>    }
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>    @Override
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>    <strong class="jxr_keyword">public</strong> String getDescription() {
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Perform an operation on a Module"</span>;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>    }
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2024. All rights reserved.</div>

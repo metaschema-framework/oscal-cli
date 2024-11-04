@@ -20,47 +20,49 @@
 <span class="source-line-no">007</span><span id="line-7"></span>
 <span class="source-line-no">008</span><span id="line-8">import gov.nist.secauto.metaschema.core.model.util.JsonUtil;</span>
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.core.model.util.XmlUtil;</span>
-<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
-<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.oscal.lib.OscalBindingContext;</span>
-<span class="source-line-no">013</span><span id="line-13"></span>
-<span class="source-line-no">014</span><span id="line-14">import org.json.JSONObject;</span>
+<span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;</span>
+<span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.oscal.lib.OscalBindingContext;</span>
 <span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">import java.io.IOException;</span>
-<span class="source-line-no">017</span><span id="line-17">import java.io.InputStream;</span>
-<span class="source-line-no">018</span><span id="line-18">import java.util.LinkedList;</span>
-<span class="source-line-no">019</span><span id="line-19">import java.util.List;</span>
-<span class="source-line-no">020</span><span id="line-20"></span>
-<span class="source-line-no">021</span><span id="line-21">import javax.xml.transform.Source;</span>
+<span class="source-line-no">016</span><span id="line-16">import org.xml.sax.SAXException;</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18">import java.io.IOException;</span>
+<span class="source-line-no">019</span><span id="line-19">import java.io.InputStream;</span>
+<span class="source-line-no">020</span><span id="line-20">import java.util.LinkedList;</span>
+<span class="source-line-no">021</span><span id="line-21">import java.util.List;</span>
 <span class="source-line-no">022</span><span id="line-22"></span>
-<span class="source-line-no">023</span><span id="line-23">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">023</span><span id="line-23">import javax.xml.transform.Source;</span>
 <span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">public class ValidateCommand</span>
-<span class="source-line-no">026</span><span id="line-26">    extends AbstractOscalValidationCommand {</span>
-<span class="source-line-no">027</span><span id="line-27">  @Override</span>
-<span class="source-line-no">028</span><span id="line-28">  public String getDescription() {</span>
-<span class="source-line-no">029</span><span id="line-29">    return "Check that the specified OSCAL instance is well-formed and valid to an OSCAL model.";</span>
-<span class="source-line-no">030</span><span id="line-30">  }</span>
-<span class="source-line-no">031</span><span id="line-31"></span>
-<span class="source-line-no">032</span><span id="line-32">  @Override</span>
-<span class="source-line-no">033</span><span id="line-33">  @NonNull</span>
-<span class="source-line-no">034</span><span id="line-34">  public List&lt;Source&gt; getOscalXmlSchemas() throws IOException {</span>
-<span class="source-line-no">035</span><span id="line-35">    List&lt;Source&gt; retval = new LinkedList&lt;&gt;();</span>
-<span class="source-line-no">036</span><span id="line-36">    retval.add(</span>
-<span class="source-line-no">037</span><span id="line-37">        XmlUtil.getStreamSource(ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">038</span><span id="line-38">            OscalBindingContext.class.getResource("/schema/xml/oscal-complete_schema.xsd"))));</span>
-<span class="source-line-no">039</span><span id="line-39">    return CollectionUtil.unmodifiableList(retval);</span>
-<span class="source-line-no">040</span><span id="line-40">  }</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">  @Override</span>
-<span class="source-line-no">043</span><span id="line-43">  @NonNull</span>
-<span class="source-line-no">044</span><span id="line-44">  public JSONObject getOscalJsonSchema() throws IOException {</span>
-<span class="source-line-no">045</span><span id="line-45">    try (InputStream is = ObjectUtils.requireNonNull(</span>
-<span class="source-line-no">046</span><span id="line-46">        OscalBindingContext.class.getResourceAsStream("/schema/json/oscal-complete_schema.json"))) {</span>
-<span class="source-line-no">047</span><span id="line-47">      return JsonUtil.toJsonObject(is);</span>
-<span class="source-line-no">048</span><span id="line-48">    }</span>
-<span class="source-line-no">049</span><span id="line-49">  }</span>
-<span class="source-line-no">050</span><span id="line-50">}</span>
+<span class="source-line-no">025</span><span id="line-25">import edu.umd.cs.findbugs.annotations.NonNull;</span>
+<span class="source-line-no">026</span><span id="line-26"></span>
+<span class="source-line-no">027</span><span id="line-27">public class ValidateCommand</span>
+<span class="source-line-no">028</span><span id="line-28">    extends AbstractOscalValidationCommand {</span>
+<span class="source-line-no">029</span><span id="line-29">  @Override</span>
+<span class="source-line-no">030</span><span id="line-30">  public String getDescription() {</span>
+<span class="source-line-no">031</span><span id="line-31">    return "Check that the specified OSCAL instance is well-formed and valid to an OSCAL model.";</span>
+<span class="source-line-no">032</span><span id="line-32">  }</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34">  @Override</span>
+<span class="source-line-no">035</span><span id="line-35">  @NonNull</span>
+<span class="source-line-no">036</span><span id="line-36">  public XmlSchemaContentValidator getOscalXmlSchemas() throws IOException, SAXException {</span>
+<span class="source-line-no">037</span><span id="line-37">    List&lt;Source&gt; retval = new LinkedList&lt;&gt;();</span>
+<span class="source-line-no">038</span><span id="line-38">    retval.add(</span>
+<span class="source-line-no">039</span><span id="line-39">        XmlUtil.getStreamSource(ObjectUtils.requireNonNull(</span>
+<span class="source-line-no">040</span><span id="line-40">            OscalBindingContext.class.getResource("/schema/xml/oscal-complete_schema.xsd"))));</span>
+<span class="source-line-no">041</span><span id="line-41">    return new XmlSchemaContentValidator(CollectionUtil.unmodifiableList(retval));</span>
+<span class="source-line-no">042</span><span id="line-42">  }</span>
+<span class="source-line-no">043</span><span id="line-43"></span>
+<span class="source-line-no">044</span><span id="line-44">  @Override</span>
+<span class="source-line-no">045</span><span id="line-45">  @NonNull</span>
+<span class="source-line-no">046</span><span id="line-46">  public JsonSchemaContentValidator getOscalJsonSchema() throws IOException {</span>
+<span class="source-line-no">047</span><span id="line-47">    try (InputStream is = ObjectUtils.requireNonNull(</span>
+<span class="source-line-no">048</span><span id="line-48">        OscalBindingContext.class.getResourceAsStream("/schema/json/oscal-complete_schema.json"))) {</span>
+<span class="source-line-no">049</span><span id="line-49">      return new JsonSchemaContentValidator(JsonUtil.toJsonObject(is));</span>
+<span class="source-line-no">050</span><span id="line-50">    }</span>
+<span class="source-line-no">051</span><span id="line-51">  }</span>
+<span class="source-line-no">052</span><span id="line-52">}</span>
 
 
 

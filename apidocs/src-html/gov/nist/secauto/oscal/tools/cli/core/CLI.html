@@ -22,8 +22,8 @@
 <span class="source-line-no">009</span><span id="line-9">import gov.nist.secauto.metaschema.cli.processor.ExitStatus;</span>
 <span class="source-line-no">010</span><span id="line-10">import gov.nist.secauto.metaschema.core.MetaschemaJavaVersion;</span>
 <span class="source-line-no">011</span><span id="line-11">import gov.nist.secauto.metaschema.core.model.MetaschemaVersion;</span>
-<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.util.IVersionInfo;</span>
-<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.ObjectUtils;</span>
+<span class="source-line-no">012</span><span id="line-12">import gov.nist.secauto.metaschema.core.util.CollectionUtil;</span>
+<span class="source-line-no">013</span><span id="line-13">import gov.nist.secauto.metaschema.core.util.IVersionInfo;</span>
 <span class="source-line-no">014</span><span id="line-14">import gov.nist.secauto.oscal.lib.LibOscalVersion;</span>
 <span class="source-line-no">015</span><span id="line-15">import gov.nist.secauto.oscal.lib.OscalVersion;</span>
 <span class="source-line-no">016</span><span id="line-16">import gov.nist.secauto.oscal.tools.cli.core.commands.ConvertCommand;</span>
@@ -56,36 +56,33 @@
 <span class="source-line-no">043</span><span id="line-43"></span>
 <span class="source-line-no">044</span><span id="line-44">  @NonNull</span>
 <span class="source-line-no">045</span><span id="line-45">  public static ExitStatus runCli(String... args) {</span>
-<span class="source-line-no">046</span><span id="line-46">    @SuppressWarnings("serial") Map&lt;String, IVersionInfo&gt; versions = ObjectUtils.notNull(</span>
-<span class="source-line-no">047</span><span id="line-47">        new LinkedHashMap&lt;&gt;() {</span>
-<span class="source-line-no">048</span><span id="line-48">          {</span>
-<span class="source-line-no">049</span><span id="line-49">            put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());</span>
-<span class="source-line-no">050</span><span id="line-50">            put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());</span>
-<span class="source-line-no">051</span><span id="line-51">            put("https://github.com/usnistgov/OSCAL", new OscalVersion());</span>
-<span class="source-line-no">052</span><span id="line-52">            put("https://github.com/usnistgov/metaschema-java", new MetaschemaJavaVersion());</span>
-<span class="source-line-no">053</span><span id="line-53">            put("https://github.com/usnistgov/metaschema", new MetaschemaVersion());</span>
-<span class="source-line-no">054</span><span id="line-54">          }</span>
-<span class="source-line-no">055</span><span id="line-55">        });</span>
-<span class="source-line-no">056</span><span id="line-56">    CLIProcessor processor = new CLIProcessor("oscal-cli", versions);</span>
-<span class="source-line-no">057</span><span id="line-57">    processor.addCommandHandler(new CatalogCommand());</span>
-<span class="source-line-no">058</span><span id="line-58">    processor.addCommandHandler(new ProfileCommand());</span>
-<span class="source-line-no">059</span><span id="line-59">    processor.addCommandHandler(new ComponentDefinitionCommand());</span>
-<span class="source-line-no">060</span><span id="line-60">    processor.addCommandHandler(new SystemSecurityPlanCommand());</span>
-<span class="source-line-no">061</span><span id="line-61">    processor.addCommandHandler(new AssessmentPlanCommand());</span>
-<span class="source-line-no">062</span><span id="line-62">    processor.addCommandHandler(new AssessmentResultsCommand());</span>
-<span class="source-line-no">063</span><span id="line-63">    processor.addCommandHandler(new PlanOfActionsAndMilestonesCommand());</span>
-<span class="source-line-no">064</span><span id="line-64">    processor.addCommandHandler(new MetaschemaCommand());</span>
-<span class="source-line-no">065</span><span id="line-65">    processor.addCommandHandler(new ValidateCommand());</span>
-<span class="source-line-no">066</span><span id="line-66">    processor.addCommandHandler(new ConvertCommand());</span>
-<span class="source-line-no">067</span><span id="line-67">    processor.addCommandHandler(new ResolveCommand());</span>
-<span class="source-line-no">068</span><span id="line-68">    processor.addCommandHandler(new ListAllowedValuesCommand());</span>
-<span class="source-line-no">069</span><span id="line-69">    return processor.process(args);</span>
-<span class="source-line-no">070</span><span id="line-70">  }</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">  private CLI() {</span>
-<span class="source-line-no">073</span><span id="line-73">    // disable construction</span>
-<span class="source-line-no">074</span><span id="line-74">  }</span>
-<span class="source-line-no">075</span><span id="line-75">}</span>
+<span class="source-line-no">046</span><span id="line-46">    @SuppressWarnings("PMD.UseConcurrentHashMap") Map&lt;String, IVersionInfo&gt; versions = new LinkedHashMap&lt;&gt;();</span>
+<span class="source-line-no">047</span><span id="line-47">    versions.put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());</span>
+<span class="source-line-no">048</span><span id="line-48">    versions.put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());</span>
+<span class="source-line-no">049</span><span id="line-49">    versions.put("https://github.com/usnistgov/OSCAL", new OscalVersion());</span>
+<span class="source-line-no">050</span><span id="line-50">    versions.put("https://github.com/usnistgov/metaschema-java", new MetaschemaJavaVersion());</span>
+<span class="source-line-no">051</span><span id="line-51">    versions.put("https://github.com/usnistgov/metaschema", new MetaschemaVersion());</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">    CLIProcessor processor = new CLIProcessor("oscal-cli", CollectionUtil.unmodifiableMap(versions));</span>
+<span class="source-line-no">054</span><span id="line-54">    processor.addCommandHandler(new CatalogCommand());</span>
+<span class="source-line-no">055</span><span id="line-55">    processor.addCommandHandler(new ProfileCommand());</span>
+<span class="source-line-no">056</span><span id="line-56">    processor.addCommandHandler(new ComponentDefinitionCommand());</span>
+<span class="source-line-no">057</span><span id="line-57">    processor.addCommandHandler(new SystemSecurityPlanCommand());</span>
+<span class="source-line-no">058</span><span id="line-58">    processor.addCommandHandler(new AssessmentPlanCommand());</span>
+<span class="source-line-no">059</span><span id="line-59">    processor.addCommandHandler(new AssessmentResultsCommand());</span>
+<span class="source-line-no">060</span><span id="line-60">    processor.addCommandHandler(new PlanOfActionsAndMilestonesCommand());</span>
+<span class="source-line-no">061</span><span id="line-61">    processor.addCommandHandler(new MetaschemaCommand());</span>
+<span class="source-line-no">062</span><span id="line-62">    processor.addCommandHandler(new ValidateCommand());</span>
+<span class="source-line-no">063</span><span id="line-63">    processor.addCommandHandler(new ConvertCommand());</span>
+<span class="source-line-no">064</span><span id="line-64">    processor.addCommandHandler(new ResolveCommand());</span>
+<span class="source-line-no">065</span><span id="line-65">    processor.addCommandHandler(new ListAllowedValuesCommand());</span>
+<span class="source-line-no">066</span><span id="line-66">    return processor.process(args);</span>
+<span class="source-line-no">067</span><span id="line-67">  }</span>
+<span class="source-line-no">068</span><span id="line-68"></span>
+<span class="source-line-no">069</span><span id="line-69">  private CLI() {</span>
+<span class="source-line-no">070</span><span id="line-70">    // disable construction</span>
+<span class="source-line-no">071</span><span id="line-71">  }</span>
+<span class="source-line-no">072</span><span id="line-72">}</span>
 
 
 
