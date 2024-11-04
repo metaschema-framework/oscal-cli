@@ -164,8 +164,7 @@ public abstract class AbstractResolveCommand
     ISerializer<Catalog> serializer = bindingContext.newSerializer(toFormat, Catalog.class);
     try {
       if (destination == null) {
-        @SuppressWarnings({ "resource", "PMD.CloseResource" })
-        PrintStream stdOut = ObjectUtils.notNull(System.out);
+        @SuppressWarnings({ "resource", "PMD.CloseResource" }) PrintStream stdOut = ObjectUtils.notNull(System.out);
         serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), stdOut);
       } else {
         serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), destination);
