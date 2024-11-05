@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>4</version>
+		<version>5-SNAPSHOT</version>
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
@@ -28,8 +28,25 @@
 	<distributionManagement>
 		<repository>
 			<id>central</id>
-			<url>https://central.sonatype.com</url>
+            <name>Maven Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+			<releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
 		</repository>
+		<snapshotRepository>
+			<id>repo-snapshot</id>
+			<url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</snapshotRepository>
 		<site>
 			<id>pages</id>
 			<url>${site.url}</url>
@@ -96,7 +113,59 @@
 
 		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
 	</properties>
-	<dependencyManagement>
+
+	<repositories>
+		<repository>
+			 <id>central</id>
+			 <name>Maven Central Repository</name>
+			 <url>https://repo.maven.apache.org/maven2</url>
+			 <releases>
+				 <enabled>true</enabled>
+			 </releases>
+			 <snapshots>
+				 <enabled>false</enabled>
+			 </snapshots>
+		 </repository>
+		 <repository>
+			 <id>repo-snapshot</id>
+			 <name>Local Snapshots</name>
+			 <url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
+			 <releases>
+				 <enabled>false</enabled>
+			 </releases>
+			 <snapshots>
+				 <enabled>true</enabled>
+				 <updatePolicy>always</updatePolicy>
+			 </snapshots>
+		 </repository>
+	 </repositories>
+	 <pluginRepositories>
+		<pluginRepository>
+			 <id>central</id>
+			 <name>Maven Central Repository</name>
+			 <url>https://repo.maven.apache.org/maven2</url>
+			 <releases>
+				 <enabled>true</enabled>
+			 </releases>
+			 <snapshots>
+				 <enabled>false</enabled>
+			 </snapshots>
+		 </pluginRepository>
+		 <pluginRepository>
+			 <id>repo-snapshot</id>
+			 <name>Local Snapshots</name>
+			 <url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
+			 <releases>
+				 <enabled>false</enabled>
+			 </releases>
+			 <snapshots>
+				 <enabled>true</enabled>
+				 <updatePolicy>always</updatePolicy>
+			 </snapshots>
+		 </pluginRepository>
+	 </pluginRepositories>
+
+	 <dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
@@ -479,4 +548,34 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<profiles>
+		<profile>
+			<id>deployment</id>
+			<build>
+				<plugins>
+					<plugin>
+			          <groupId>org.sonatype.central</groupId>
+			          <artifactId>central-publishing-maven-plugin</artifactId>
+			          <version>0.5.0</version>
+			          <extensions>true</extensions>
+			          <configuration>
+			             <publishingServerId>central</publishingServerId>
+			             <autoPublish>false</autoPublish>
+			          </configuration>
+			        </plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>snapshots</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-deploy-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

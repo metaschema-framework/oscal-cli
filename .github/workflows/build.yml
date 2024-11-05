@@ -36,14 +36,22 @@ jobs:
     runs-on: ubuntu-20.04
     permissions:
       actions: read
-      contents: read
+      contents: write
       security-events: write
-
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       with:
         submodules: recursive
         filter: tree:0
+    - name: Checkout maven2 branch
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      with:
+        path: maven2
+        ref: main
+        repository: metaschema-framework/maven2
+        token: ${{ secrets.ACCESS_TOKEN }}
+        fetch-depth: 2
+        persist-credentials: true
     # -------------------------
     # Java Environment Setup
     # -------------------------
@@ -58,7 +66,6 @@ jobs:
         distribution: ${{ env.JAVA_DISTRO }}
         cache: 'maven'
     - name: Initialize CodeQL
-      if: github.event_name == 'push'
       uses: github/codeql-action/init@662472033e021d55d94146f66f6058822b0b39fd
       with:
         languages: java
@@ -66,13 +73,22 @@ jobs:
     # Maven Build
     # -------------------------
     - name: Build and Test Code
+      run: | 
+        mvn -B -e -Prelease -Psnapshots -DaltDeploymentRepository=repo-snapshot::file://${GITHUB_WORKSPACE}/maven2/ -DaltSnapshotDeploymentRepository=repo-snapshot::file://${GITHUB_WORKSPACE}/maven2/ -DrepositoryId=repo-snapshot deploy
+    - name: Deploy Artifacts
+      if: (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'metaschema-framework'
       run: |
-        mvn -B -e -Prelease package
+        cd maven2
+        git pull -r --autostash
+        git add -A
+        git config user.name "$(git log -n 1 --pretty=format:%an)"
+        git config user.email "$(git log -n 1 --pretty=format:%ae)"
+        git commit -m "[CI SKIP] Deploying artifacts."
+        git push
     - name: Perform CodeQL Analysis
-      if: github.event_name == 'push'
       uses: github/codeql-action/analyze@662472033e021d55d94146f66f6058822b0b39fd
       with:
-        upload: ${{ github.ref_name == 'develop' && 'always' || 'never' }}
+        upload: ${{ ((github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'refs/heads/develop' || startsWith(github.base_ref, 'refs/heads/release/')))) && 'always' || 'never' }}
   build-website:
     name: Website
     runs-on: ubuntu-20.04
