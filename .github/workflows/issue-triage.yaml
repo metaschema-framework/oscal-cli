@@ -1,12 +1,10 @@
 name: Triage Board Management
-
 on:
   issues:
     types:
       - opened
       - reopened
       - transferred
-
 jobs:
   add-to-project:
     name: Add issue to project
