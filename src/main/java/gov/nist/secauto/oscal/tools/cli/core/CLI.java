@@ -43,7 +43,8 @@ public final class CLI {
 
   @NonNull
   public static ExitStatus runCli(String... args) {
-    @SuppressWarnings("PMD.UseConcurrentHashMap") Map<String, IVersionInfo> versions = new LinkedHashMap<>();
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
+    Map<String, IVersionInfo> versions = new LinkedHashMap<>();
     versions.put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());
     versions.put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());
     versions.put("https://github.com/usnistgov/OSCAL", new OscalVersion());
