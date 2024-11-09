@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
-	<version>2.3.1</version>
+	<version>2.3.2-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
@@ -23,7 +23,7 @@
 		<url>${scm.url}/tree/develop</url>
 		<connection>scm:git:git@github.com/metaschema-framework/oscal-cli.git</connection>
 		<developerConnection>scm:git:git@github.com:metaschema-framework/oscal-cli.git</developerConnection>
-		<tag>v2.3.1</tag>
+		<tag>v2.3.0</tag>
 	</scm>
 	<distributionManagement>
 		<repository>
