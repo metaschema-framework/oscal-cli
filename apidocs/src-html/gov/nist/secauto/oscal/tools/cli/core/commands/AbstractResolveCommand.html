@@ -177,16 +177,17 @@
 <span class="source-line-no">164</span><span id="line-164">    ISerializer&lt;Catalog&gt; serializer = bindingContext.newSerializer(toFormat, Catalog.class);</span>
 <span class="source-line-no">165</span><span id="line-165">    try {</span>
 <span class="source-line-no">166</span><span id="line-166">      if (destination == null) {</span>
-<span class="source-line-no">167</span><span id="line-167">        @SuppressWarnings({ "resource", "PMD.CloseResource" }) PrintStream stdOut = ObjectUtils.notNull(System.out);</span>
-<span class="source-line-no">168</span><span id="line-168">        serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), stdOut);</span>
-<span class="source-line-no">169</span><span id="line-169">      } else {</span>
-<span class="source-line-no">170</span><span id="line-170">        serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), destination);</span>
-<span class="source-line-no">171</span><span id="line-171">      }</span>
-<span class="source-line-no">172</span><span id="line-172">    } catch (IOException ex) {</span>
-<span class="source-line-no">173</span><span id="line-173">      throw new CommandExecutionException(ExitCode.IO_ERROR, ex);</span>
-<span class="source-line-no">174</span><span id="line-174">    }</span>
-<span class="source-line-no">175</span><span id="line-175">  }</span>
-<span class="source-line-no">176</span><span id="line-176">}</span>
+<span class="source-line-no">167</span><span id="line-167">        @SuppressWarnings({ "resource", "PMD.CloseResource" })</span>
+<span class="source-line-no">168</span><span id="line-168">        PrintStream stdOut = ObjectUtils.notNull(System.out);</span>
+<span class="source-line-no">169</span><span id="line-169">        serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), stdOut);</span>
+<span class="source-line-no">170</span><span id="line-170">      } else {</span>
+<span class="source-line-no">171</span><span id="line-171">        serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), destination);</span>
+<span class="source-line-no">172</span><span id="line-172">      }</span>
+<span class="source-line-no">173</span><span id="line-173">    } catch (IOException ex) {</span>
+<span class="source-line-no">174</span><span id="line-174">      throw new CommandExecutionException(ExitCode.IO_ERROR, ex);</span>
+<span class="source-line-no">175</span><span id="line-175">    }</span>
+<span class="source-line-no">176</span><span id="line-176">  }</span>
+<span class="source-line-no">177</span><span id="line-177">}</span>
 
 
 
