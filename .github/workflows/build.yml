@@ -85,12 +85,16 @@ jobs:
       run: |
         MVN_COORDS=$(echo '${project.groupId}:${project.artifactId}:${project.version}' | mvn -N -q -DforceStdout help:evaluate)
         cd maven2
-        git pull -r -s ours --autostash
-        git add -A
+        echo "Configuring git identity"
         git config user.name "GitHub Action"
         git config user.email "action@github.com"
+        echo "Comitting artifacts"
+        git add -A
         git commit -m "[CI SKIP] Deploying artifacts for $MVN_COORDS."
-        git push
+        echo "Syncing with latest"
+        git pull -r -s ours
+        echo "Pushing changes"
+        git push --force-with-lease
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@662472033e021d55d94146f66f6058822b0b39fd
       with:
