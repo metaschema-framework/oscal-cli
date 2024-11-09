@@ -14,7 +14,7 @@ The developers provide rationale below for [requirements](#What-are-our-requirem
 
 Continuous builds and testing are part of the continuous integration methodology of software development. Continuous integration involves developers frequently merging code changes into a central code repository, automatically building software from changed code, testing the code and/or the resulting software. This methodology creates a fast feedback loop to test changes and validate the desired behavior of the software from code changes. Continuous builds and testing increase developer productivity and reduce the risk of infrequently aggregating large changes in the code with a higher likelihood of releasing software with undesired behavior. Reducing the likelihood of degradations or failures as early as possible reduces the reputational risk of end users using poor quality software after the fact.
 
-This project uses [GitHub Actions](https://github.com/metaschema-framework/oscal-cli//actions) (GHA) as a Continuous Integration and Continuous Deployment (CI/CD) environment to build, [test](#unit-testing), and [release](https://github.com/metaschema-framework/oscal-cli//releases) code. The CI is used for all commits against the `develop` and `main` branches, and for all [Pull Requests](https://github.com/metaschema-framework/oscal-cli//pulls). CD is used for all [tagged releases](https://github.com/metaschema-framework/oscal-cli//tags). Specialized [GHA workflows](https://github.com/metaschema-framework/oscal-cli//tree/main/.github/workflows) are used to drive this automation.
+This project uses [GitHub Actions](https://github.com/metaschema-framework/oscal-cli/actions) (GHA) as a Continuous Integration and Continuous Deployment (CI/CD) environment to build, [test](#unit-testing), and [release](https://github.com/metaschema-framework/oscal-cli/releases) code. The CI is used for all commits against the `develop` and `main` branches, and for all [Pull Requests](https://github.com/metaschema-framework/oscal-cli/pulls). CD is used for all [tagged releases](https://github.com/metaschema-framework/oscal-cli/tags). Specialized [GHA workflows](https://github.com/metaschema-framework/oscal-cli/tree/main/.github/workflows) are used to drive this automation.
 
 References:
 
@@ -76,7 +76,7 @@ References:
 
 Modern software must often provide complex functionality combining a variety of media, protocols, and data exchange mechanisms. It is often too resource intensive to implement the prerequisite functionality for these capabilities in before completing the features of the software the the end user wants. Developers use third-party libraries and tools to efficiently develop software and not expend resources on common prerequisites. Supply chain analysis identifies these third-party tools and software libraries and subsequently flag potentially undesired behavior from code changes, discovered security vulnerabilities, and/or performance degradation. When developers perform this analysis, they significantly reduce the risk of supply chain attacks. Not doing any supply chain analysis significantly increases the risk and likelihood of being an unknowing target of this increasingly popular attack vector.
 
-Supply chain analysis is supported in this project by GitHub [Dependabot](https://docs.github.com/en/code-security/dependabot). Dependabot is [configured](https://github.com/metaschema-framework/oscal-cli//blob/main/.github/dependabot.yml) to automatically identify vulnerable and out-of-date Maven dependencies and GitHub actions plugins, and create pull requests to update to newer versions against the `develop` branch.
+Supply chain analysis is supported in this project by GitHub [Dependabot](https://docs.github.com/en/code-security/dependabot). Dependabot is [configured](https://github.com/metaschema-framework/oscal-cli/blob/main/.github/dependabot.yml) to automatically identify vulnerable and out-of-date Maven dependencies and GitHub actions plugins, and create pull requests to update to newer versions against the `develop` branch.
 
 References:
 
@@ -90,7 +90,6 @@ This aspect is supported in multiple ways.
 
 - Building instructions are included in the [README.md](../../README.md#building).
 - Code documenation is provided using Javadocs in the [project website](). This is accessable for each module under "Project Reports".
-- Some modules provide basic usage examples, e.g. [Metaschema XML](https://pages.nist.gov/oscal-cli//metaschema-model/).
 
 Improving documentation is a current work focus for the project.
 
@@ -98,7 +97,7 @@ Improving documentation is a current work focus for the project.
 
 It is good practice for one developer to add or modify code for software and have an independent developer review the change for correctness and quality. A code review by a developer with "a fresh set of eyes" will use that perspective to analyze the code for a variety of factors, provide feedback, and have the developer who authored the code potentially make changes. Code review reduces the risk of releasing software with undesirable behavior or incorrectly addressing the business case of a particular feature or business case overall. Like other methods above, it similarly increases the ease of knowledge transfer and limits the institutional risk of one singular developer being the sole staff member understanding the software.
 
-All changes to the project's source are made through [pull requests](https://github.com/metaschema-framework/oscal-cli//pulls), with required reviews. This ensures that all changes are reviewed by another set of eyes. The GitHub [CODEOWNERS](https://github.com/metaschema-framework/oscal-cli//blob/main/CODEOWNERS) configuration is used to direct reviews to the people responsible for the changed code.
+All changes to the project's source are made through [pull requests](https://github.com/metaschema-framework/oscal-cli/pulls), with required reviews. This ensures that all changes are reviewed by another set of eyes. The GitHub [CODEOWNERS](https://github.com/metaschema-framework/oscal-cli/blob/main/CODEOWNERS) configuration is used to direct reviews to the people responsible for the changed code.
 
 #### References
 
