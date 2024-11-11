@@ -7,10 +7,17 @@ package gov.nist.secauto.oscal.tools.cli.core.commands.poam;
 
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractParentCommand;
 
+/**
+ * A parent command implementation that organizes commands related to an OSCAL
+ * plan of actions and milestone.
+ */
 public class PlanOfActionsAndMilestonesCommand
     extends AbstractParentCommand {
   private static final String COMMAND = "poam";
 
+  /**
+   * Construct a new parent command.
+   */
   public PlanOfActionsAndMilestonesCommand() {
     super(true);
     addCommandHandler(new ValidateSubcommand());

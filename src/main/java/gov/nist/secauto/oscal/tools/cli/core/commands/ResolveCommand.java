@@ -7,6 +7,10 @@ package gov.nist.secauto.oscal.tools.cli.core.commands;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A CLI command that supports resolving an OSCAL profile into a resolved
+ * catalog.
+ */
 public class ResolveCommand
     extends AbstractResolveCommand {
 

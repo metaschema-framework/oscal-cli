@@ -28,24 +28,50 @@ import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Used by implementing classes to provide an OSCAL content validation command.
+ */
 public abstract class AbstractOscalValidationCommand
     extends AbstractValidateContentCommand {
 
+  /**
+   * Load the OSCAL XML schemas.
+   *
+   * @return the XML schema validator instance
+   * @throws IOException
+   *           if an error occurred while parsing the provided XML schemas
+   */
   @NonNull
-  protected abstract XmlSchemaContentValidator getOscalXmlSchemas() throws IOException, SAXException;
+  protected abstract XmlSchemaContentValidator getOscalXmlSchemas() throws IOException;
 
+  /**
+   * Load the OSCAL JSON schemas.
+   *
+   * @return the XML schema validator instance
+   * @throws IOException
+   *           if an error occurred while parsing the provided XML schemas
+   */
   @NonNull
   protected abstract JsonSchemaContentValidator getOscalJsonSchema() throws IOException;
 
   @Override
-  public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
-    return new AbstractOscalValidationCommand.OscalValidationCommandExecutor(callingContext, commandLine);
-  }
+  public abstract ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine);
 
+  /**
+   * Provides OSCAL validation command execution support.
+   */
   protected class OscalValidationCommandExecutor
       extends AbstractValidateContentCommand.AbstractValidationCommandExecutor
       implements ISchemaValidationProvider {
 
+    /**
+     * Construct a new command executor.
+     *
+     * @param callingContext
+     *          the context of the command execution
+     * @param commandLine
+     *          the parsed command line details
+     */
     protected OscalValidationCommandExecutor(
         @NonNull CallingContext callingContext,
         @NonNull CommandLine commandLine) {

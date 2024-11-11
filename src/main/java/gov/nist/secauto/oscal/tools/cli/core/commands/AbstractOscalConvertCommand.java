@@ -26,10 +26,21 @@ import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Used by implementing classes to provide an OSCAL content conversion command.
+ * <p>
+ * This executor provides user feedback about extending command being deprecated
+ * in favor of the {@link ConvertCommand}.
+ */
 public abstract class AbstractOscalConvertCommand
     extends AbstractConvertSubcommand {
   private static final Logger LOGGER = LogManager.getLogger(AbstractOscalConvertCommand.class);
 
+  /**
+   * Get the bound object class for the assembly associated with the command.
+   *
+   * @return the bound object class for the associated assembly
+   */
   @NonNull
   public abstract Class<? extends IBoundObject> getOscalClass();
 

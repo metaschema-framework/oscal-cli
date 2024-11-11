@@ -27,6 +27,9 @@ import java.net.URI;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides an OSCAL content conversion command.
+ */
 public class ConvertCommand
     extends AbstractConvertSubcommand {
   @Override
@@ -61,10 +64,10 @@ public class ConvertCommand
       IBoundObject object;
       try (InputStream is = source.toURL().openStream()) {
         assert is != null;
-        FormatDetector.Result formatResult = loader.detectFormat(is);
+        FormatDetector.Result formatResult = loader.detectFormat(is, source);
         Format sourceformat = formatResult.getFormat();
         try (InputStream fis = formatResult.getDataStream()) {
-          try (ModelDetector.Result modelResult = loader.detectModel(fis, sourceformat)) {
+          try (ModelDetector.Result modelResult = loader.detectModel(fis, source, sourceformat)) {
             boundClass = modelResult.getBoundClass();
             try (InputStream mis = modelResult.getDataStream()) {
               object = loader.load(boundClass, sourceformat, mis, source);
