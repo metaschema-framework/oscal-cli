@@ -61,6 +61,11 @@ import java.util.stream.Collectors;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
+/**
+ * A CLI command that provides a listing of allowed values constraints by
+ * targeted node.
+ */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class ListAllowedValuesCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(ListAllowedValuesCommand.class);

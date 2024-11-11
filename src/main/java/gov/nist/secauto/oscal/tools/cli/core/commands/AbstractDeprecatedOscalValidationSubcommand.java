@@ -15,6 +15,10 @@ import org.apache.logging.log4j.Logger;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * This abstract command implementation provides user feedback about extending
+ * command being deprecated in favor of the {@link ValidateCommand}.
+ */
 public abstract class AbstractDeprecatedOscalValidationSubcommand
     extends AbstractOscalValidationCommand {
   private static final Logger LOGGER = LogManager.getLogger(AbstractDeprecatedOscalValidationSubcommand.class);
@@ -24,7 +28,7 @@ public abstract class AbstractDeprecatedOscalValidationSubcommand
     return new CommandExecutor(callingContext, commandLine);
   }
 
-  protected final class CommandExecutor
+  private final class CommandExecutor
       extends AbstractOscalValidationCommand.OscalValidationCommandExecutor {
 
     private CommandExecutor(

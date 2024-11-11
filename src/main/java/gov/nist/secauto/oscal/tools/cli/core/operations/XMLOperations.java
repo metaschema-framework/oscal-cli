@@ -30,12 +30,36 @@ public final class XMLOperations {
     // disable construction
   }
 
+  /**
+   * Render the input catalog as HTML.
+   *
+   * @param input
+   *          the source to render
+   * @param result
+   *          the file to write the rendered HTML to
+   * @throws IOException
+   *           if an error occurred while loading the input
+   * @throws TransformerException
+   *           if an error occurred while creating the rendered content
+   */
   public static void renderCatalogHTML(File input, File result) throws IOException, TransformerException {
     render(input, result,
         XmlUtil.getStreamSource(ObjectUtils.requireNonNull(
             XMLOperations.class.getResource("/xsl/oscal-for-bootstrap-html.xsl"))));
   }
 
+  /**
+   * Render the input profile as HTML.
+   *
+   * @param input
+   *          the source to render
+   * @param result
+   *          the file to write the rendered HTML to
+   * @throws IOException
+   *           if an error occurred while loading the input
+   * @throws TransformerException
+   *           if an error occurred while creating the rendered content
+   */
   public static void renderProfileHTML(File input, File result) throws IOException, TransformerException {
     SaxonTransformerFactory transfomerFactory = (SaxonTransformerFactory) TransformerFactory.newInstance();
     // Templates resolver = transfomerFactory.newTemplates();
@@ -78,28 +102,10 @@ public final class XMLOperations {
     // t.transform(source, new SAXResult(resolverHandler));
   }
 
-  public static void render(File input, File result, Source transform) throws TransformerException {
+  private static void render(File input, File result, Source transform) throws TransformerException {
     TransformerFactory transfomerFactory = TransformerFactory.newInstance();
     assert transfomerFactory instanceof SaxonTransformerFactory;
     Transformer transformer = transfomerFactory.newTransformer(transform);
     transformer.transform(new StreamSource(input), new StreamResult(result));
   }
-
-  // private static class LoggingURIResolver implements URIResolver {
-  // private final URIResolver delegate;
-  //
-  //
-  // public LoggingURIResolver(URIResolver delegate) {
-  // super();
-  // this.delegate = delegate;
-  // }
-  //
-  //
-  // @Override
-  // public Source resolve(String href, String base) throws TransformerException {
-  // log.info("Resolve: base='{}', href='{}'", base, href);
-  // return delegate.resolve(href, base);
-  // }
-  //
-  // }
 }

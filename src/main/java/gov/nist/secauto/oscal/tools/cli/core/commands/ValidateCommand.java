@@ -5,6 +5,8 @@
 
 package gov.nist.secauto.oscal.tools.cli.core.commands;
 
+import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.util.JsonUtil;
 import gov.nist.secauto.metaschema.core.model.util.XmlUtil;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
@@ -13,7 +15,7 @@ import gov.nist.secauto.metaschema.core.util.CollectionUtil;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
 
-import org.xml.sax.SAXException;
+import org.apache.commons.cli.CommandLine;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +26,9 @@ import javax.xml.transform.Source;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A CLI command that supports validating that an OSCAL instance is valid.
+ */
 public class ValidateCommand
     extends AbstractOscalValidationCommand {
   @Override
@@ -32,8 +37,13 @@ public class ValidateCommand
   }
 
   @Override
+  public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine commandLine) {
+    return new AbstractOscalValidationCommand.OscalValidationCommandExecutor(callingContext, commandLine);
+  }
+
+  @Override
   @NonNull
-  public XmlSchemaContentValidator getOscalXmlSchemas() throws IOException, SAXException {
+  public XmlSchemaContentValidator getOscalXmlSchemas() throws IOException {
     List<Source> retval = new LinkedList<>();
     retval.add(
         XmlUtil.getStreamSource(ObjectUtils.requireNonNull(

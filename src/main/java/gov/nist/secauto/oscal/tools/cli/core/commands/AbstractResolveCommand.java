@@ -40,6 +40,9 @@ import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * A command implementation supporting the resolution of an OSCAL profile.
+ */
 public abstract class AbstractResolveCommand
     extends AbstractTerminalCommand {
   @NonNull
@@ -78,9 +81,20 @@ public abstract class AbstractResolveCommand
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
+  /**
+   * Process the command line arguments and execute the profile resolution
+   * operation.
+   *
+   * @param callingContext
+   *          the context information for the execution
+   * @param cmdLine
+   *          the parsed command line details
+   * @throws CommandExecutionException
+   *           if an error occurred while determining the source format
+   */
   @SuppressWarnings({
       "PMD.OnlyOneReturn", // readability
-      "unused"
+      "PMD.CyclomaticComplexity"
   })
   protected void executeCommand(
       @NonNull CallingContext callingContext,
@@ -102,17 +116,12 @@ public abstract class AbstractResolveCommand
         loader,
         source);
 
-    Path destination = null;
-    if (extraArgs.size() > 1) {
-      destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(1)), cmdLine);
-    }
-
     IDocumentNodeItem document;
     try {
       document = loader.loadAsNodeItem(asFormat, source);
     } catch (IOException ex) {
       throw new CommandExecutionException(
-          ExitCode.INVALID_ARGUMENTS,
+          ExitCode.IO_ERROR,
           String.format("Unable to load content '%s'. %s",
               source,
               ex.getMessage()),
@@ -129,7 +138,7 @@ public abstract class AbstractResolveCommand
     if (object instanceof Catalog) {
       // this is a catalog
       throw new CommandExecutionException(
-          ExitCode.INVALID_ARGUMENTS,
+          ExitCode.OK,
           String.format("The source '%s' is already a catalog.", source));
     }
 
@@ -138,6 +147,11 @@ public abstract class AbstractResolveCommand
       throw new CommandExecutionException(
           ExitCode.INVALID_ARGUMENTS,
           String.format("The source '%s' is not a profile.", source));
+    }
+
+    Path destination = null;
+    if (extraArgs.size() > 1) {
+      destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(1)), cmdLine);
     }
 
     // this is a profile

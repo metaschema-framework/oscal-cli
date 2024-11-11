@@ -8,7 +8,6 @@ package gov.nist.secauto.oscal.tools.cli.core.commands;
 import gov.nist.secauto.metaschema.cli.commands.MetaschemaCommands;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
-import gov.nist.secauto.metaschema.cli.processor.InvalidArgumentException;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
@@ -21,7 +20,6 @@ import org.apache.commons.cli.Option;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
@@ -33,6 +31,10 @@ import javax.xml.transform.TransformerException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+/**
+ * An abstract command implementation supporting the rendering of an OSCAL
+ * content instance.
+ */
 public abstract class AbstractRenderCommand
     extends AbstractTerminalCommand {
   private static final Logger LOGGER = LogManager.getLogger(AbstractRenderCommand.class);
@@ -69,29 +71,22 @@ public abstract class AbstractRenderCommand
   }
 
   @Override
-  public void validateOptions(CallingContext callingContext, CommandLine cmdLine) throws InvalidArgumentException {
-    List<String> extraArgs = cmdLine.getArgList();
-    if (extraArgs.size() != 2) {
-      throw new InvalidArgumentException("Both a source and destination argument must be provided.");
-    }
-
-    File source = new File(extraArgs.get(0));
-    if (!source.exists()) {
-      throw new InvalidArgumentException("The provided source '" + source.getPath() + "' does not exist.");
-    }
-    if (!source.canRead()) {
-      throw new InvalidArgumentException("The provided source '" + source.getPath() + "' is not readable.");
-    }
-  }
-
-  @Override
   public ICommandExecutor newExecutor(CallingContext callingContext, CommandLine cmdLine) {
     return ICommandExecutor.using(callingContext, cmdLine, this::executeCommand);
   }
 
+  /**
+   * Process the command line arguments and execute the rendering operation.
+   *
+   * @param callingContext
+   *          the context information for the execution
+   * @param cmdLine
+   *          the parsed command line details
+   * @throws CommandExecutionException
+   *           if an error occurred while determining the source format
+   */
   @SuppressWarnings({
-      "PMD.OnlyOneReturn", // readability
-      "unused"
+      "PMD.OnlyOneReturn" // readability
   })
   protected void executeCommand(
       @NonNull CallingContext callingContext,
@@ -119,6 +114,18 @@ public abstract class AbstractRenderCommand
     }
   }
 
+  /**
+   * Perform the rendering operation.
+   *
+   * @param input
+   *          the OSCAL content resource to render
+   * @param result
+   *          the destination file to create rendered content in
+   * @throws IOException
+   *           if an error occurred while loading the input
+   * @throws TransformerException
+   *           if an error occurred while creating the rendered content
+   */
   protected abstract void performRender(@NonNull URI input, Path result)
       throws IOException, TransformerException;
 }

@@ -31,8 +31,17 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
+/**
+ * Provides the main entry point for executing the command line interface.
+ */
 @SuppressWarnings("PMD.ShortClassName")
 public final class CLI {
+  /**
+   * Executes the CLI and handled the exit code.
+   *
+   * @param args
+   *          the CLI arguments
+   */
   public static void main(String[] args) {
     System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
 
@@ -41,6 +50,13 @@ public final class CLI {
     System.exit(exitCode);
   }
 
+  /**
+   * Executes the CLI.
+   *
+   * @param args
+   *          the CLI arguments
+   * @return the result of executing the CLI
+   */
   @NonNull
   public static ExitStatus runCli(String... args) {
     @SuppressWarnings("PMD.UseConcurrentHashMap")

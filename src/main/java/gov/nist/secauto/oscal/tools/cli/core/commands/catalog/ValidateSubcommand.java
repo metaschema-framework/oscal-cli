@@ -14,8 +14,6 @@ import gov.nist.secauto.metaschema.core.util.ObjectUtils;
 import gov.nist.secauto.oscal.lib.OscalBindingContext;
 import gov.nist.secauto.oscal.tools.cli.core.commands.AbstractDeprecatedOscalValidationSubcommand;
 
-import org.xml.sax.SAXException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -31,7 +29,7 @@ class ValidateSubcommand
   }
 
   @Override
-  protected XmlSchemaContentValidator getOscalXmlSchemas() throws IOException, SAXException {
+  protected XmlSchemaContentValidator getOscalXmlSchemas() throws IOException {
     List<Source> retval = new LinkedList<>();
     retval.add(
         XmlUtil.getStreamSource(ObjectUtils.requireNonNull(
