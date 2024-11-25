@@ -19,7 +19,6 @@ public class ProfileCommand
    * Construct a new parent command.
    */
   public ProfileCommand() {
-    super(true);
     addCommandHandler(new ValidateSubcommand());
     // addCommandHandler(new RenderSubcommand());
     addCommandHandler(new ConvertSubcommand());

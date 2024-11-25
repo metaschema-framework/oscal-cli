@@ -10,7 +10,6 @@ import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.command.AbstractTerminalCommand;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
-import gov.nist.secauto.metaschema.cli.processor.command.DefaultExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ExtraArgument;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
@@ -47,8 +46,8 @@ public abstract class AbstractResolveCommand
     extends AbstractTerminalCommand {
   @NonNull
   private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
-      new DefaultExtraArgument("URI to resolve", true),
-      new DefaultExtraArgument("destination file", false)));
+      ExtraArgument.newInstance("URI to resolve", true),
+      ExtraArgument.newInstance("destination file", false)));
   @NonNull
   private static final List<Option> OPTIONS = ObjectUtils.notNull(
       List.of(

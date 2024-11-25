@@ -19,7 +19,6 @@ public class PlanOfActionsAndMilestonesCommand
    * Construct a new parent command.
    */
   public PlanOfActionsAndMilestonesCommand() {
-    super(true);
     addCommandHandler(new ValidateSubcommand());
     // addCommandHandler(new RenderSubcommand());
     addCommandHandler(new ConvertSubcommand());

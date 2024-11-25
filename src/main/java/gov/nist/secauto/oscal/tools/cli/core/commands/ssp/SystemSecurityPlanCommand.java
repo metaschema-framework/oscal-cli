@@ -19,7 +19,6 @@ public class SystemSecurityPlanCommand
    * Construct a new parent command.
    */
   public SystemSecurityPlanCommand() {
-    super(true);
     addCommandHandler(new ValidateSubcommand());
     // addCommandHandler(new RenderSubcommand());
     addCommandHandler(new ConvertSubcommand());

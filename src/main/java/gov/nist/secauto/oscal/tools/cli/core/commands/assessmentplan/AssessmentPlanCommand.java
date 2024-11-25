@@ -19,7 +19,6 @@ public class AssessmentPlanCommand
    * Construct a new parent command.
    */
   public AssessmentPlanCommand() {
-    super(true);
     addCommandHandler(new ValidateSubcommand());
     // addCommandHandler(new RenderSubcommand());
     addCommandHandler(new ConvertSubcommand());

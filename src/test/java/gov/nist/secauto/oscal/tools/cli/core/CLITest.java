@@ -228,6 +228,8 @@ class CLITest {
       }
     }
 
+    values.add(Arguments.of(new String[] { "metaschema", "metapath", "list-functions" }, ExitCode.OK, null));
+
     return values.stream();
   }
 

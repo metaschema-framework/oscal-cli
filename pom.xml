@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>5</version>
+		<version>6-SNAPSHOT</version>
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
@@ -105,7 +105,6 @@
 		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
 		<dependency.pmd.version>7.4.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
-		<dependency.saxon-he.version>12.5</dependency.saxon-he.version>
 		<dependency.xmlbeans.version>5.2.2</dependency.xmlbeans.version>
 		<dependency.xmlresolver.version>6.0.11</dependency.xmlresolver.version>
 
@@ -224,11 +223,6 @@
 			<version>${dependency.commons-io.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>Saxon-HE</artifactId>
-			<version>${dependency.saxon-he.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.xmlresolver</groupId>
 			<artifactId>xmlresolver</artifactId>
 			<version>${dependency.xmlresolver.version}</version>
@@ -329,6 +323,7 @@
 						<excludedEnvironmentVariables>
 							<excludedEnvironmentVariable>JAVA_TOOL_OPTIONS</excludedEnvironmentVariable>
 						</excludedEnvironmentVariables>
+						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -465,7 +460,21 @@
 				</dependencies>
 				<executions>
 					<execution>
-						<id>make-assembly-bin</id> <!-- this is used for
+						<id>make-assembly-dir</id> <!-- this is used for
+						inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<attach>false</attach>
+							<descriptors>
+								<descriptor>src/main/assembly/dir.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+					<execution>
+						<id>make-assembly-archives</id> <!-- this is used for
 						inheritance merges -->
 						<phase>package</phase> <!-- bind to the packaging phase -->
 						<goals>
@@ -473,7 +482,7 @@
 						</goals>
 						<configuration>
 							<descriptors>
-								<descriptor>src/main/assembly/bin.xml</descriptor>
+								<descriptor>src/main/assembly/assembly.xml</descriptor>
 							</descriptors>
 						</configuration>
 					</execution>

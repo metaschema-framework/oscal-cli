@@ -20,7 +20,6 @@ public class MetaschemaCommand
    * Construct a new parent command.
    */
   public MetaschemaCommand() {
-    super(true);
     MetaschemaCommands.COMMANDS.forEach(this::addCommandHandler);
   }
 
