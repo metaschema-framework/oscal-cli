@@ -102,7 +102,7 @@
 		<dependency.jline.version>3.21.0</dependency.jline.version>
 		<dependency.json.version>20240303</dependency.json.version>
 		<dependency.junit5.version>5.11.3</dependency.junit5.version>
-		<dependency.log4j2.version>2.24.1</dependency.log4j2.version>
+		<dependency.log4j2.version>2.24.2</dependency.log4j2.version>
 		<dependency.pmd.version>7.4.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
 		<dependency.xmlbeans.version>5.2.2</dependency.xmlbeans.version>
