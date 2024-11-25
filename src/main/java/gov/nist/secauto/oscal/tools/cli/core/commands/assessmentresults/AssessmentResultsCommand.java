@@ -19,7 +19,6 @@ public class AssessmentResultsCommand
    * Construct a new parent command.
    */
   public AssessmentResultsCommand() {
-    super(true);
     addCommandHandler(new ValidateSubcommand());
     // addCommandHandler(new RenderSubcommand());
     addCommandHandler(new ConvertSubcommand());

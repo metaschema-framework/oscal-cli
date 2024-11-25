@@ -19,7 +19,6 @@ public class CatalogCommand
    * Construct a new parent command.
    */
   public CatalogCommand() {
-    super(true);
     addCommandHandler(new ValidateSubcommand());
     // addCommandHandler(new RenderSubcommand());
     addCommandHandler(new ConvertSubcommand());
