@@ -22,41 +22,39 @@
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.oscal.lib.OscalBindingContext;
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.oscal.tools.cli.core.commands.AbstractDeprecatedOscalValidationSubcommand;
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>  
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.xml.sax.SAXException;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.util.LinkedList;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> java.io.InputStream;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.util.LinkedList;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.Source;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> javax.xml.transform.Source;
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">class</strong> <a name="ValidateSubcommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/assessmentplan/ValidateSubcommand.html#ValidateSubcommand">ValidateSubcommand</a>
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">extends</strong> <a name="AbstractDeprecatedOscalValidationSubcommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/AbstractDeprecatedOscalValidationSubcommand.html#AbstractDeprecatedOscalValidationSubcommand">AbstractDeprecatedOscalValidationSubcommand</a> {
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>    @Override
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>    <strong class="jxr_keyword">public</strong> String getDescription() {
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Check that the specified OSCAL instance is well-formed and valid to the System Assessment Plan model."</span>;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>    }
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>    @Override
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">protected</strong> XmlSchemaContentValidator getOscalXmlSchemas() <strong class="jxr_keyword">throws</strong> IOException, SAXException {
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>      List&lt;Source&gt; retval = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;();
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      retval.add(
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>          XmlUtil.getStreamSource(ObjectUtils.requireNonNull(
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>              OscalBindingContext.<strong class="jxr_keyword">class</strong>.getResource(<span class="jxr_string">"/schema/xml/oscal-ap_schema.xsd"</span>))));
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> XmlSchemaContentValidator(CollectionUtil.unmodifiableList(retval));
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>    }
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    @Override
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">protected</strong> JsonSchemaContentValidator getOscalJsonSchema() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">try</strong> (InputStream is = ObjectUtils.requireNonNull(
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>          OscalBindingContext.<strong class="jxr_keyword">class</strong>.getResourceAsStream(<span class="jxr_string">"/schema/json/oscal-ap_schema.json"</span>))) {
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JsonSchemaContentValidator(JsonUtil.toJsonObject(is));
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      }
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  }
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">class</strong> <a name="ValidateSubcommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/assessmentplan/ValidateSubcommand.html#ValidateSubcommand">ValidateSubcommand</a>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">extends</strong> <a name="AbstractDeprecatedOscalValidationSubcommand" href="../../../../../../../../../gov/nist/secauto/oscal/tools/cli/core/commands/AbstractDeprecatedOscalValidationSubcommand.html#AbstractDeprecatedOscalValidationSubcommand">AbstractDeprecatedOscalValidationSubcommand</a> {
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>    @Override
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">public</strong> String getDescription() {
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">return</strong> <span class="jxr_string">"Check that the specified OSCAL instance is well-formed and valid to the System Assessment Plan model."</span>;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>    }
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>    @Override
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">protected</strong> XmlSchemaContentValidator getOscalXmlSchemas() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      List&lt;Source&gt; retval = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;();
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      retval.add(
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          XmlUtil.getStreamSource(ObjectUtils.requireNonNull(
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>              OscalBindingContext.<strong class="jxr_keyword">class</strong>.getResource(<span class="jxr_string">"/schema/xml/oscal-ap_schema.xsd"</span>))));
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> XmlSchemaContentValidator(CollectionUtil.unmodifiableList(retval));
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    }
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    @Override
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">protected</strong> JsonSchemaContentValidator getOscalJsonSchema() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">try</strong> (InputStream is = ObjectUtils.requireNonNull(
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          OscalBindingContext.<strong class="jxr_keyword">class</strong>.getResourceAsStream(<span class="jxr_string">"/schema/json/oscal-ap_schema.json"</span>))) {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> JsonSchemaContentValidator(JsonUtil.toJsonObject(is));
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

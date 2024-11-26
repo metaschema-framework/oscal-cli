@@ -236,81 +236,83 @@
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>       }
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>     }
 <a class="jxr_linenumber" name="L230" href="#L230">230</a> 
-<a class="jxr_linenumber" name="L231" href="#L231">231</a>     <strong class="jxr_keyword">return</strong> values.stream();
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>   }
-<a class="jxr_linenumber" name="L233" href="#L233">233</a> 
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>   @ParameterizedTest
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>   @MethodSource(<span class="jxr_string">"providesValues"</span>)
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>   <strong class="jxr_keyword">void</strong> testAllSubCommands(@NonNull String[] commandArgs, @NonNull ExitCode expectedExitCode,
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Throwable&gt; expectedThrownClass) {
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>     List&lt;String&gt; execArgs = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;(Arrays.asList(commandArgs));
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>     execArgs.add(<span class="jxr_string">"--show-stack-trace"</span>);
-<a class="jxr_linenumber" name="L240" href="#L240">240</a> 
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>     String[] args = execArgs.toArray(<strong class="jxr_keyword">new</strong> String[0]);
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>     values.add(Arguments.of(<strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"metaschema"</span>, <span class="jxr_string">"metapath"</span>, <span class="jxr_string">"list-functions"</span> }, ExitCode.OK, <strong class="jxr_keyword">null</strong>));
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     <strong class="jxr_keyword">return</strong> values.stream();
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>   }
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> 
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>   @ParameterizedTest
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>   @MethodSource(<span class="jxr_string">"providesValues"</span>)
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>   <strong class="jxr_keyword">void</strong> testAllSubCommands(@NonNull String[] commandArgs, @NonNull ExitCode expectedExitCode,
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>       Class&lt;? <strong class="jxr_keyword">extends</strong> Throwable&gt; expectedThrownClass) {
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>     List&lt;String&gt; execArgs = <strong class="jxr_keyword">new</strong> LinkedList&lt;&gt;(Arrays.asList(commandArgs));
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     execArgs.add(<span class="jxr_string">"--show-stack-trace"</span>);
 <a class="jxr_linenumber" name="L242" href="#L242">242</a> 
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>     <strong class="jxr_keyword">if</strong> (expectedThrownClass == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>       evaluateResult(CLI.runCli(args), expectedExitCode);
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L246" href="#L246">246</a>       evaluateResult(CLI.runCli(args), expectedExitCode, expectedThrownClass);
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>     }
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>   }
-<a class="jxr_linenumber" name="L249" href="#L249">249</a> 
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>   @Test
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>   <strong class="jxr_keyword">void</strong> testSystemSecurityPlanQuietlyFailing() {
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>     String[] args = {
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <span class="jxr_string">"convert"</span>,
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>         <span class="jxr_string">"--to=yaml"</span>,
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>         <span class="jxr_string">"src/test/resources/cli/quietly_failing_ssp.xml"</span>,
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>         <span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>,
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>         <span class="jxr_string">"--show-stack-trace"</span>,
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>         <span class="jxr_string">"--overwrite"</span>
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>     };
-<a class="jxr_linenumber" name="L260" href="#L260">260</a> 
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     ExitStatus status = CLI.runCli(args);
-<a class="jxr_linenumber" name="L262" href="#L262">262</a>     Throwable thrown = status.getThrowable();
-<a class="jxr_linenumber" name="L263" href="#L263">263</a>     assertAll(
-<a class="jxr_linenumber" name="L264" href="#L264">264</a>         () -&gt; assertEquals(ExitCode.OK, status.getExitCode()),
-<a class="jxr_linenumber" name="L265" href="#L265">265</a>         () -&gt; assertEquals(NO_THROWABLE_RESULT, thrown),
-<a class="jxr_linenumber" name="L266" href="#L266">266</a>         () -&gt; assertNotEquals(Files.size(Paths.get(<span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>)), 0));
-<a class="jxr_linenumber" name="L267" href="#L267">267</a>   }
-<a class="jxr_linenumber" name="L268" href="#L268">268</a> 
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>   @Test
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>   <strong class="jxr_keyword">void</strong> testSystemSecurityPlanQuietlyFailing2() {
-<a class="jxr_linenumber" name="L271" href="#L271">271</a>     String[] args = {
-<a class="jxr_linenumber" name="L272" href="#L272">272</a>         <span class="jxr_string">"validate"</span>,
-<a class="jxr_linenumber" name="L273" href="#L273">273</a>         <span class="jxr_string">"src/test/resources/AwesomeCloudSSP1extrainvalid.xml"</span>,
-<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <span class="jxr_string">"--show-stack-trace"</span>
-<a class="jxr_linenumber" name="L275" href="#L275">275</a>     };
-<a class="jxr_linenumber" name="L276" href="#L276">276</a> 
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>     ExitStatus status = CLI.runCli(args);
-<a class="jxr_linenumber" name="L278" href="#L278">278</a>     Throwable thrown = status.getThrowable();
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>     assertAll(
-<a class="jxr_linenumber" name="L280" href="#L280">280</a>         () -&gt; assertEquals(ExitCode.IO_ERROR, status.getExitCode()),
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>         () -&gt; assertEquals(IOException.<strong class="jxr_keyword">class</strong>, thrown == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : thrown.getClass()),
-<a class="jxr_linenumber" name="L282" href="#L282">282</a>         () -&gt; assertNotEquals(Files.size(Paths.get(<span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>)), 0));
-<a class="jxr_linenumber" name="L283" href="#L283">283</a>   }
-<a class="jxr_linenumber" name="L284" href="#L284">284</a> 
-<a class="jxr_linenumber" name="L285" href="#L285">285</a>   @Test
-<a class="jxr_linenumber" name="L286" href="#L286">286</a>   <strong class="jxr_keyword">void</strong> testSystemSecurityPlanQuietlyFailing3() {
-<a class="jxr_linenumber" name="L287" href="#L287">287</a>     String[] args = {
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>         <span class="jxr_string">"convert"</span>,
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>         <span class="jxr_string">"--to=json"</span>,
-<a class="jxr_linenumber" name="L290" href="#L290">290</a>         <span class="jxr_string">"src/test/resources/AwesomeCloudSSP1extrainvalid.xml"</span>,
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>         <span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted2.json"</span>,
-<a class="jxr_linenumber" name="L292" href="#L292">292</a>         <span class="jxr_string">"--show-stack-trace"</span>,
-<a class="jxr_linenumber" name="L293" href="#L293">293</a>         <span class="jxr_string">"--overwrite"</span>
-<a class="jxr_linenumber" name="L294" href="#L294">294</a>     };
-<a class="jxr_linenumber" name="L295" href="#L295">295</a> 
-<a class="jxr_linenumber" name="L296" href="#L296">296</a>     ExitStatus status = CLI.runCli(args);
-<a class="jxr_linenumber" name="L297" href="#L297">297</a>     Throwable thrown = status.getThrowable();
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     assertAll(
-<a class="jxr_linenumber" name="L299" href="#L299">299</a>         () -&gt; assertEquals(ExitCode.IO_ERROR, status.getExitCode()),
-<a class="jxr_linenumber" name="L300" href="#L300">300</a>         () -&gt; assertEquals(IOException.<strong class="jxr_keyword">class</strong>, thrown == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : thrown.getClass()),
-<a class="jxr_linenumber" name="L301" href="#L301">301</a>         () -&gt; assertNotEquals(Files.size(Paths.get(<span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>)), 0));
-<a class="jxr_linenumber" name="L302" href="#L302">302</a>   }
-<a class="jxr_linenumber" name="L303" href="#L303">303</a> }
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     String[] args = execArgs.toArray(<strong class="jxr_keyword">new</strong> String[0]);
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     <strong class="jxr_keyword">if</strong> (expectedThrownClass == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>       evaluateResult(CLI.runCli(args), expectedExitCode);
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>       evaluateResult(CLI.runCli(args), expectedExitCode, expectedThrownClass);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     }
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>   }
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>   @Test
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>   <strong class="jxr_keyword">void</strong> testSystemSecurityPlanQuietlyFailing() {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     String[] args = {
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>         <span class="jxr_string">"convert"</span>,
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>         <span class="jxr_string">"--to=yaml"</span>,
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>         <span class="jxr_string">"src/test/resources/cli/quietly_failing_ssp.xml"</span>,
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>         <span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>,
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         <span class="jxr_string">"--show-stack-trace"</span>,
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>         <span class="jxr_string">"--overwrite"</span>
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>     };
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> 
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>     ExitStatus status = CLI.runCli(args);
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>     Throwable thrown = status.getThrowable();
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>     assertAll(
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>         () -&gt; assertEquals(ExitCode.OK, status.getExitCode()),
+<a class="jxr_linenumber" name="L267" href="#L267">267</a>         () -&gt; assertEquals(NO_THROWABLE_RESULT, thrown),
+<a class="jxr_linenumber" name="L268" href="#L268">268</a>         () -&gt; assertNotEquals(Files.size(Paths.get(<span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>)), 0));
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>   }
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> 
+<a class="jxr_linenumber" name="L271" href="#L271">271</a>   @Test
+<a class="jxr_linenumber" name="L272" href="#L272">272</a>   <strong class="jxr_keyword">void</strong> testSystemSecurityPlanQuietlyFailing2() {
+<a class="jxr_linenumber" name="L273" href="#L273">273</a>     String[] args = {
+<a class="jxr_linenumber" name="L274" href="#L274">274</a>         <span class="jxr_string">"validate"</span>,
+<a class="jxr_linenumber" name="L275" href="#L275">275</a>         <span class="jxr_string">"src/test/resources/AwesomeCloudSSP1extrainvalid.xml"</span>,
+<a class="jxr_linenumber" name="L276" href="#L276">276</a>         <span class="jxr_string">"--show-stack-trace"</span>
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     };
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> 
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     ExitStatus status = CLI.runCli(args);
+<a class="jxr_linenumber" name="L280" href="#L280">280</a>     Throwable thrown = status.getThrowable();
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>     assertAll(
+<a class="jxr_linenumber" name="L282" href="#L282">282</a>         () -&gt; assertEquals(ExitCode.IO_ERROR, status.getExitCode()),
+<a class="jxr_linenumber" name="L283" href="#L283">283</a>         () -&gt; assertEquals(IOException.<strong class="jxr_keyword">class</strong>, thrown == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : thrown.getClass()),
+<a class="jxr_linenumber" name="L284" href="#L284">284</a>         () -&gt; assertNotEquals(Files.size(Paths.get(<span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>)), 0));
+<a class="jxr_linenumber" name="L285" href="#L285">285</a>   }
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 
+<a class="jxr_linenumber" name="L287" href="#L287">287</a>   @Test
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>   <strong class="jxr_keyword">void</strong> testSystemSecurityPlanQuietlyFailing3() {
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>     String[] args = {
+<a class="jxr_linenumber" name="L290" href="#L290">290</a>         <span class="jxr_string">"convert"</span>,
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>         <span class="jxr_string">"--to=json"</span>,
+<a class="jxr_linenumber" name="L292" href="#L292">292</a>         <span class="jxr_string">"src/test/resources/AwesomeCloudSSP1extrainvalid.xml"</span>,
+<a class="jxr_linenumber" name="L293" href="#L293">293</a>         <span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted2.json"</span>,
+<a class="jxr_linenumber" name="L294" href="#L294">294</a>         <span class="jxr_string">"--show-stack-trace"</span>,
+<a class="jxr_linenumber" name="L295" href="#L295">295</a>         <span class="jxr_string">"--overwrite"</span>
+<a class="jxr_linenumber" name="L296" href="#L296">296</a>     };
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> 
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     ExitStatus status = CLI.runCli(args);
+<a class="jxr_linenumber" name="L299" href="#L299">299</a>     Throwable thrown = status.getThrowable();
+<a class="jxr_linenumber" name="L300" href="#L300">300</a>     assertAll(
+<a class="jxr_linenumber" name="L301" href="#L301">301</a>         () -&gt; assertEquals(ExitCode.IO_ERROR, status.getExitCode()),
+<a class="jxr_linenumber" name="L302" href="#L302">302</a>         () -&gt; assertEquals(IOException.<strong class="jxr_keyword">class</strong>, thrown == <strong class="jxr_keyword">null</strong> ? <strong class="jxr_keyword">null</strong> : thrown.getClass()),
+<a class="jxr_linenumber" name="L303" href="#L303">303</a>         () -&gt; assertNotEquals(Files.size(Paths.get(<span class="jxr_string">"target/oscal-cli-convert/quietly_failing_ssp_converted.json"</span>)), 0));
+<a class="jxr_linenumber" name="L304" href="#L304">304</a>   }
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2024. All rights reserved.</div>
+<div id="footer">© 2024</div>
 </body>
 </html>

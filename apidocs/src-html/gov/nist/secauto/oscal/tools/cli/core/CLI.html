@@ -44,46 +44,62 @@
 <span class="source-line-no">031</span><span id="line-31"></span>
 <span class="source-line-no">032</span><span id="line-32">import edu.umd.cs.findbugs.annotations.NonNull;</span>
 <span class="source-line-no">033</span><span id="line-33"></span>
-<span class="source-line-no">034</span><span id="line-34">@SuppressWarnings("PMD.ShortClassName")</span>
-<span class="source-line-no">035</span><span id="line-35">public final class CLI {</span>
-<span class="source-line-no">036</span><span id="line-36">  public static void main(String[] args) {</span>
-<span class="source-line-no">037</span><span id="line-37">    System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">    ExitStatus status = runCli(args);</span>
-<span class="source-line-no">040</span><span id="line-40">    int exitCode = status.getExitCode().getStatusCode();</span>
-<span class="source-line-no">041</span><span id="line-41">    System.exit(exitCode);</span>
-<span class="source-line-no">042</span><span id="line-42">  }</span>
-<span class="source-line-no">043</span><span id="line-43"></span>
-<span class="source-line-no">044</span><span id="line-44">  @NonNull</span>
-<span class="source-line-no">045</span><span id="line-45">  public static ExitStatus runCli(String... args) {</span>
-<span class="source-line-no">046</span><span id="line-46">    @SuppressWarnings("PMD.UseConcurrentHashMap")</span>
-<span class="source-line-no">047</span><span id="line-47">    Map&lt;String, IVersionInfo&gt; versions = new LinkedHashMap&lt;&gt;();</span>
-<span class="source-line-no">048</span><span id="line-48">    versions.put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());</span>
-<span class="source-line-no">049</span><span id="line-49">    versions.put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());</span>
-<span class="source-line-no">050</span><span id="line-50">    versions.put("https://github.com/usnistgov/OSCAL", new OscalVersion());</span>
-<span class="source-line-no">051</span><span id="line-51">    versions.put("https://github.com/usnistgov/metaschema-java", new MetaschemaJavaVersion());</span>
-<span class="source-line-no">052</span><span id="line-52">    versions.put("https://github.com/usnistgov/metaschema", new MetaschemaVersion());</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">    CLIProcessor processor = new CLIProcessor("oscal-cli", CollectionUtil.unmodifiableMap(versions));</span>
-<span class="source-line-no">055</span><span id="line-55">    processor.addCommandHandler(new CatalogCommand());</span>
-<span class="source-line-no">056</span><span id="line-56">    processor.addCommandHandler(new ProfileCommand());</span>
-<span class="source-line-no">057</span><span id="line-57">    processor.addCommandHandler(new ComponentDefinitionCommand());</span>
-<span class="source-line-no">058</span><span id="line-58">    processor.addCommandHandler(new SystemSecurityPlanCommand());</span>
-<span class="source-line-no">059</span><span id="line-59">    processor.addCommandHandler(new AssessmentPlanCommand());</span>
-<span class="source-line-no">060</span><span id="line-60">    processor.addCommandHandler(new AssessmentResultsCommand());</span>
-<span class="source-line-no">061</span><span id="line-61">    processor.addCommandHandler(new PlanOfActionsAndMilestonesCommand());</span>
-<span class="source-line-no">062</span><span id="line-62">    processor.addCommandHandler(new MetaschemaCommand());</span>
-<span class="source-line-no">063</span><span id="line-63">    processor.addCommandHandler(new ValidateCommand());</span>
-<span class="source-line-no">064</span><span id="line-64">    processor.addCommandHandler(new ConvertCommand());</span>
-<span class="source-line-no">065</span><span id="line-65">    processor.addCommandHandler(new ResolveCommand());</span>
-<span class="source-line-no">066</span><span id="line-66">    processor.addCommandHandler(new ListAllowedValuesCommand());</span>
-<span class="source-line-no">067</span><span id="line-67">    return processor.process(args);</span>
-<span class="source-line-no">068</span><span id="line-68">  }</span>
+<span class="source-line-no">034</span><span id="line-34">/**</span>
+<span class="source-line-no">035</span><span id="line-35"> * Provides the main entry point for executing the command line interface.</span>
+<span class="source-line-no">036</span><span id="line-36"> */</span>
+<span class="source-line-no">037</span><span id="line-37">@SuppressWarnings("PMD.ShortClassName")</span>
+<span class="source-line-no">038</span><span id="line-38">public final class CLI {</span>
+<span class="source-line-no">039</span><span id="line-39">  /**</span>
+<span class="source-line-no">040</span><span id="line-40">   * Executes the CLI and handled the exit code.</span>
+<span class="source-line-no">041</span><span id="line-41">   *</span>
+<span class="source-line-no">042</span><span id="line-42">   * @param args</span>
+<span class="source-line-no">043</span><span id="line-43">   *          the CLI arguments</span>
+<span class="source-line-no">044</span><span id="line-44">   */</span>
+<span class="source-line-no">045</span><span id="line-45">  public static void main(String[] args) {</span>
+<span class="source-line-no">046</span><span id="line-46">    System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");</span>
+<span class="source-line-no">047</span><span id="line-47"></span>
+<span class="source-line-no">048</span><span id="line-48">    ExitStatus status = runCli(args);</span>
+<span class="source-line-no">049</span><span id="line-49">    int exitCode = status.getExitCode().getStatusCode();</span>
+<span class="source-line-no">050</span><span id="line-50">    System.exit(exitCode);</span>
+<span class="source-line-no">051</span><span id="line-51">  }</span>
+<span class="source-line-no">052</span><span id="line-52"></span>
+<span class="source-line-no">053</span><span id="line-53">  /**</span>
+<span class="source-line-no">054</span><span id="line-54">   * Executes the CLI.</span>
+<span class="source-line-no">055</span><span id="line-55">   *</span>
+<span class="source-line-no">056</span><span id="line-56">   * @param args</span>
+<span class="source-line-no">057</span><span id="line-57">   *          the CLI arguments</span>
+<span class="source-line-no">058</span><span id="line-58">   * @return the result of executing the CLI</span>
+<span class="source-line-no">059</span><span id="line-59">   */</span>
+<span class="source-line-no">060</span><span id="line-60">  @NonNull</span>
+<span class="source-line-no">061</span><span id="line-61">  public static ExitStatus runCli(String... args) {</span>
+<span class="source-line-no">062</span><span id="line-62">    @SuppressWarnings("PMD.UseConcurrentHashMap")</span>
+<span class="source-line-no">063</span><span id="line-63">    Map&lt;String, IVersionInfo&gt; versions = new LinkedHashMap&lt;&gt;();</span>
+<span class="source-line-no">064</span><span id="line-64">    versions.put(CLIProcessor.COMMAND_VERSION, new OscalCliVersion());</span>
+<span class="source-line-no">065</span><span id="line-65">    versions.put("https://github.com/usnistgov/liboscal-java", new LibOscalVersion());</span>
+<span class="source-line-no">066</span><span id="line-66">    versions.put("https://github.com/usnistgov/OSCAL", new OscalVersion());</span>
+<span class="source-line-no">067</span><span id="line-67">    versions.put("https://github.com/usnistgov/metaschema-java", new MetaschemaJavaVersion());</span>
+<span class="source-line-no">068</span><span id="line-68">    versions.put("https://github.com/usnistgov/metaschema", new MetaschemaVersion());</span>
 <span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">  private CLI() {</span>
-<span class="source-line-no">071</span><span id="line-71">    // disable construction</span>
-<span class="source-line-no">072</span><span id="line-72">  }</span>
-<span class="source-line-no">073</span><span id="line-73">}</span>
+<span class="source-line-no">070</span><span id="line-70">    CLIProcessor processor = new CLIProcessor("oscal-cli", CollectionUtil.unmodifiableMap(versions));</span>
+<span class="source-line-no">071</span><span id="line-71">    processor.addCommandHandler(new CatalogCommand());</span>
+<span class="source-line-no">072</span><span id="line-72">    processor.addCommandHandler(new ProfileCommand());</span>
+<span class="source-line-no">073</span><span id="line-73">    processor.addCommandHandler(new ComponentDefinitionCommand());</span>
+<span class="source-line-no">074</span><span id="line-74">    processor.addCommandHandler(new SystemSecurityPlanCommand());</span>
+<span class="source-line-no">075</span><span id="line-75">    processor.addCommandHandler(new AssessmentPlanCommand());</span>
+<span class="source-line-no">076</span><span id="line-76">    processor.addCommandHandler(new AssessmentResultsCommand());</span>
+<span class="source-line-no">077</span><span id="line-77">    processor.addCommandHandler(new PlanOfActionsAndMilestonesCommand());</span>
+<span class="source-line-no">078</span><span id="line-78">    processor.addCommandHandler(new MetaschemaCommand());</span>
+<span class="source-line-no">079</span><span id="line-79">    processor.addCommandHandler(new ValidateCommand());</span>
+<span class="source-line-no">080</span><span id="line-80">    processor.addCommandHandler(new ConvertCommand());</span>
+<span class="source-line-no">081</span><span id="line-81">    processor.addCommandHandler(new ResolveCommand());</span>
+<span class="source-line-no">082</span><span id="line-82">    processor.addCommandHandler(new ListAllowedValuesCommand());</span>
+<span class="source-line-no">083</span><span id="line-83">    return processor.process(args);</span>
+<span class="source-line-no">084</span><span id="line-84">  }</span>
+<span class="source-line-no">085</span><span id="line-85"></span>
+<span class="source-line-no">086</span><span id="line-86">  private CLI() {</span>
+<span class="source-line-no">087</span><span id="line-87">    // disable construction</span>
+<span class="source-line-no">088</span><span id="line-88">  }</span>
+<span class="source-line-no">089</span><span id="line-89">}</span>
 
 
 
