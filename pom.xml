@@ -73,8 +73,8 @@
 	
 	<properties>
 		<!-- metaschema dependencies -->
-		<dependency.metaschema-framework.version>2.1.0</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>5.1.0</dependency.liboscal-java.version>
+		<dependency.metaschema-framework.version>2.2.0-SNAPSHOT</dependency.metaschema-framework.version>
+		<dependency.liboscal-java.version>5.2.0-SNAPSHOT</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
 		<site.url>https://oscal-cli.metaschema.dev</site.url>
