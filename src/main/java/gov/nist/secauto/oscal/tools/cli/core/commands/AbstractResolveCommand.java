@@ -16,6 +16,7 @@ import gov.nist.secauto.metaschema.core.metapath.DynamicContext;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IDocumentNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItem;
 import gov.nist.secauto.metaschema.core.util.ObjectUtils;
+import gov.nist.secauto.metaschema.core.util.UriUtils;
 import gov.nist.secauto.metaschema.databind.IBindingContext;
 import gov.nist.secauto.metaschema.databind.io.DeserializationFeature;
 import gov.nist.secauto.metaschema.databind.io.Format;
@@ -33,6 +34,7 @@ import org.apache.commons.cli.Option;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -48,12 +50,19 @@ public abstract class AbstractResolveCommand
   private static final List<ExtraArgument> EXTRA_ARGUMENTS = ObjectUtils.notNull(List.of(
       ExtraArgument.newInstance("URI to resolve", true),
       ExtraArgument.newInstance("destination file", false)));
+  private static final Option RELATIVE_TO = Option.builder()
+      .longOpt("relative-to")
+      .desc("Generate URI references relative to this resource")
+      .hasArg()
+      .build();
+
   @NonNull
   private static final List<Option> OPTIONS = ObjectUtils.notNull(
       List.of(
           MetaschemaCommands.AS_FORMAT_OPTION,
           MetaschemaCommands.TO_OPTION,
-          MetaschemaCommands.OVERWRITE_OPTION));
+          MetaschemaCommands.OVERWRITE_OPTION,
+          RELATIVE_TO));
 
   @Override
   public String getDescription() {
@@ -153,10 +162,25 @@ public abstract class AbstractResolveCommand
       destination = MetaschemaCommands.handleDestination(ObjectUtils.requireNonNull(extraArgs.get(1)), cmdLine);
     }
 
+    URI relativeTo;
+    if (cmdLine.hasOption(RELATIVE_TO)) {
+      relativeTo = getCurrentWorkingDirectory().toUri().resolve(cmdLine.getOptionValue(RELATIVE_TO));
+    } else {
+      relativeTo = document.getDocumentUri();
+    }
+
     // this is a profile
     DynamicContext dynamicContext = new DynamicContext(document.getStaticContext());
     dynamicContext.setDocumentLoader(loader);
-    ProfileResolver resolver = new ProfileResolver(dynamicContext);
+    ProfileResolver resolver = new ProfileResolver(
+        dynamicContext,
+        (uri, src) -> {
+          try {
+            return UriUtils.relativize(relativeTo, src.resolve(uri), true);
+          } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException(ex);
+          }
+        });
 
     IDocumentNodeItem resolvedProfile;
     try {

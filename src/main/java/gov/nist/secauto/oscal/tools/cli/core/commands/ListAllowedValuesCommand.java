@@ -89,7 +89,7 @@ public class ListAllowedValuesCommand
 
   @Override
   public String getDescription() {
-    return "Generate a diagram for the provided Metaschema module";
+    return "List allowed values constraints for the provided Metaschema module";
   }
 
   @SuppressWarnings("null")
