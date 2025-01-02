@@ -61,8 +61,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
 /**
- * A CLI command that provides a listing of allowed values constraints by
- * targeted node.
+ * A CLI command that provides a listing of allowed values constraints by targeted node.
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class ListAllowedValuesCommand
@@ -306,7 +305,7 @@ public class ListAllowedValuesCommand
       generator.writeStringField("identifier", constraint.getId());
     }
     generator.writeStringField("location", metapath(record.getLocation()));
-    generator.writeStringField("target", constraint.getTarget());
+    generator.writeStringField("target", constraint.getTarget().getPath());
 
     List<String> values = constraint.getAllowedValues().values().stream()
         .map(IAllowedValue::getValue)
