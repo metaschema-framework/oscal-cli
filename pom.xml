@@ -100,7 +100,7 @@
 		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
 		<dependency.jansi.version>2.4.1</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
-		<dependency.json.version>20241224</dependency.json.version>
+		<dependency.json.version>20250107</dependency.json.version>
 		<dependency.junit5.version>5.11.4</dependency.junit5.version>
 		<dependency.log4j2.version>2.24.3</dependency.log4j2.version>
 		<dependency.pmd.version>7.4.0</dependency.pmd.version>
