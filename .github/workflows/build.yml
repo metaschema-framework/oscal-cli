@@ -71,7 +71,7 @@ jobs:
         distribution: ${{ env.JAVA_DISTRO }}
         cache: 'maven'
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169
+      uses: github/codeql-action/init@6e5455904168f98c75d8e5ad848b4dc4ab3ae77e
       with:
         languages: java
     # -------------------------
@@ -96,7 +96,7 @@ jobs:
         echo "Pushing changes"
         git push --force-with-lease
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169
+      uses: github/codeql-action/analyze@6e5455904168f98c75d8e5ad848b4dc4ab3ae77e
       with:
         upload: ${{ env.UPLOAD_CODEQL }}
   build-website:
