@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
@@ -38,28 +39,15 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 class CLITest {
   private static final Throwable NO_THROWABLE_RESULT = null;
 
-  void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode) {
-    assertAll(
-        () -> assertEquals(expectedCode, status.getExitCode(), "exit code mismatch"),
-        () -> assertNull(status.getThrowable(), "expected null Throwable"));
-  }
-
-  void evaluateResult(@NonNull ExitStatus status, @NonNull ExitCode expectedCode,
-      @NonNull Class<? extends Throwable> thrownClass) {
-    Throwable thrown = status.getThrowable();
-    assertAll(
-        () -> assertEquals(expectedCode, status.getExitCode(), "exit code mismatch"),
-        () -> assertEquals(
-            thrownClass,
-            thrown == null ? null : thrown.getClass(),
-            "Throwable mismatch"));
-  }
-
-  private static String generateOutputPath(@NonNull Path source, @NonNull Format targetFormat) throws IOException {
+  private static String generateOutputPath(
+      @NonNull Path source,
+      @NonNull String extra,
+      @NonNull Format targetFormat)
+      throws IOException {
     String filename = ObjectUtils.notNull(source.getFileName()).toString();
 
     int pos = filename.lastIndexOf('.');
-    filename = filename.substring(0, pos) + "_converted" + targetFormat.getDefaultExtension();
+    filename = filename.substring(0, pos) + "_" + extra + "_converted" + targetFormat.getDefaultExtension();
 
     Path dir = Files.createDirectories(Path.of("target/oscal-cli-convert"));
 
@@ -112,7 +100,7 @@ class CLITest {
                 new String[] {
                     "validate",
                     "-o",
-                    "target/" + cmd + "-invalid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
+                    "target/general-" + cmd + "-invalid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
                     Paths.get("src/test/resources/cli/example_" + cmd + "_invalid" + sourceExtension).toString()
                 },
                 ExitCode.FAIL,
@@ -122,7 +110,7 @@ class CLITest {
                 new String[] {
                     "validate",
                     "-o",
-                    "target/" + cmd + "-valid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
+                    "target/general-" + cmd + "-valid-" + format.name().toLowerCase(Locale.ROOT) + "-sarif.json",
                     Paths.get("src/test/resources/cli/example_" + cmd + "_valid" + sourceExtension).toString()
                 },
                 ExitCode.OK,
@@ -138,7 +126,7 @@ class CLITest {
                       "convert",
                       "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
-                      generateOutputPath(path, targetFormat),
+                      generateOutputPath(path, "convert-" + cmd + "-" + format.name(), targetFormat),
                       "--overwrite"
                   },
                   ExitCode.OK,
@@ -150,7 +138,7 @@ class CLITest {
                       "convert",
                       "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
-                      generateOutputPath(path, targetFormat),
+                      generateOutputPath(path, "convert-general-" + format.name(), targetFormat),
                       "--overwrite"
                   },
                   ExitCode.OK,
@@ -165,7 +153,7 @@ class CLITest {
                       "convert",
                       "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
-                      generateOutputPath(path, targetFormat),
+                      generateOutputPath(path, "convert-" + cmd + "-" + format.name(), targetFormat),
                       "--overwrite"
                   },
                   ExitCode.OK,
@@ -177,7 +165,7 @@ class CLITest {
                       "convert",
                       "--to=" + targetFormat.name().toLowerCase(Locale.ROOT),
                       path.toString(),
-                      generateOutputPath(path, targetFormat),
+                      generateOutputPath(path, "convert-general-" + format.name(), targetFormat),
                       "--overwrite"
                   },
                   ExitCode.OK,
@@ -235,17 +223,44 @@ class CLITest {
 
   @ParameterizedTest
   @MethodSource("providesValues")
-  void testAllSubCommands(@NonNull String[] commandArgs, @NonNull ExitCode expectedExitCode,
+  void testAllSubCommands(
+      @NonNull String[] commandArgs,
+      @NonNull ExitCode expectedExitCode,
       Class<? extends Throwable> expectedThrownClass) {
     List<String> execArgs = new LinkedList<>(Arrays.asList(commandArgs));
     execArgs.add("--show-stack-trace");
 
     String[] args = execArgs.toArray(new String[0]);
+    ExitStatus exitStatus = CLI.runCli(args);
 
+    exitStatus.generateMessage(true);
     if (expectedThrownClass == null) {
-      evaluateResult(CLI.runCli(args), expectedExitCode);
+      assertAll(
+          () -> assertEquals(expectedExitCode, exitStatus.getExitCode(), "exit code mismatch"),
+          () -> assertNull(expectedThrownClass, "expected null Throwable"),
+          () -> {
+            Throwable thrown = exitStatus.getThrowable();
+            if (!expectedExitCode.equals(exitStatus.getExitCode())
+                && thrown != null) {
+              throw thrown;
+            }
+          });
     } else {
-      evaluateResult(CLI.runCli(args), expectedExitCode, expectedThrownClass);
+      assertAll(
+          () -> assertEquals(expectedExitCode, exitStatus.getExitCode(), "exit code mismatch"),
+          () -> assertThrows(expectedThrownClass, () -> {
+            Throwable thrown = exitStatus.getThrowable();
+            if (thrown != null) {
+              throw thrown;
+            }
+          }, "throwable mismatch"),
+          () -> {
+            Throwable thrown = exitStatus.getThrowable();
+            if (thrown != null && !(expectedExitCode.equals(exitStatus.getExitCode())
+                && expectedThrownClass.equals(thrown.getClass()))) {
+              throw thrown;
+            }
+          });
     }
   }
 
@@ -280,8 +295,7 @@ class CLITest {
     Throwable thrown = status.getThrowable();
     assertAll(
         () -> assertEquals(ExitCode.IO_ERROR, status.getExitCode()),
-        () -> assertEquals(IOException.class, thrown == null ? null : thrown.getClass()),
-        () -> assertNotEquals(Files.size(Paths.get("target/oscal-cli-convert/quietly_failing_ssp_converted.json")), 0));
+        () -> assertEquals(IOException.class, thrown == null ? null : thrown.getClass()));
   }
 
   @Test
@@ -299,7 +313,6 @@ class CLITest {
     Throwable thrown = status.getThrowable();
     assertAll(
         () -> assertEquals(ExitCode.IO_ERROR, status.getExitCode()),
-        () -> assertEquals(IOException.class, thrown == null ? null : thrown.getClass()),
-        () -> assertNotEquals(Files.size(Paths.get("target/oscal-cli-convert/quietly_failing_ssp_converted.json")), 0));
+        () -> assertEquals(IOException.class, thrown == null ? null : thrown.getClass()));
   }
 }

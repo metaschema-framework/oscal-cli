@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>6</version>
+		<version>7</version>
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
@@ -95,20 +95,18 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<!-- other dependencies -->
-		<dependency.commons-cli.version>1.7.0</dependency.commons-cli.version>
+		<dependency.commons-cli.version>1.9.0</dependency.commons-cli.version>
 		<dependency.commons-io.version>2.18.0</dependency.commons-io.version>
-		<dependency.everit-json.version>1.14.4</dependency.everit-json.version>
+		<dependency.everit-json.version>1.14.5</dependency.everit-json.version>
 		<dependency.jansi.version>2.4.1</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
-		<dependency.json.version>20241224</dependency.json.version>
-		<dependency.junit5.version>5.11.4</dependency.junit5.version>
+		<dependency.json.version>20250107</dependency.json.version>
+		<dependency.junit5.version>5.12.0</dependency.junit5.version>
 		<dependency.log4j2.version>2.24.3</dependency.log4j2.version>
-		<dependency.pmd.version>7.4.0</dependency.pmd.version>
-		<dependency.spotbugs-annotations.version>4.8.6</dependency.spotbugs-annotations.version>
+		<dependency.pmd.version>7.10.0</dependency.pmd.version>
+		<dependency.spotbugs-annotations.version>4.9.1</dependency.spotbugs-annotations.version>
 		<dependency.xmlbeans.version>5.3.0</dependency.xmlbeans.version>
-		<dependency.xmlresolver.version>6.0.11</dependency.xmlresolver.version>
-
-		<plugin.maven-toolchains.version>3.2.0</plugin.maven-toolchains.version>
+		<dependency.xmlresolver.version>6.0.12</dependency.xmlresolver.version>
 	</properties>
 
 	<repositories>
@@ -286,7 +284,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-toolchains-plugin</artifactId>
-					<version>${plugin.maven-toolchains.version}</version>
 					<executions>
 						<execution>
 							<goals>
@@ -316,14 +313,39 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
+					<dependencies>
+						<dependency>
+							<groupId>me.fabriciorby</groupId>
+							<artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+							<version>1.4.0</version>
+						</dependency>
+					</dependencies>
 					<configuration>
-						<forkCount>1.5C</forkCount>
-						<reuseForks>true</reuseForks>
-						<argLine>-Xmx1024m</argLine>
 						<excludedEnvironmentVariables>
 							<excludedEnvironmentVariable>JAVA_TOOL_OPTIONS</excludedEnvironmentVariable>
 						</excludedEnvironmentVariables>
+						<useModulePath>false</useModulePath>
+						<redirectTestOutputToFile>true</redirectTestOutputToFile>
+						<!-- Use of TCP to transmit events to the plugin -->
 						<forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
+						<!-- Junit5 parallel configuration -->
+						<parallel>all</parallel>
+						<useUnlimitedThreads>true</useUnlimitedThreads>
+						<properties>
+							<configurationParameters>
+								junit.jupiter.execution.parallel.enabled = true
+								junit.jupiter.execution.parallel.mode.default = concurrent
+								junit.jupiter.execution.timeout.default=60 s
+							</configurationParameters>
+						</properties>
+						<!-- tree reporter configuration -->
+						<reportFormat>plain</reportFormat>
+						<consoleOutputReporter>
+							<disable>true</disable>
+						</consoleOutputReporter>
+						<statelessTestsetInfoReporter
+								implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">
+						</statelessTestsetInfoReporter>
 					</configuration>
 				</plugin>
 				<plugin>
