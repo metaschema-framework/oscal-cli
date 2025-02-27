@@ -107,6 +107,8 @@
 		<dependency.spotbugs-annotations.version>4.9.1</dependency.spotbugs-annotations.version>
 		<dependency.xmlbeans.version>5.3.0</dependency.xmlbeans.version>
 		<dependency.xmlresolver.version>6.0.12</dependency.xmlresolver.version>
+		
+		<plugin.central-publishing.version>0.7.0</plugin.central-publishing.version>
 	</properties>
 
 	<repositories>
@@ -213,7 +215,7 @@
 			<!-- For console log color -->
 			<groupId>org.fusesource.jansi</groupId>
 			<artifactId>jansi</artifactId>
-			<version>2.4.1</version>
+			<version>${dependency.jansi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -487,6 +489,9 @@
 						<version>0.7.0</version>
 					</dependency>
 				</dependencies>
+				<configuration>
+					<tarLongFileMode>posix</tarLongFileMode>
+				</configuration>
 				<executions>
 					<execution>
 						<id>make-assembly-dir</id> <!-- this is used for
@@ -586,7 +591,7 @@
 					<plugin>
 			          <groupId>org.sonatype.central</groupId>
 			          <artifactId>central-publishing-maven-plugin</artifactId>
-			          <version>0.6.0</version>
+			          <version>${plugin.central-publishing.versi}</version>
 			          <extensions>true</extensions>
 			          <configuration>
 			             <publishingServerId>central</publishingServerId>
