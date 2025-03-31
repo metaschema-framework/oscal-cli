@@ -32,7 +32,7 @@ This project is in the worldwide [public domain](LICENSE.md) and as stated in [C
 mkdir -p /opt/oscal-cli
 ```
 
-2. Download the zipped oscal-cli Java package to the install directory. Download your preferred version, but we recommend [the latest stable release on the Maven Central repository](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli/). You can use [the Maven tool](https://maven.apache.org/) instead of in place of additional command line tools (i.e. `curl`; `wget`; etc.) or browser to craft URLs for a specific version.
+2. Download the zipped oscal-cli Java package to the install directory. Download your preferred version, but we recommend [the latest stable release on the Maven Central repository](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli-enhanced/). You can use [the Maven tool](https://maven.apache.org/) instead of in place of additional command line tools (i.e. `curl`; `wget`; etc.) or browser to craft URLs for a specific version.
 
 ```sh
 mvn \
