@@ -101,7 +101,7 @@
 		<dependency.jansi.version>2.4.1</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
 		<dependency.json.version>20250107</dependency.json.version>
-		<dependency.junit5.version>5.12.0</dependency.junit5.version>
+		<dependency.junit5.version>5.12.1</dependency.junit5.version>
 		<dependency.log4j2.version>2.24.3</dependency.log4j2.version>
 		<dependency.pmd.version>7.10.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.9.1</dependency.spotbugs-annotations.version>
