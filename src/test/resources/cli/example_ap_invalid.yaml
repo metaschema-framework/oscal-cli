@@ -23,6 +23,6 @@ assessment-plan:
     resources:
     - uuid: 1db9626b-1ef9-47f9-944f-a71ce8494322
       rlinks:
-      - href: example_ssp_invalid.xml
-      - href: example_ssp_invalid.json
-      - href: example_ssp_invalid.yaml
+      - href: example_ssp_valid.xml
+      - href: example_ssp_valid.json
+      - href: example_ssp_valid.yaml
