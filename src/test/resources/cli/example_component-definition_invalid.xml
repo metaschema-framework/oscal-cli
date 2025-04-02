@@ -16,12 +16,5 @@
             <party-uuid>4ba3f2b7-e894-48d7-b940-91c68661df55</party-uuid>
         </responsible-party>
     </metadata>
-    <component />
-    <back-matter>
-        <resource uuid="8d99e4fb-02a8-4dc6-9beb-d15f74a423ba">
-            <rlink href="example_ap_invalid.xml"/>
-            <rlink href="example_ap_invalid.json"/>
-            <rlink href="example_ap_invalid.yaml"/>
-        </resource>
-    </back-matter>
+    <component/>
 </component-definition>

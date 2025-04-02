@@ -19,9 +19,9 @@
     <import-ssp href="#20b9606d-08bd-42d2-b684-3c8e57ab5c44"/>
     <back-matter>
         <resource uuid="20b9606d-08bd-42d2-b684-3c8e57ab5c44">
-            <rlink href="example_ssp_invalid.xml"/>
-            <rlink href="example_ssp_invalid.json"/>
-            <rlink href="example_ssp_invalid.yaml"/>
+            <rlink href="example_ssp_valid.xml"/>
+            <rlink href="example_ssp_valid.json"/>
+            <rlink href="example_ssp_valid.yaml"/>
         </resource>
     </back-matter>
 </plan-of-action-and-milestones>
