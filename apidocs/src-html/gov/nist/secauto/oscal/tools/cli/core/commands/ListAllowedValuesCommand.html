@@ -102,7 +102,7 @@
 <span class="source-line-no">089</span><span id="line-89"></span>
 <span class="source-line-no">090</span><span id="line-90">  @Override</span>
 <span class="source-line-no">091</span><span id="line-91">  public String getDescription() {</span>
-<span class="source-line-no">092</span><span id="line-92">    return "Generate a diagram for the provided Metaschema module";</span>
+<span class="source-line-no">092</span><span id="line-92">    return "List allowed values constraints for the provided Metaschema module";</span>
 <span class="source-line-no">093</span><span id="line-93">  }</span>
 <span class="source-line-no">094</span><span id="line-94"></span>
 <span class="source-line-no">095</span><span id="line-95">  @SuppressWarnings("null")</span>
@@ -319,7 +319,7 @@
 <span class="source-line-no">306</span><span id="line-306">      generator.writeStringField("identifier", constraint.getId());</span>
 <span class="source-line-no">307</span><span id="line-307">    }</span>
 <span class="source-line-no">308</span><span id="line-308">    generator.writeStringField("location", metapath(record.getLocation()));</span>
-<span class="source-line-no">309</span><span id="line-309">    generator.writeStringField("target", constraint.getTarget());</span>
+<span class="source-line-no">309</span><span id="line-309">    generator.writeStringField("target", constraint.getTarget().getPath());</span>
 <span class="source-line-no">310</span><span id="line-310"></span>
 <span class="source-line-no">311</span><span id="line-311">    List&lt;String&gt; values = constraint.getAllowedValues().values().stream()</span>
 <span class="source-line-no">312</span><span id="line-312">        .map(IAllowedValue::getValue)</span>
