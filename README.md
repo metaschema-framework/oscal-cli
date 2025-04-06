@@ -91,7 +91,7 @@ The following instructions can be used to clone and build this project.
 1. Clone the GitHub repository.
 
 ```bash
-git clone --recurse-submodules https://github.com/usnistgov/oscal-cli.git 
+git clone --recurse-submodules https://github.com/metaschema-framework/oscal-cli.git 
 ```
 
 2. Build the project with Maven
@@ -104,3 +104,4 @@ mvn install
 
 The contents of this repository is based on work from the [Metaschema Java repository](https://github.com/usnistgov/oscal-cli/) maintained by the National Institute of Standards and Technology (NIST), the [contents of which have been dedicated in the worldwide public domain](https://github.com/usnistgov/oscal-cli/blob/1d4f38d6b73ec34469063e2a90be69367f8d8996/LICENSE.md) using the [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) public domain dedication. This repository builds on this prior work, maintaining the [CCO license](https://github.com/metaschema-framework/oscal-cli/blob/main/LICENSE.md) on any new works in this repository.
 
+This tool is maintained to be feature compatible with the NIST [v1.0.3](https://github.com/usnistgov/oscal-cli/releases/tag/v1.0.3) release. As a result, Metaschema-based and OSCAL content produced for either will work with this tool. This library version fixes bugs in in the NIST version that were confirmed to be present in this library. This has been noted in related [issues](https://github.com/usnistgov/oscal-cli/issues) in the NIST repository. Unlike its predecessor, this version supports newer releases of the OSCAL models and additional features.
