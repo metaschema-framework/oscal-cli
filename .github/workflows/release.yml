@@ -12,7 +12,7 @@ env:
 jobs:
   deploy-to-nexus:
     name: Maven Central Deployment
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: read
@@ -50,7 +50,7 @@ jobs:
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
   deploy-website:
     name: Website Deployment
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: write
