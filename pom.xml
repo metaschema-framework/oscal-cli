@@ -106,7 +106,7 @@
 		<dependency.pmd.version>7.10.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.9.1</dependency.spotbugs-annotations.version>
 		<dependency.xmlbeans.version>5.3.0</dependency.xmlbeans.version>
-		<dependency.xmlresolver.version>6.0.14</dependency.xmlresolver.version>
+		<dependency.xmlresolver.version>6.0.15</dependency.xmlresolver.version>
 		
 		<plugin.central-publishing.version>0.7.0</plugin.central-publishing.version>
 	</properties>
