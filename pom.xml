@@ -96,7 +96,7 @@
 
 		<!-- other dependencies -->
 		<dependency.commons-cli.version>1.9.0</dependency.commons-cli.version>
-		<dependency.commons-io.version>2.18.0</dependency.commons-io.version>
+		<dependency.commons-io.version>2.19.0</dependency.commons-io.version>
 		<dependency.everit-json.version>1.14.6</dependency.everit-json.version>
 		<dependency.jansi.version>2.4.2</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
