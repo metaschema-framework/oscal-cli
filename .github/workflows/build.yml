@@ -141,7 +141,7 @@ jobs:
         retention-days: 5
     - id: linkchecker
       name: Link Checker
-      uses: lycheeverse/lychee-action@82202e5e9c2f4ef1a55a3d02563e1cb6041e5332
+      uses: lycheeverse/lychee-action@885c65f3dc543b57c898c8099f4e08c8afd178a2
       with:
         args: --verbose --no-progress --accept 200,206,429 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/oscal-cli/tree/develop/ file://${GITHUB_WORKSPACE}/" --remap "https://oscal-cli.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/" --exclude-mail
         format: markdown
