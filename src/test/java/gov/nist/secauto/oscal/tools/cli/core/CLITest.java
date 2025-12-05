@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.ExitStatus;
@@ -23,6 +24,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -314,5 +316,101 @@ class CLITest {
     assertAll(
         () -> assertEquals(ExitCode.IO_ERROR, status.getExitCode()),
         () -> assertEquals(IOException.class, thrown == null ? null : thrown.getClass()));
+  }
+
+  /**
+   * Tests the --pretty-print option for profile resolution with XML output.
+   * <p>
+   * This feature was originally contributed by Mahesh Kumar Gaddam (ermahesh) in
+   * <a href="https://github.com/usnistgov/oscal-cli/pull/295">PR #295</a>.
+   * </p>
+   */
+  @Test
+  void testPrettyPrintProfileResolveXml() throws IOException {
+    Path outputPath = Path.of("target/resolved_pretty_print.xml");
+    String[] args = {
+        "resolve-profile",
+        "--to=xml",
+        "--pretty-print",
+        "src/test/resources/cli/example_profile_valid.xml",
+        outputPath.toString(),
+        "--overwrite",
+        "--show-stack-trace"
+    };
+
+    ExitStatus status = CLI.runCli(args);
+    assertAll(
+        () -> assertEquals(ExitCode.OK, status.getExitCode()),
+        () -> assertTrue(Files.exists(outputPath), "Output file should exist"),
+        () -> assertPrettyPrintedOutput(outputPath));
+  }
+
+  /**
+   * Tests the --pretty-print option for profile resolution with JSON output.
+   * <p>
+   * This feature was originally contributed by Mahesh Kumar Gaddam (ermahesh) in
+   * <a href="https://github.com/usnistgov/oscal-cli/pull/295">PR #295</a>.
+   * </p>
+   */
+  @Test
+  void testPrettyPrintProfileResolveJson() throws IOException {
+    Path outputPath = Path.of("target/resolved_pretty_print.json");
+    String[] args = {
+        "resolve-profile",
+        "--to=json",
+        "--pretty-print",
+        "src/test/resources/cli/example_profile_valid.xml",
+        outputPath.toString(),
+        "--overwrite",
+        "--show-stack-trace"
+    };
+
+    ExitStatus status = CLI.runCli(args);
+    assertAll(
+        () -> assertEquals(ExitCode.OK, status.getExitCode()),
+        () -> assertTrue(Files.exists(outputPath), "Output file should exist"),
+        () -> assertPrettyPrintedOutput(outputPath));
+  }
+
+  /**
+   * Tests the --pretty-print option for profile resolution with YAML output.
+   * <p>
+   * This feature was originally contributed by Mahesh Kumar Gaddam (ermahesh) in
+   * <a href="https://github.com/usnistgov/oscal-cli/pull/295">PR #295</a>.
+   * </p>
+   */
+  @Test
+  void testPrettyPrintProfileResolveYaml() throws IOException {
+    Path outputPath = Path.of("target/resolved_pretty_print.yaml");
+    String[] args = {
+        "resolve-profile",
+        "--to=yaml",
+        "--pretty-print",
+        "src/test/resources/cli/example_profile_valid.xml",
+        outputPath.toString(),
+        "--overwrite",
+        "--show-stack-trace"
+    };
+
+    ExitStatus status = CLI.runCli(args);
+    assertAll(
+        () -> assertEquals(ExitCode.OK, status.getExitCode()),
+        () -> assertTrue(Files.exists(outputPath), "Output file should exist"),
+        () -> assertPrettyPrintedOutput(outputPath));
+  }
+
+  private void assertPrettyPrintedOutput(Path outputPath) throws IOException {
+    String content = Files.readString(outputPath, StandardCharsets.UTF_8);
+    assertAll(
+        () -> assertTrue(content != null && !content.isBlank(), "Content should not be empty"),
+        () -> {
+          // Naive pretty-print assertion: check for line breaks and indentation
+          long lineCount = content.lines().count();
+          boolean hasIndentedLines = content.lines()
+              .anyMatch(line -> line.startsWith("  ") || line.startsWith("    "));
+
+          assertTrue(lineCount > 5, "Expected multiple lines for pretty-printed output");
+          assertTrue(hasIndentedLines, "Expected indented lines in pretty-printed output");
+        });
   }
 }
