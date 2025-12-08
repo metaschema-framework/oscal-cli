@@ -43,13 +43,13 @@ jobs:
       contents: read
       security-events: write
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
         submodules: recursive
         filter: tree:0
     - name: Checkout maven2 branch
       if: env.COMMIT_MAVEN_ARTIFACTS == 'true'
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
         path: maven2
         ref: main
@@ -106,7 +106,7 @@ jobs:
       actions: read
       contents: write
     steps:
-    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
         submodules: recursive
         filter: tree:0
