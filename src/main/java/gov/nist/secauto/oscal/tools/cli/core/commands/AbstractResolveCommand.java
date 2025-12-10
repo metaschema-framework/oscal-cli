@@ -27,6 +27,7 @@ import gov.nist.secauto.oscal.lib.model.Catalog;
 import gov.nist.secauto.oscal.lib.model.Profile;
 import gov.nist.secauto.oscal.lib.profile.resolver.ProfileResolutionException;
 import gov.nist.secauto.oscal.lib.profile.resolver.ProfileResolver;
+import gov.nist.secauto.oscal.tools.cli.core.utils.PrettyPrinter;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -55,6 +56,10 @@ public abstract class AbstractResolveCommand
       .desc("Generate URI references relative to this resource")
       .hasArg()
       .build();
+  private static final Option PRETTY_PRINT_OPTION = Option.builder()
+      .longOpt("pretty-print")
+      .desc("Enable pretty-printing of the output for better readability")
+      .build();
 
   @NonNull
   private static final List<Option> OPTIONS = ObjectUtils.notNull(
@@ -62,7 +67,8 @@ public abstract class AbstractResolveCommand
           MetaschemaCommands.AS_FORMAT_OPTION,
           MetaschemaCommands.TO_OPTION,
           MetaschemaCommands.OVERWRITE_OPTION,
-          RELATIVE_TO));
+          RELATIVE_TO,
+          PRETTY_PRINT_OPTION));
 
   @Override
   public String getDescription() {
@@ -198,6 +204,7 @@ public abstract class AbstractResolveCommand
     // validator.finalizeValidation();
 
     Format toFormat = MetaschemaCommands.getFormat(cmdLine, MetaschemaCommands.TO_OPTION);
+    boolean prettyPrint = cmdLine.hasOption(PRETTY_PRINT_OPTION);
     ISerializer<Catalog> serializer = bindingContext.newSerializer(toFormat, Catalog.class);
     try {
       if (destination == null) {
@@ -206,9 +213,52 @@ public abstract class AbstractResolveCommand
         serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), stdOut);
       } else {
         serializer.serialize((Catalog) INodeItem.toValue(resolvedProfile), destination);
+        if (prettyPrint) {
+          prettyPrintOutput(destination, toFormat);
+        }
       }
     } catch (IOException ex) {
       throw new CommandExecutionException(ExitCode.IO_ERROR, ex);
+    }
+  }
+
+  /**
+   * Pretty-print the output file based on the specified format.
+   * <p>
+   * This feature was originally contributed by Mahesh Kumar Gaddam (ermahesh) in
+   * <a href="https://github.com/usnistgov/oscal-cli/pull/295">PR #295</a>.
+   * </p>
+   *
+   * @param destination
+   *          the path to the output file
+   * @param toFormat
+   *          the format of the output file
+   * @throws CommandExecutionException
+   *           if pretty-printing fails
+   */
+  @SuppressWarnings("PMD.PreserveStackTrace")
+  private void prettyPrintOutput(@NonNull Path destination, @NonNull Format toFormat)
+      throws CommandExecutionException {
+    try {
+      switch (toFormat) {
+      case JSON:
+        PrettyPrinter.prettyPrintJson(destination.toFile());
+        break;
+      case YAML:
+        PrettyPrinter.prettyPrintYaml(destination.toFile());
+        break;
+      case XML:
+        PrettyPrinter.prettyPrintXml(destination.toFile());
+        break;
+      default:
+        // do nothing for unknown formats
+        break;
+      }
+    } catch (Exception ex) {
+      throw new CommandExecutionException(
+          ExitCode.PROCESSING_ERROR,
+          String.format("Pretty-printing failed: %s", ex.getMessage()),
+          ex);
     }
   }
 }
