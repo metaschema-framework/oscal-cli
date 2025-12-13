@@ -7,9 +7,11 @@ package gov.nist.secauto.oscal.tools.cli.core.commands;
 
 import gov.nist.secauto.metaschema.cli.commands.AbstractValidateContentCommand;
 import gov.nist.secauto.metaschema.cli.processor.CLIProcessor.CallingContext;
+import gov.nist.secauto.metaschema.cli.processor.ExitCode;
 import gov.nist.secauto.metaschema.cli.processor.command.CommandExecutionException;
 import gov.nist.secauto.metaschema.cli.processor.command.ICommandExecutor;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
 import gov.nist.secauto.metaschema.core.model.validation.JsonSchemaContentValidator;
 import gov.nist.secauto.metaschema.core.model.validation.XmlSchemaContentValidator;
@@ -111,7 +113,11 @@ public abstract class AbstractOscalValidationCommand
     @Override
     protected IModule getModule(CommandLine commandLine, IBindingContext bindingContext)
         throws CommandExecutionException {
-      return bindingContext.registerModule(OscalCompleteModule.class);
+      try {
+        return bindingContext.registerModule(OscalCompleteModule.class);
+      } catch (MetaschemaException ex) {
+        throw new CommandExecutionException(ExitCode.PROCESSING_ERROR, "Failed to register OSCAL module", ex);
+      }
     }
   }
 }

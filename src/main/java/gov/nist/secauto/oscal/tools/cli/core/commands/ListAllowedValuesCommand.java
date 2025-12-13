@@ -22,6 +22,7 @@ import gov.nist.secauto.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.IModuleNodeItem;
 import gov.nist.secauto.metaschema.core.metapath.item.node.INodeItemFactory;
 import gov.nist.secauto.metaschema.core.model.IModule;
+import gov.nist.secauto.metaschema.core.model.MetaschemaException;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValue;
 import gov.nist.secauto.metaschema.core.model.constraint.IAllowedValuesConstraint;
 import gov.nist.secauto.metaschema.core.model.constraint.IConstraintSet;
@@ -144,17 +145,21 @@ public class ListAllowedValuesCommand
         currentWorkingDirectory);
 
     IBindingContext bindingContext;
+    IBoundModule module;
     try {
       bindingContext = OscalBindingContext.builder()
           .constraintSet(constraintSets)
           .build();
+      module = bindingContext.registerModule(OscalCompleteModule.class);
+    } catch (MetaschemaException ex) {
+      throw new CommandExecutionException(ExitCode.PROCESSING_ERROR,
+          String.format("Unable to register OSCAL module. %s", ex.getLocalizedMessage()),
+          ex);
     } catch (RuntimeException ex) {
       throw new CommandExecutionException(ExitCode.RUNTIME_ERROR,
           String.format("Unable to initialize the binding context. %s", ex.getLocalizedMessage()),
           ex);
     }
-
-    IBoundModule module = bindingContext.registerModule(OscalCompleteModule.class);
 
     try {
       if (destination == null) {
