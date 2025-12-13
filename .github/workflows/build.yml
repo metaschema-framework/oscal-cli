@@ -11,6 +11,9 @@ on:
     - develop
     - feature/**
   merge_group:
+  schedule:
+    # Nightly build at 4:00 AM UTC (after liboscal-java)
+    - cron: '0 4 * * *'
   workflow_dispatch:
     inputs:
       linkcheck_fail_on_error:
@@ -24,6 +27,9 @@ on:
         default: false
         type: boolean
 name: Build and Test
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 env:
   INPUT_FAIL_ON_ERROR: ${{ github.event.inputs.linkcheck_fail_on_error || 'true' }}
   INPUT_ISSUE_ON_ERROR: ${{ github.event.inputs.linkcheck_create_issue || 'false' }}
