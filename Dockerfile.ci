@@ -1,0 +1,14 @@
+ARG BUILDER_IMAGE=maven:3.9.9-eclipse-temurin-17-alpine
+ARG RUNNER_IMAGE=eclipse-temurin:17-alpine
+
+FROM ${BUILDER_IMAGE} AS builder
+COPY ./target/*oscal-cli.zip /tmp/oscal-cli.zip
+WORKDIR /tmp
+RUN unzip /tmp/oscal-cli.zip -d /opt/oscal-cli
+RUN chmod +x /opt/oscal-cli/bin/oscal-cli
+
+FROM ${RUNNER_IMAGE} AS runner
+COPY --from=builder /opt/oscal-cli /opt/oscal-cli
+WORKDIR /opt/oscal-cli
+RUN /opt/oscal-cli/bin/oscal-cli --version
+ENTRYPOINT [ "/opt/oscal-cli/bin/oscal-cli" ]
