@@ -1,0 +1,40 @@
+ARG BUILDER_IMAGE=maven:3.9.9-eclipse-temurin-17-alpine
+ARG RUNNER_IMAGE=eclipse-temurin:17-alpine
+
+FROM ${BUILDER_IMAGE} AS builder
+ARG BUILDER_JDK_VENDOR=temurin
+ARG BUILDER_JDK_MAJOR_VERSION=17
+ARG BUILDER_JDK_HOME_PATH=/opt/java/openjdk
+ADD . /usr/local/src
+WORKDIR /usr/local/src
+RUN mkdir -p "/root/.m2"
+COPY  <<M2TEMPLATE /root/.m2/toolchains.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains>
+    <toolchain>
+    <type>jdk</type>
+    <provides>
+        <version>${BUILDER_JDK_MAJOR_VERSION}</version>
+        <vendor>${BUILDER_JDK_VENDOR}</vendor>
+        <id>${BUILDER_JDK_VENDOR}_${BUILDER_JDK_MAJOR_VERSION}</id>
+    </provides>
+    <configuration>
+        <jdkHome>${BUILDER_JDK_HOME_PATH}</jdkHome>
+    </configuration>
+    </toolchain>
+</toolchains>
+M2TEMPLATE
+RUN apk add --no-cache git unzip
+RUN mvn -B -e -Prelease package
+RUN find /usr/local/src/target \
+    -iname '*oscal-cli.zip' \
+    -exec cp {} /tmp/oscal-cli.zip \;
+RUN mkdir -p /opt/oscal-cli
+RUN unzip /tmp/oscal-cli.zip -d /opt/oscal-cli
+RUN chmod +x /opt/oscal-cli/bin/oscal-cli
+
+FROM ${RUNNER_IMAGE} AS runner
+COPY --from=builder /opt/oscal-cli /opt/oscal-cli
+WORKDIR /opt/oscal-cli
+RUN /opt/oscal-cli/bin/oscal-cli --version
+ENTRYPOINT [ "/opt/oscal-cli/bin/oscal-cli" ]

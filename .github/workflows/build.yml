@@ -40,6 +40,14 @@ env:
   COMMIT_MAVEN_ARTIFACTS: ${{ (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'metaschema-framework' }}
   # Upload CodeQL results if the branch is 'develop' or 'release/*' or a pull request targeting these branches.
   UPLOAD_CODEQL: ${{ ((github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'refs/heads/develop' || startsWith(github.base_ref, 'refs/heads/release/')))) && 'always' || 'never' }}
+  REGISTRY: ghcr.io
+  HOME_REPO:  metaschema-framework/oscal-cli
+  IMAGE_NAME: metaschema-framework/oscal-cli
+  USE_PREBUILT_ZIP: yes
+  # Docs: github.com/docker/metadata-action/?tab=readme-ov-file#typesha
+  DOCKER_METADATA_PR_HEAD_SHA: true
+  # https://github.com/docker/metadata-action?tab=readme-ov-file#annotations
+  DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
 jobs:
   build-code:
     name: Code
@@ -48,6 +56,9 @@ jobs:
       actions: read
       contents: read
       security-events: write
+      packages: write
+      attestations: write
+      id-token: write      
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
@@ -105,6 +116,62 @@ jobs:
       uses: github/codeql-action/analyze@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
         upload: ${{ env.UPLOAD_CODEQL }}
+    - name: Container image QEMU setup for cross-arch builds
+      id: image_setup_qemu
+      uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf
+    - name: Container image buildx setup for cross-arch builds
+      id: image_setup_buildx
+      with:
+        platforms: linux/amd64
+      uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db
+    - name: Container image login
+      id: image_login
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Container image metadata and tag generation
+      id: image_metadata
+      uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
+      with:
+        images:
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=sha,prefix=,suffix=,format=long
+          type=ref,event=branch
+          type=ref,event=tag
+          type=ref,event=pr
+        flavor: |
+          latest=true
+        annotations: |
+          maintainers="Metaschema Community Admin <admin@metaschema.dev>"
+          org.opencontainers.image.authors="Metaschema Community Admin <admin@metaschema.dev>"
+          org.opencontainers.image.documentation="https://metaschema.dev"
+          org.opencontainers.image.source="https://github.com/metaschema-framework/oscal-cli"
+          org.opencontainers.image.vendor="Metaschema Community"
+          org.opencontainers.image.title="oscal-cli-extended"
+          org.opencontainers.image.description="Metaschema-powered CLI tool for processing OSCAL"
+          org.opencontainers.image.licenses="CC0-1.0"
+    - name: Container image registry push
+      id: image_registry_push
+      uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      with:
+        context: .
+        file: ./Dockerfile.ci
+        push: true
+        tags: ${{ steps.image_metadata.outputs.tags }}
+        labels: ${{ steps.image_metadata.outputs.annotations }}
+        platforms: linux/amd64
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    - if: github.repository == env.HOME_REPO && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature'))
+      name: Container image push attestations
+      uses: actions/attest-build-provenance@1c608d11d69870c2092266b3f9a6f3abbf17002c
+      with:
+        subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+        subject-digest: ${{ steps.image_registry_push.outputs.digest }}
+        push-to-registry: false
   build-website:
     name: Website
     runs-on: ubuntu-24.04
