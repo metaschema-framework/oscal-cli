@@ -8,3 +8,4 @@ gov.nist.secauto.oscal.tools.cli.core.commands.metaschema
 gov.nist.secauto.oscal.tools.cli.core.commands.poam
 gov.nist.secauto.oscal.tools.cli.core.commands.profile
 gov.nist.secauto.oscal.tools.cli.core.commands.ssp
+gov.nist.secauto.oscal.tools.cli.core.utils
