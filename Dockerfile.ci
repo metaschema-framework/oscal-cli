@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG BUILDER_IMAGE=maven:3.9.9-eclipse-temurin-17-alpine
 ARG RUNNER_IMAGE=eclipse-temurin:17-alpine
 
