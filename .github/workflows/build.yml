@@ -153,7 +153,8 @@ jobs:
           org.opencontainers.image.title="oscal-cli-extended"
           org.opencontainers.image.description="Metaschema-powered CLI tool for processing OSCAL"
           org.opencontainers.image.licenses="CC0-1.0"
-    - name: Container image registry push
+    - if: env.COMMIT_MAVEN_ARTIFACTS == 'true'
+      name: Container image registry push
       id: image_registry_push
       uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
       with:
@@ -165,7 +166,7 @@ jobs:
         platforms: linux/amd64
         cache-from: type=gha
         cache-to: type=gha,mode=max
-    - if: github.repository == env.HOME_REPO && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature'))
+    - if: env.COMMIT_MAVEN_ARTIFACTS == 'true'
       name: Container image push attestations
       uses: actions/attest-build-provenance@1c608d11d69870c2092266b3f9a6f3abbf17002c
       with:
