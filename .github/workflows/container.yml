@@ -32,6 +32,7 @@ jobs:
       uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
       with:
         name: build_zip
+        path: ./target
     - name: Container image QEMU setup for cross-arch builds
       id: image_setup_qemu
       uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf
