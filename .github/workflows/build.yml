@@ -105,6 +105,11 @@ jobs:
       uses: github/codeql-action/analyze@1b168cd39490f61582a9beae412bb7057a6b2c4e
       with:
         upload: ${{ env.UPLOAD_CODEQL }}
+    - name: Upload build zip archive
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: build_zip
+        path: ./target/*oscal-cli.zip
   build-container:
     name: Container
     permissions:
