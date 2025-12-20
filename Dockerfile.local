@@ -25,7 +25,7 @@ COPY  <<M2TEMPLATE /root/.m2/toolchains.xml
     </toolchain>
 </toolchains>
 M2TEMPLATE
-RUN apk add --no-cache git unzip
+RUN apt-get update && apt-get install -y unzip
 RUN mvn -B -e -Prelease package
 RUN find /usr/local/src/target \
     -iname '*oscal-cli.zip' \
