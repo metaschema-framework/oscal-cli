@@ -8,24 +8,25 @@ ARG BUILDER_JDK_MAJOR_VERSION=17
 ARG BUILDER_JDK_HOME_PATH=/opt/java/openjdk
 ADD . /usr/local/src
 WORKDIR /usr/local/src
-RUN mkdir -p "/root/.m2"
-COPY  <<M2TEMPLATE /root/.m2/toolchains.xml
+RUN apt-get update && apt-get install -y unzip
+RUN <<EOF
+mkdir -p /root/.m2
+cat > /root/.m2/toolchains.xml << XMLEOF
 <?xml version="1.0" encoding="UTF-8"?>
 <toolchains>
-    <toolchain>
+  <toolchain>
     <type>jdk</type>
     <provides>
-        <version>${BUILDER_JDK_MAJOR_VERSION}</version>
-        <vendor>${BUILDER_JDK_VENDOR}</vendor>
-        <id>${BUILDER_JDK_VENDOR}_${BUILDER_JDK_MAJOR_VERSION}</id>
+      <vendor>${BUILDER_JDK_VENDOR}</vendor>
+      <version>${BUILDER_JDK_MAJOR_VERSION}</version>
     </provides>
     <configuration>
-        <jdkHome>${BUILDER_JDK_HOME_PATH}</jdkHome>
+      <jdkHome>${BUILDER_JDK_HOME_PATH}</jdkHome>
     </configuration>
-    </toolchain>
+  </toolchain>
 </toolchains>
-M2TEMPLATE
-RUN apt-get update && apt-get install -y unzip
+XMLEOF
+EOF
 RUN mvn -B -e -Prelease package
 RUN find /usr/local/src/target \
     -iname '*oscal-cli.zip' \
