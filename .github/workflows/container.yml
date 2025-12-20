@@ -60,7 +60,7 @@ jobs:
           type=ref,event=tag
           type=ref,event=pr
         flavor: |
-          latest=true
+          latest=${{ github.ref == 'refs/heads/main' }}
         annotations: |
           maintainers="Metaschema Community Admin <admin@metaschema.dev>"
           org.opencontainers.image.authors="Metaschema Community Admin <admin@metaschema.dev>"
