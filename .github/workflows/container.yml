@@ -16,7 +16,7 @@ env:
   DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
 jobs:
   build-container:
-    name: Container
+    name: Build Image
     runs-on: ubuntu-24.04
     permissions:
       contents: read
