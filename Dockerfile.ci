@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
-ARG BUILDER_IMAGE=maven:3.9.9-eclipse-temurin-17-alpine
-ARG RUNNER_IMAGE=eclipse-temurin:17-alpine
+ARG BUILDER_IMAGE=maven:3.9.9-eclipse-temurin-17
+ARG RUNNER_IMAGE=eclipse-temurin:17
 
 FROM ${BUILDER_IMAGE} AS builder
 COPY ./target/*oscal-cli.zip /tmp/oscal-cli.zip
