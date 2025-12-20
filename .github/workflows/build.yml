@@ -107,6 +107,11 @@ jobs:
         upload: ${{ env.UPLOAD_CODEQL }}
   build-container:
     name: Container
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     needs: build-code
     if: ${{ (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'metaschema-framework' }}
     uses: ./.github/workflows/container.yml
