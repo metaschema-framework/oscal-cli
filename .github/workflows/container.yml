@@ -24,6 +24,10 @@ jobs:
       attestations: write
       id-token: write
     steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      with:
+        submodules: recursive
+        filter: tree:0
     - name: Download build zip
       uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
       with:
