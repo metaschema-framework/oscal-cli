@@ -24,10 +24,10 @@ jobs:
       attestations: write
       id-token: write
     steps:
-    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+    - name: Download build zip
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
       with:
-        submodules: recursive
-        filter: tree:0
+        name: build_zip
     - name: Container image QEMU setup for cross-arch builds
       id: image_setup_qemu
       uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf
