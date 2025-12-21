@@ -89,4 +89,4 @@ jobs:
       with:
         subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
         subject-digest: ${{ steps.image_registry_push.outputs.digest }}
-        push-to-registry: false
+        push-to-registry: true
