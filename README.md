@@ -70,6 +70,16 @@ echo 'export PATH=$PATH:/opt/oscal-cli/bin' >> ~/.bashrc
 echo 'export PATH=$PATH:/opt/oscal-cli/bin' >> ~/.zshrc
 ```
 
+### Installing pre-built package as a container image 
+
+You can also download pre-release and official release versions of the CLI as an OCI-conformant image with `docker`, `podman`, or other tools.
+
+```sh
+docker pull ghcr.io/metaschema-framework/oscal-cli:latest
+docker run -it ghcr.io/metaschema-framework/oscal-cli:latest --version
+```
+
+
 ## Running 
 
 Run help to make sure everything works.
