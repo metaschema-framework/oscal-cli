@@ -73,7 +73,7 @@
 	
 	<properties>
 		<!-- metaschema dependencies -->
-		<dependency.metaschema-framework.version>3.0.0.M1</dependency.metaschema-framework.version>
+		<dependency.metaschema-framework.version>3.0.0-SNAPSHOT</dependency.metaschema-framework.version>
 		<dependency.liboscal-java.version>6.0.0</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
