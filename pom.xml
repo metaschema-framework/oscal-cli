@@ -100,7 +100,7 @@
 		<dependency.everit-json.version>1.14.6</dependency.everit-json.version>
 		<dependency.jansi.version>2.4.2</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
-		<dependency.json.version>20250517</dependency.json.version>
+		<dependency.json.version>20251224</dependency.json.version>
 		<dependency.junit5.version>6.0.1</dependency.junit5.version>
 		<dependency.log4j2.version>2.25.3</dependency.log4j2.version>
 		<dependency.pmd.version>7.10.0</dependency.pmd.version>
@@ -185,6 +185,17 @@
 			<groupId>dev.metaschema.oscal</groupId>
 			<artifactId>liboscal-java</artifactId>
 			<version>${dependency.liboscal-java.version}</version>
+			<exclusions>
+				<!-- Exclude metaschema-java transitive dependencies to use 3.0.0-SNAPSHOT versions -->
+				<exclusion>
+					<groupId>dev.metaschema.java</groupId>
+					<artifactId>metaschema-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>dev.metaschema.java</groupId>
+					<artifactId>metaschema-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>dev.metaschema.java</groupId>
@@ -199,6 +210,16 @@
 		<dependency>
 			<groupId>dev.metaschema.java</groupId>
 			<artifactId>metaschema-schema-generator</artifactId>
+			<version>${dependency.metaschema-framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>dev.metaschema.java</groupId>
+			<artifactId>metaschema-core</artifactId>
+			<version>${dependency.metaschema-framework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>dev.metaschema.java</groupId>
+			<artifactId>metaschema-databind</artifactId>
 			<version>${dependency.metaschema-framework.version}</version>
 		</dependency>
 
