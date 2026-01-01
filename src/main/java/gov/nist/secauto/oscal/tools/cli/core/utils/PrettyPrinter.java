@@ -8,8 +8,6 @@ package gov.nist.secauto.oscal.tools.cli.core.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import net.sf.saxon.TransformerFactoryImpl;
-
 import org.w3c.dom.Document;
 
 import java.io.File;
@@ -22,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -89,9 +88,10 @@ public final class PrettyPrinter {
     Document doc = DocumentBuilderFactory.newInstance()
         .newDocumentBuilder().parse(file);
 
-    TransformerFactoryImpl transformerFactory = new TransformerFactoryImpl();
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
     Transformer transformer = transformerFactory.newTransformer();
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
     try (OutputStream out = Files.newOutputStream(file.toPath())) {
       transformer.transform(new DOMSource(doc), new StreamResult(out));
