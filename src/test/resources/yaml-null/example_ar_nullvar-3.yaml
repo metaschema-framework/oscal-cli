@@ -20,15 +20,15 @@ assessment-results:
         from an assessment plan in OSCAL format and processed in GitHub Actions.
       start: 2022-12-05T18:02:05.217748+00:00
       reviewed-controls:
-        control-objective-selections:
-        - include-objectives:
-          - objective-id: ac-8_obj.a.1
-          - objective-id: ac-8_obj.a.2
-          - objective-id: ac-8_obj.a.3
-          - objective-id: ac-8_obj.a.4
         control-selections:
-        - include-controls:
-          - control-id: ac-8
+          - include-controls:
+              - control-id: ac-8
+        control-objective-selections:
+          - include-objectives:
+              - objective-id: ac-8_obj.a.1
+              - objective-id: ac-8_obj.a.2
+              - objective-id: ac-8_obj.a.3
+              - objective-id: ac-8_obj.a.4
         remarks: Control objective selections are declared separately of the include-controls
           directive, must be explicit here.
 
