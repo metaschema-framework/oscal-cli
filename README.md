@@ -82,6 +82,16 @@ oscal-cli --help
 /opt/oscal-cli/bin/oscal-cli --help
 ```
 
+### Disabling Color Output
+
+The CLI uses ANSI escape codes for colored output, which is supported by most modern terminals including Windows 10+, Linux, and macOS. If you are using a legacy console that does not support ANSI escape codes (e.g., older Windows cmd.exe, certain CI/CD environments, or when redirecting output to a file), you may see raw escape sequences in the output.
+
+To disable colored output, use the `--no-color` flag:
+
+```sh
+oscal-cli --no-color <command>
+```
+
 ## Building
 
 This project can be built with [Apache Maven](https://maven.apache.org/) version 3.8.4 or greater.
