@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
-	<version>2.7.0-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
@@ -23,16 +23,16 @@
 		<url>${scm.url}/tree/develop</url>
 		<connection>scm:git:git@github.com/metaschema-framework/oscal-cli.git</connection>
 		<developerConnection>scm:git:git@github.com:metaschema-framework/oscal-cli.git</developerConnection>
-		<tag>v0.2.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<distributionManagement>
 		<repository>
 			<id>central</id>
-            <name>Maven Central Repository</name>
+			<name>Maven Central Repository</name>
 			<url>https://central.sonatype.com</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<snapshotRepository>
 			<id>repo-snapshot</id>
@@ -74,7 +74,7 @@
 	<properties>
 		<!-- metaschema dependencies -->
 		<dependency.metaschema-framework.version>3.0.0-SNAPSHOT</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>6.1.0-SNAPSHOT</dependency.liboscal-java.version>
+		<dependency.liboscal-java.version>7.0.0-SNAPSHOT</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
 		<site.url>https://oscal-cli.metaschema.dev</site.url>
@@ -105,58 +105,56 @@
 		<dependency.log4j2.version>2.25.3</dependency.log4j2.version>
 		<dependency.pmd.version>7.10.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.9.1</dependency.spotbugs-annotations.version>
-		<dependency.xmlbeans.version>5.3.0</dependency.xmlbeans.version>
-		<dependency.xmlresolver.version>6.0.19</dependency.xmlresolver.version>
-		
+
 		<plugin.central-publishing.version>0.9.0</plugin.central-publishing.version>
 	</properties>
 
 	<repositories>
 		<repository>
-			 <id>central</id>
-			 <name>Maven Central Repository</name>
-			 <url>https://repo.maven.apache.org/maven2</url>
-			 <snapshots>
-				 <enabled>false</enabled>
-			 </snapshots>
-		 </repository>
-		 <repository>
-			 <id>repo-snapshot</id>
-			 <name>Local Snapshots</name>
-			 <url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
-			 <releases>
-				 <enabled>false</enabled>
-			 </releases>
-			 <snapshots>
-				 <enabled>true</enabled>
-				 <updatePolicy>always</updatePolicy>
-			 </snapshots>
-		 </repository>
-	 </repositories>
-	 <pluginRepositories>
+			<id>central</id>
+			<name>Maven Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>repo-snapshot</id>
+			<name>Local Snapshots</name>
+			<url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
 		<pluginRepository>
-			 <id>central</id>
-			 <name>Maven Central Repository</name>
-			 <url>https://repo.maven.apache.org/maven2</url>
-			 <snapshots>
-				 <enabled>false</enabled>
-			 </snapshots>
-		 </pluginRepository>
-		 <pluginRepository>
-			 <id>repo-snapshot</id>
-			 <name>Local Snapshots</name>
-			 <url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
-			 <releases>
-				 <enabled>false</enabled>
-			 </releases>
-			 <snapshots>
-				 <enabled>true</enabled>
-				 <updatePolicy>always</updatePolicy>
-			 </snapshots>
-		 </pluginRepository>
-	 </pluginRepositories>
+			<id>central</id>
+			<name>Maven Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>repo-snapshot</id>
+			<name>Local Snapshots</name>
+			<url>https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
-	 <dependencyManagement>
+	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
@@ -173,11 +171,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.xmlbeans</groupId>
-				<artifactId>xmlbeans</artifactId>
-				<version>${dependency.xmlbeans.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -185,17 +178,6 @@
 			<groupId>dev.metaschema.oscal</groupId>
 			<artifactId>liboscal-java</artifactId>
 			<version>${dependency.liboscal-java.version}</version>
-			<exclusions>
-				<!-- Exclude metaschema-java transitive dependencies to use 3.0.0-SNAPSHOT versions -->
-				<exclusion>
-					<groupId>dev.metaschema.java</groupId>
-					<artifactId>metaschema-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>dev.metaschema.java</groupId>
-					<artifactId>metaschema-databind</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>dev.metaschema.java</groupId>
@@ -210,16 +192,6 @@
 		<dependency>
 			<groupId>dev.metaschema.java</groupId>
 			<artifactId>metaschema-schema-generator</artifactId>
-			<version>${dependency.metaschema-framework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>dev.metaschema.java</groupId>
-			<artifactId>metaschema-core</artifactId>
-			<version>${dependency.metaschema-framework.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>dev.metaschema.java</groupId>
-			<artifactId>metaschema-databind</artifactId>
 			<version>${dependency.metaschema-framework.version}</version>
 		</dependency>
 
@@ -242,21 +214,6 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>${dependency.commons-io.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xmlresolver</groupId>
-			<artifactId>xmlresolver</artifactId>
-			<version>${dependency.xmlresolver.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xmlresolver</groupId>
-			<artifactId>xmlresolver</artifactId>
-			<version>${dependency.xmlresolver.version}</version>
-			<classifier>data</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.github.erosb</groupId>
@@ -447,7 +404,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>gov.nist.secauto.oscal.tools.cli.core.CLI</mainClass>
+							<mainClass>dev.metaschema.oscal.tools.cli.core.CLI</mainClass>
 							<addClasspath>true</addClasspath>
 							<!-- <classpathPrefix>lib/</classpathPrefix> -->
 							<classpathLayoutType>custom</classpathLayoutType>
@@ -463,7 +420,7 @@
 				<configuration>
 					<programs>
 						<program>
-							<mainClass>gov.nist.secauto.oscal.tools.cli.core.CLI</mainClass>
+							<mainClass>dev.metaschema.oscal.tools.cli.core.CLI</mainClass>
 							<id>oscal-cli</id>
 						</program>
 					</programs>
