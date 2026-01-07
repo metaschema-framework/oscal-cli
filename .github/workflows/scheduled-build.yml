@@ -1,0 +1,14 @@
+name: Scheduled Build
+on:
+  schedule:
+    # Nightly build at 4:00 AM UTC (after liboscal-java)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+jobs:
+  nightly:
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: develop
+      skip_code_scans: true
+      skip_linkcheck: true
+    secrets: inherit
