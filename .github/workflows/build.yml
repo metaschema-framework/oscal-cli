@@ -112,6 +112,8 @@ jobs:
         path: ./target/*oscal-cli.zip
   build-container:
     name: Container
+    # Skip container build for fork PRs (no write access to org container registry)
+    if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.head.repo.fork }}
     permissions:
       contents: read
       packages: write

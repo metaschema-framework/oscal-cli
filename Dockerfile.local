@@ -40,7 +40,8 @@ COPY --from=builder /opt/oscal-cli /opt/oscal-cli
 RUN groupadd -r oscalcli && \
     useradd -r -g oscalcli -s /bin/false oscalcli && \
     chown -R oscalcli:oscalcli /opt/oscal-cli && \
-    mkdir -p /app
+    mkdir -p /app && \
+    chown oscalcli:oscalcli /app
 WORKDIR /app
 USER oscalcli
 RUN /opt/oscal-cli/bin/oscal-cli --version
