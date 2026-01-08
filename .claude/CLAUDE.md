@@ -158,3 +158,27 @@ target/oscal-cli/bin/oscal-cli --help
 # Disable colored output for legacy terminals
 oscal-cli --no-color <command>
 ```
+
+## Available Skills
+
+### Metaschema (metaschema plugin)
+- `metaschema:metaschema-basics` - Introduction to Metaschema concepts
+- `metaschema:metaschema-module-authoring` - Creating/modifying Metaschema modules
+- `metaschema:metaschema-constraints-authoring` - Writing Metaschema constraints
+- `metaschema:metapath-expressions` - Metapath query syntax and functions
+
+### OSCAL (oscal plugin)
+- `oscal:oscal-basics` - Working with OSCAL documents
+- `oscal:oscal-catalog` - OSCAL catalog documents
+- `oscal:oscal-profile` - OSCAL profiles and baselines
+- `oscal:oscal-ssp` - System Security Plans
+- `oscal:oscal-component-definition` - Component definitions
+
+### Development (dev-metaschema plugin)
+- `dev-metaschema:development-workflow` - TDD, debugging, PRD workflow
+- `dev-metaschema:javadoc-style-guide` - Javadoc requirements and patterns
+- `dev-metaschema:unit-test-writing` - Test patterns and edge cases
+
+### Tools
+- `metaschema-tools:using-metaschema-java` - metaschema-java CLI commands
+- `oscal-tools:using-oscal-cli` - oscal-cli commands and usage
