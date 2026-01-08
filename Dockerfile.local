@@ -1,0 +1,49 @@
+# syntax=docker/dockerfile:1
+ARG BUILDER_IMAGE=maven:3.9.9-eclipse-temurin-17
+ARG RUNNER_IMAGE=eclipse-temurin:17
+
+FROM ${BUILDER_IMAGE} AS builder
+ARG BUILDER_JDK_VENDOR=temurin
+ARG BUILDER_JDK_MAJOR_VERSION=17
+ARG BUILDER_JDK_HOME_PATH=/opt/java/openjdk
+ADD . /usr/local/src
+WORKDIR /usr/local/src
+RUN apt-get update && apt-get install -y unzip
+RUN <<EOF
+mkdir -p /root/.m2
+cat > /root/.m2/toolchains.xml << XMLEOF
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <vendor>${BUILDER_JDK_VENDOR}</vendor>
+      <version>${BUILDER_JDK_MAJOR_VERSION}</version>
+    </provides>
+    <configuration>
+      <jdkHome>${BUILDER_JDK_HOME_PATH}</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
+XMLEOF
+EOF
+RUN mvn -B -e -Prelease package
+RUN find /usr/local/src/target \
+    -iname '*oscal-cli.zip' \
+    -exec cp {} /tmp/oscal-cli.zip \;
+RUN mkdir -p /opt/oscal-cli
+RUN unzip /tmp/oscal-cli.zip -d /opt/oscal-cli
+RUN chmod +x /opt/oscal-cli/bin/oscal-cli
+
+FROM ${RUNNER_IMAGE} AS runner
+COPY --from=builder /opt/oscal-cli /opt/oscal-cli
+RUN groupadd -r oscalcli && \
+    useradd -r -g oscalcli -s /bin/false oscalcli && \
+    chown -R oscalcli:oscalcli /opt/oscal-cli && \
+    mkdir -p /app && \
+    chown oscalcli:oscalcli /app
+WORKDIR /app
+USER oscalcli
+RUN /opt/oscal-cli/bin/oscal-cli --version
+ENTRYPOINT [ "/opt/oscal-cli/bin/oscal-cli" ]
+

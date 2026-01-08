@@ -1,0 +1,30 @@
+name: Container Image Cleanup
+on:
+  schedule:
+    # Run daily at 2:00 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Simulate cleanup without deleting images'
+        required: false
+        default: false
+        type: boolean
+jobs:
+  cleanup-images:
+    name: Prune Old Container Images
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    steps:
+    - name: Delete old container images
+      uses: snok/container-retention-policy@3b0972b2276b171b212f8c4efbca59ebba26eceb
+      with:
+        account: metaschema-framework
+        image-names: oscal-cli
+        cut-off: 7d
+        keep-n-most-recent: 5
+        image-tags: "!latest !v*"
+        tag-selection: both
+        dry-run: ${{ inputs.dry-run || false }}
+        token: ${{ secrets.GITHUB_TOKEN }}
