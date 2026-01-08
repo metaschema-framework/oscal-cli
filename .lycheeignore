@@ -4,6 +4,7 @@ http://fedramp.gov/ns/oscal
 http://www.first.org/cvss/v2.0/
 # broken plugin and dependency references
 https://bytebuddy.net/byte-buddy
+https://github.com/jline/jline3/.*
 https://code.revelc.net/revelc/formatter-maven-plugin
 https://errorprone.info/error_prone_annotations
 https://git-scm.com/documentation
