@@ -7,6 +7,7 @@ package dev.metaschema.oscal.tools.cli.core;
 
 import dev.metaschema.cli.processor.CLIProcessor;
 import dev.metaschema.cli.processor.ExitStatus;
+import dev.metaschema.cli.processor.command.CommandService;
 import dev.metaschema.core.MetaschemaJavaVersion;
 import dev.metaschema.core.model.MetaschemaVersion;
 import dev.metaschema.core.util.CollectionUtil;
@@ -80,6 +81,10 @@ public final class CLI {
     processor.addCommandHandler(new ConvertCommand());
     processor.addCommandHandler(new ResolveCommand());
     processor.addCommandHandler(new ListAllowedValuesCommand());
+
+    // Register SPI-discovered commands (e.g., shell-completion)
+    CommandService.getInstance().getCommands().forEach(processor::addCommandHandler);
+
     return processor.process(args);
   }
 
