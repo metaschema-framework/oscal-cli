@@ -19,5 +19,9 @@ pom.xml.versionsBackup
 release.properties
 velocity.log*
 
+# Claude
+CLAUDE.local.md
+/.claude/settings.local.json
+
 # Worktrees
 .worktrees/

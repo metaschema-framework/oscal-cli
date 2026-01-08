@@ -1,0 +1,24 @@
+{
+  "enabledPlugins": {
+    "metaschema@metaschema-framework": true,
+    "metaschema-tools@metaschema-framework": true,
+    "oscal@metaschema-framework": true,
+    "oscal-tools@metaschema-framework": true,
+    "dev-metaschema@metaschema-framework": true,
+    "superpowers@superpowers-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "metaschema-framework": {
+      "source": {
+        "source": "github",
+        "repo": "metaschema-framework/claude-plugins"
+      }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers"
+      }
+    }
+  }
+}
