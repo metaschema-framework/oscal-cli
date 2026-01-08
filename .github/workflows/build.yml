@@ -303,7 +303,7 @@ jobs:
       if: ${{ !inputs.skip_linkcheck && always() }}
       run: |
         echo "<details>" >> $GITHUB_STEP_SUMMARY
-        echo "<summary><h2>Link Checker Results</h2></summary>" >> $GITHUB_STEP_SUMMARY
+        echo "<summary><strong>Link Checker Results</strong></summary>" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ -f "html-link-report.md" ]; then
           # Extract summary stats from the report
