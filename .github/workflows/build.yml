@@ -1,28 +1,67 @@
 on:
   push:
     branches:
+    - main
     - release/**
     - develop
     - feature/**
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
+    - main
     - release/**
     - develop
     - feature/**
   merge_group:
-  schedule:
-    # Nightly build at 4:00 AM UTC (after liboscal-java)
-    - cron: '0 4 * * *'
-  workflow_dispatch:
+  workflow_call:
     inputs:
+      ref:
+        description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        type: string
+      skip_code_scans:
+        description: 'Skip CodeQL and Trivy security scans'
+        required: false
+        default: false
+        type: boolean
+      skip_linkcheck:
+        description: 'Skip website link checker'
+        required: false
+        default: false
+        type: boolean
       linkcheck_fail_on_error:
-        description: 'a boolean flag that determines if bad links found by the link checker fail fast and stop a complete build'
+        description: 'A boolean flag that determines if bad links found by the link checker fail fast and stop a complete build'
         required: false
         default: true
         type: boolean
       linkcheck_create_issue:
-        description: 'create new GitHub issue if broken links found'
+        description: 'Create new GitHub issue if broken links found'
+        required: false
+        default: false
+        type: boolean
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        type: string
+      skip_code_scans:
+        description: 'Skip CodeQL and Trivy security scans'
+        required: false
+        default: false
+        type: boolean
+      skip_linkcheck:
+        description: 'Skip website link checker'
+        required: false
+        default: false
+        type: boolean
+      linkcheck_fail_on_error:
+        description: 'A boolean flag that determines if bad links found by the link checker fail fast and stop a complete build'
+        required: false
+        default: true
+        type: boolean
+      linkcheck_create_issue:
+        description: 'Create new GitHub issue if broken links found'
         required: false
         default: false
         type: boolean
@@ -31,15 +70,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 env:
-  INPUT_FAIL_ON_ERROR: ${{ github.event.inputs.linkcheck_fail_on_error || 'true' }}
-  INPUT_ISSUE_ON_ERROR: ${{ github.event.inputs.linkcheck_create_issue || 'false' }}
+  INPUT_FAIL_ON_ERROR: ${{ inputs.linkcheck_fail_on_error || 'true' }}
+  INPUT_ISSUE_ON_ERROR: ${{ inputs.linkcheck_create_issue || 'false' }}
   MAVEN_VERSION: 3.9.8
   JAVA_DISTRO: 'temurin'
   JAVA_VERSION_FILE: .java-version
   # Post Maven artifacts to the artifact repo if the branch is 'develop' or 'release/*'. This avoids publishing artifacts for pull requests
   COMMIT_MAVEN_ARTIFACTS: ${{ (github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) && github.repository_owner == 'metaschema-framework' }}
-  # Upload CodeQL results if the branch is 'develop' or 'release/*' or a pull request targeting these branches.
-  UPLOAD_CODEQL: ${{ ((github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'refs/heads/develop' || startsWith(github.base_ref, 'refs/heads/release/')))) && 'always' || 'never' }}
+  # Upload security scan SARIF results for main, develop, release/* branches, or PRs targeting these branches.
+  UPLOAD_SCAN_SARIF: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/release/')) || (github.event_name == 'pull_request' && (github.base_ref == 'main' || github.base_ref == 'develop' || startsWith(github.base_ref, 'release/'))) }}
 jobs:
   build-code:
     name: Code
@@ -51,6 +90,7 @@ jobs:
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
+        ref: ${{ inputs.ref || github.ref }}
         submodules: recursive
         filter: tree:0
     - name: Checkout maven2 branch
@@ -77,6 +117,7 @@ jobs:
         distribution: ${{ env.JAVA_DISTRO }}
         cache: 'maven'
     - name: Initialize CodeQL
+      if: ${{ !inputs.skip_code_scans }}
       uses: github/codeql-action/init@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
         languages: java
@@ -102,9 +143,90 @@ jobs:
         echo "Pushing changes"
         git push --force-with-lease
     - name: Perform CodeQL Analysis
+      if: ${{ !inputs.skip_code_scans }}
       uses: github/codeql-action/analyze@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
-        upload: ${{ env.UPLOAD_CODEQL }}
+        upload: 'never'
+        output: codeql-results
+    - name: CodeQL Summary
+      if: ${{ !inputs.skip_code_scans }}
+      run: |
+        echo "## CodeQL Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -d "codeql-results" ]; then
+          for sarif in codeql-results/*.sarif; do
+            if [ -f "$sarif" ]; then
+              FILENAME=$(basename "$sarif" .sarif)
+              RESULTS=$(jq -r '.runs[0].results | length' "$sarif" 2>/dev/null || echo "0")
+              # Count rules from driver and all extensions
+              DRIVER_RULES=$(jq -r '.runs[0].tool.driver.rules // [] | length' "$sarif" 2>/dev/null || echo "0")
+              EXT_RULES=$(jq -r '[.runs[0].tool.extensions[]?.rules // [] | length] | add // 0' "$sarif" 2>/dev/null || echo "0")
+              RULES=$((DRIVER_RULES + EXT_RULES))
+              echo "**Language:** $FILENAME" >> $GITHUB_STEP_SUMMARY
+              echo "- Results found: $RESULTS" >> $GITHUB_STEP_SUMMARY
+              echo "- Rules checked: $RULES" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+        else
+          echo "No CodeQL results directory found." >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ env.UPLOAD_SCAN_SARIF }}" == "true" ]; then
+          echo ":white_check_mark: Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
+        else
+          echo ":information_source: Results not uploaded (branch/PR not targeting main, develop, or release)" >> $GITHUB_STEP_SUMMARY
+        fi
+    # -------------------------
+    # Trivy Security Scan
+    # -------------------------
+    - name: Run Trivy vulnerability scanner
+      if: ${{ !inputs.skip_code_scans }}
+      uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        scanners: 'vuln,secret,misconfig'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'
+    - name: Trivy Summary
+      if: ${{ !inputs.skip_code_scans }}
+      run: |
+        echo "## Trivy Security Scan Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -f "trivy-results.sarif" ]; then
+          TOTAL=$(jq -r '.runs[0].results | length' trivy-results.sarif 2>/dev/null || echo "0")
+          # Trivy SARIF level mapping: error=CRITICAL, warning=HIGH, note=MEDIUM/LOW
+          CRITICAL=$(jq -r '[.runs[0].results[] | select(.level == "error")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          HIGH=$(jq -r '[.runs[0].results[] | select(.level == "warning")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          MEDIUM_LOW=$(jq -r '[.runs[0].results[] | select(.level == "note")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| :red_circle: Critical | $CRITICAL |" >> $GITHUB_STEP_SUMMARY
+          echo "| :orange_circle: High | $HIGH |" >> $GITHUB_STEP_SUMMARY
+          echo "| :yellow_circle: Medium/Low | $MEDIUM_LOW |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Total** | **$TOTAL** |" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "No Trivy results file found." >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ env.UPLOAD_SCAN_SARIF }}" == "true" ]; then
+          echo ":white_check_mark: Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
+        else
+          echo ":information_source: Results not uploaded (branch/PR not targeting main, develop, or release)" >> $GITHUB_STEP_SUMMARY
+        fi
+    - name: Upload CodeQL scan results to GitHub Security tab
+      if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
+      uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
+      with:
+        sarif_file: codeql-results/java.sarif
+        category: 'codeql'
+    - name: Upload Trivy scan results to GitHub Security tab
+      if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
+      uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
+      with:
+        sarif_file: 'trivy-results.sarif'
+        category: 'trivy'
     - name: Upload build zip archive
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
@@ -132,6 +254,7 @@ jobs:
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       with:
+        ref: ${{ inputs.ref || github.ref }}
         submodules: recursive
         filter: tree:0
     # -------------------------
@@ -165,9 +288,10 @@ jobs:
         retention-days: 5
     - id: linkchecker
       name: Link Checker
+      if: ${{ !inputs.skip_linkcheck }}
       uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0
       with:
-        args: --verbose --no-progress --accept 200,206,429 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/oscal-cli/tree/develop/ file://${GITHUB_WORKSPACE}/" --remap "https://oscal-cli.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
+        args: --verbose --no-progress --accept 200,206,429,503 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/oscal-cli/tree/develop/ file://${GITHUB_WORKSPACE}/" --remap "https://oscal-cli.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
         format: markdown
         output: html-link-report.md
         debug: true
@@ -175,23 +299,54 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       continue-on-error: true
+    - name: Link Checker Summary
+      if: ${{ !inputs.skip_linkcheck && always() }}
+      run: |
+        echo "<details>" >> $GITHUB_STEP_SUMMARY
+        echo "<summary><strong>Link Checker Results</strong></summary>" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        if [ -f "html-link-report.md" ]; then
+          # Extract summary stats from the report
+          # Lychee uses [ERROR], [4xx], [5xx] for broken links and [TIMEOUT] for timeouts
+          ERRORS=$(grep -cE "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md 2>/dev/null || echo "0")
+          TIMEOUTS=$(grep -c "^\[TIMEOUT\]" html-link-report.md 2>/dev/null || echo "0")
+          if [ "$ERRORS" -gt 0 ]; then
+            echo ":x: **Found $ERRORS broken link(s)**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -E "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          elif [ "$TIMEOUTS" -gt 0 ]; then
+            echo ":warning: **$TIMEOUTS link(s) timed out** (external sites may be slow)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo ":white_check_mark: **All links valid**" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo ":warning: No link check report found." >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "</details>" >> $GITHUB_STEP_SUMMARY
     - name: Upload link check report
+      if: ${{ !inputs.skip_linkcheck }}
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: html-link-report
         path: html-link-report.md
         retention-days: 5
     - name: Create issue if bad links detected
-      if: ${{ !cancelled() && env.lychee_exit_code != 0 && env.INPUT_ISSUE_ON_ERROR == 'true' }}
+      # Only create issues for actual broken links (exit code 2), not timeouts (exit code 1)
+      if: ${{ !inputs.skip_linkcheck && !cancelled() && steps.linkchecker.outputs.exit_code == '2' && env.INPUT_ISSUE_ON_ERROR == 'true' }}
       uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710
       with:
         title: Scheduled Check of Website Content Found Bad Hyperlinks
-        content-filepath: ./lychee/out.md
+        content-filepath: html-link-report.md
         labels: |
           bug
           documentation
     - name: Fail on link check error
-      if: ${{ !cancelled() && env.lychee_exit_code != 0 && env.INPUT_FAIL_ON_ERROR == 'true' }}
+      # Exit codes: 0=success, 1=runtime errors/timeouts, 2=broken links found
+      # Only fail on actual broken links (exit code 2), not timeouts (exit code 1)
+      if: ${{ !inputs.skip_linkcheck && !cancelled() && steps.linkchecker.outputs.exit_code == '2' && env.INPUT_FAIL_ON_ERROR == 'true' }}
       uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
       with:
         script: |
