@@ -83,7 +83,7 @@ Each OSCAL model type (catalog, profile, ssp, component-definition, assessment-p
 
 ## Git Workflow
 
-- Repository: https://github.com/metaschema-framework/oscal-cli
+- Repository: <https://github.com/metaschema-framework/oscal-cli>
 - **All PRs MUST be created from a personal fork** (required by CONTRIBUTING.md)
 - **All PRs MUST target the `develop` branch**
 - All changes require PR review
@@ -139,7 +139,7 @@ Use the `superpowers:using-git-worktrees` skill for guided worktree creation and
 - Tests use JUnit 5
 - All PRs require passing CI checks before merge
 - 100% of unit tests must pass before pushing code
-- See [TESTING.md](TESTING.md) for detailed testing documentation
+- See [TESTING.md](../TESTING.md) for detailed testing documentation
 
 ## Dependencies
 
