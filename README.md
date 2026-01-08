@@ -76,7 +76,7 @@ You can also download pre-release and official release versions of the CLI as an
 
 ```sh
 docker pull ghcr.io/metaschema-framework/oscal-cli:latest
-docker run -it ghcr.io/metaschema-framework/oscal-cli:latest --version
+docker run ghcr.io/metaschema-framework/oscal-cli:latest --version
 ```
 
 
