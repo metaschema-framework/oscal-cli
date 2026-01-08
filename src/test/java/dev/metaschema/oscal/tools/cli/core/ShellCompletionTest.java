@@ -81,21 +81,23 @@ class ShellCompletionTest {
     Path outputPath = Path.of("target/completion." + shell);
     String[] args = { "shell-completion", shell, "--to", outputPath.toString() };
 
-    ExitStatus status = CLI.runCli(args);
+    try {
+      ExitStatus status = CLI.runCli(args);
 
-    assertAll(
-        () -> assertEquals(ExitCode.OK, status.getExitCode(),
-            "shell-completion " + shell + " --to file should return OK"),
-        () -> assertTrue(Files.exists(outputPath),
-            "Output file should exist"),
-        () -> {
-          String content = Files.readString(outputPath, StandardCharsets.UTF_8);
-          assertTrue(content.contains("oscal-cli"),
-              "Completion script should reference oscal-cli");
-        });
-
-    // Clean up
-    Files.deleteIfExists(outputPath);
+      assertAll(
+          () -> assertEquals(ExitCode.OK, status.getExitCode(),
+              "shell-completion " + shell + " --to file should return OK"),
+          () -> assertTrue(Files.exists(outputPath),
+              "Output file should exist"),
+          () -> {
+            String content = Files.readString(outputPath, StandardCharsets.UTF_8);
+            assertTrue(content.contains("oscal-cli"),
+                "Completion script should reference oscal-cli");
+          });
+    } finally {
+      // Clean up - always runs even if assertions fail
+      Files.deleteIfExists(outputPath);
+    }
   }
 
   /**
