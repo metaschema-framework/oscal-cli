@@ -1,14 +1,17 @@
 # syntax=docker/dockerfile:1
+# trivy:ignore:DS026 - CLI tool runs and exits, HEALTHCHECK not applicable
 ARG BUILDER_IMAGE=maven:3.9.9-eclipse-temurin-17
 ARG RUNNER_IMAGE=eclipse-temurin:17
 
+# Builder stage runs as root; runner stage uses non-root user
 FROM ${BUILDER_IMAGE} AS builder
 ARG BUILDER_JDK_VENDOR=temurin
 ARG BUILDER_JDK_MAJOR_VERSION=17
 ARG BUILDER_JDK_HOME_PATH=/opt/java/openjdk
-ADD . /usr/local/src
+COPY . /usr/local/src
 WORKDIR /usr/local/src
-RUN apt-get update && apt-get install -y unzip
+# trivy:ignore:DS029 - Builder stage requires root for system package installation
+RUN apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*
 RUN <<EOF
 mkdir -p /root/.m2
 cat > /root/.m2/toolchains.xml << XMLEOF
