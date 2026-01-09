@@ -72,6 +72,9 @@ concurrency:
 env:
   INPUT_FAIL_ON_ERROR: ${{ inputs.linkcheck_fail_on_error || 'true' }}
   INPUT_ISSUE_ON_ERROR: ${{ inputs.linkcheck_create_issue || 'false' }}
+  # Effective ref for link checker remap: prefer inputs.ref if it looks like a branch name, else fall back to base_ref/ref_name
+  # Heuristic: use inputs.ref if provided, doesn't contain '/', and doesn't start with 'v' (likely a tag)
+  EFFECTIVE_REF: ${{ (inputs.ref && !contains(inputs.ref, '/') && !startsWith(inputs.ref, 'v')) && inputs.ref || github.base_ref || github.ref_name }}
   MAVEN_VERSION: 3.9.8
   JAVA_DISTRO: 'temurin'
   JAVA_VERSION_FILE: .java-version
@@ -165,6 +168,25 @@ jobs:
               echo "**Language:** $FILENAME" >> $GITHUB_STEP_SUMMARY
               echo "- Results found: $RESULTS" >> $GITHUB_STEP_SUMMARY
               echo "- Rules checked: $RULES" >> $GITHUB_STEP_SUMMARY
+              # Show details if there are findings
+              if [ "$RESULTS" -gt 0 ]; then
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "<details>" >> $GITHUB_STEP_SUMMARY
+                echo "<summary>View $RESULTS finding(s)</summary>" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "| Severity | Sec-Sev | Rule | Location | Message |" >> $GITHUB_STEP_SUMMARY
+                echo "|----------|---------|------|----------|---------|" >> $GITHUB_STEP_SUMMARY
+                # Join results with rules to get security-severity (which is on rule definitions, not results)
+                jq -r '
+                  (.runs[0].tool.driver.rules // []) as $driver_rules |
+                  ([.runs[0].tool.extensions[]?.rules // []] | add // []) as $ext_rules |
+                  ($driver_rules + $ext_rules | map({(.id): (.properties["security-severity"] // null)}) | add // {}) as $severities |
+                  .runs[0].results[] |
+                  "| \(if .level == "error" then "Error" elif .level == "warning" then "Warning" elif .level == "note" then "Note" else .level end) | \($severities[.ruleId] // "N/A") | \(.ruleId // "unknown") | `\(.locations[0].physicalLocation.artifactLocation.uri // "unknown"):\(.locations[0].physicalLocation.region.startLine // "?")` | \(.message.text | gsub("\n"; " ") | gsub("\\|"; "\\\\|") | .[0:120]) |"
+                ' "$sarif" >> $GITHUB_STEP_SUMMARY
+                echo "" >> $GITHUB_STEP_SUMMARY
+                echo "</details>" >> $GITHUB_STEP_SUMMARY
+              fi
             fi
           done
         else
@@ -179,7 +201,7 @@ jobs:
     # -------------------------
     # Trivy Security Scan
     # -------------------------
-    - name: Run Trivy vulnerability scanner
+    - name: Run Trivy security scanner
       if: ${{ !inputs.skip_code_scans }}
       uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
       with:
@@ -196,16 +218,28 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ -f "trivy-results.sarif" ]; then
           TOTAL=$(jq -r '.runs[0].results | length' trivy-results.sarif 2>/dev/null || echo "0")
-          # Trivy SARIF level mapping: error=CRITICAL, warning=HIGH, note=MEDIUM/LOW
-          CRITICAL=$(jq -r '[.runs[0].results[] | select(.level == "error")] | length' trivy-results.sarif 2>/dev/null || echo "0")
-          HIGH=$(jq -r '[.runs[0].results[] | select(.level == "warning")] | length' trivy-results.sarif 2>/dev/null || echo "0")
-          MEDIUM_LOW=$(jq -r '[.runs[0].results[] | select(.level == "note")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          # Trivy SARIF level mapping (from trivy source): CRITICAL+HIGH -> error, MEDIUM -> warning, LOW+UNKNOWN -> note
+          CRITICAL_HIGH=$(jq -r '[.runs[0].results[] | select(.level == "error")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          MEDIUM=$(jq -r '[.runs[0].results[] | select(.level == "warning")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          LOW=$(jq -r '[.runs[0].results[] | select(.level == "note")] | length' trivy-results.sarif 2>/dev/null || echo "0")
           echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| :red_circle: Critical | $CRITICAL |" >> $GITHUB_STEP_SUMMARY
-          echo "| :orange_circle: High | $HIGH |" >> $GITHUB_STEP_SUMMARY
-          echo "| :yellow_circle: Medium/Low | $MEDIUM_LOW |" >> $GITHUB_STEP_SUMMARY
+          echo "| :red_circle: Critical/High | $CRITICAL_HIGH |" >> $GITHUB_STEP_SUMMARY
+          echo "| :orange_circle: Medium | $MEDIUM |" >> $GITHUB_STEP_SUMMARY
+          echo "| :yellow_circle: Low | $LOW |" >> $GITHUB_STEP_SUMMARY
           echo "| **Total** | **$TOTAL** |" >> $GITHUB_STEP_SUMMARY
+          # Show details if there are findings
+          if [ "$TOTAL" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>View $TOTAL finding(s)</summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Severity | Rule | Location | Message |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|------|----------|---------|" >> $GITHUB_STEP_SUMMARY
+            jq -r '.runs[0].results[] | "| \(if .level == "error" then "Critical/High" elif .level == "warning" then "Medium" elif .level == "note" then "Low" else .level end) | \(.ruleId // "unknown") | `\(.locations[0].physicalLocation.artifactLocation.uri // "unknown"):\(.locations[0].physicalLocation.region.startLine // "?")` | \(.message.text | gsub("\n"; " ") | gsub("\\|"; "\\\\|") | .[0:120]) |"' trivy-results.sarif >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+          fi
         else
           echo "No Trivy results file found." >> $GITHUB_STEP_SUMMARY
         fi
@@ -219,7 +253,7 @@ jobs:
       if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
       uses: github/codeql-action/upload-sarif@5d4e8d1aca955e8d8589aabd499c5cae939e33c7
       with:
-        sarif_file: codeql-results/java.sarif
+        sarif_file: codeql-results
         category: 'codeql'
     - name: Upload Trivy scan results to GitHub Security tab
       if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
@@ -227,6 +261,50 @@ jobs:
       with:
         sarif_file: 'trivy-results.sarif'
         category: 'trivy'
+    - name: Fail on critical/high security findings
+      if: ${{ !inputs.skip_code_scans }}
+      run: |
+        FAILED=false
+        # Check CodeQL for error level (critical/high) findings
+        if [ -d "codeql-results" ]; then
+          for sarif in codeql-results/*.sarif; do
+            if [ -f "$sarif" ]; then
+              # Check for error level OR security-severity >= 7.0 (high/critical)
+              # Note: security-severity is on rule definitions, not results, so we join via ruleId
+              CODEQL_CRITICAL=$(jq -r '
+                # Collect security-severity from driver and extension rules
+                (.runs[0].tool.driver.rules // []) as $driver_rules |
+                ([.runs[0].tool.extensions[]?.rules // []] | add // []) as $ext_rules |
+                ($driver_rules + $ext_rules | map({(.id): (.properties["security-severity"] // "0")}) | add // {}) as $severities |
+                [.runs[0].results[] | select(
+                  .level == "error" or
+                  (($severities[.ruleId] // "0") | tonumber >= 7.0)
+                )] | length
+              ' "$sarif" 2>/dev/null || echo "0")
+              if [ "$CODEQL_CRITICAL" -gt 0 ]; then
+                echo "::error::CodeQL found $CODEQL_CRITICAL critical/high severity issue(s)"
+                FAILED=true
+              fi
+            fi
+          done
+        fi
+        # Check Trivy for critical/high (error) and medium (warning) findings
+        # Note: Trivy SARIF mapping: CRITICAL+HIGH -> error, MEDIUM -> warning, LOW -> note
+        if [ -f "trivy-results.sarif" ]; then
+          TRIVY_CRITICAL_HIGH=$(jq -r '[.runs[0].results[] | select(.level == "error")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          TRIVY_MEDIUM=$(jq -r '[.runs[0].results[] | select(.level == "warning")] | length' trivy-results.sarif 2>/dev/null || echo "0")
+          if [ "$TRIVY_CRITICAL_HIGH" -gt 0 ]; then
+            echo "::error::Trivy found $TRIVY_CRITICAL_HIGH critical/high severity issue(s)"
+            FAILED=true
+          fi
+          if [ "$TRIVY_MEDIUM" -gt 0 ]; then
+            echo "::warning::Trivy found $TRIVY_MEDIUM medium severity issue(s)"
+          fi
+        fi
+        if [ "$FAILED" = true ]; then
+          echo "::error::Build failed due to critical/high security findings. See summaries above for details."
+          exit 1
+        fi
     - name: Upload build zip archive
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
@@ -291,7 +369,7 @@ jobs:
       if: ${{ !inputs.skip_linkcheck }}
       uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0
       with:
-        args: --verbose --no-progress --accept 200,206,429,503 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/oscal-cli/tree/develop/ file://${GITHUB_WORKSPACE}/" --remap "https://oscal-cli.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
+        args: --verbose --no-progress --accept 200,206,429,503 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/oscal-cli/tree/${{ env.EFFECTIVE_REF }}/ file://${GITHUB_WORKSPACE}/" --remap "https://oscal-cli.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
         format: markdown
         output: html-link-report.md
         debug: true
@@ -302,20 +380,25 @@ jobs:
     - name: Link Checker Summary
       if: ${{ !inputs.skip_linkcheck && always() }}
       run: |
-        echo "<details>" >> $GITHUB_STEP_SUMMARY
-        echo "<summary><strong>Link Checker Results</strong></summary>" >> $GITHUB_STEP_SUMMARY
+        echo "## Link Checker Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ -f "html-link-report.md" ]; then
           # Extract summary stats from the report
           # Lychee uses [ERROR], [4xx], [5xx] for broken links and [TIMEOUT] for timeouts
-          ERRORS=$(grep -cE "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md 2>/dev/null || echo "0")
-          TIMEOUTS=$(grep -c "^\[TIMEOUT\]" html-link-report.md 2>/dev/null || echo "0")
+          # Note: grep -c exits 1 when no matches, so we capture output first then handle exit code
+          ERRORS=$(grep -cE "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md 2>/dev/null) || ERRORS=0
+          TIMEOUTS=$(grep -c "^\[TIMEOUT\]" html-link-report.md 2>/dev/null) || TIMEOUTS=0
           if [ "$ERRORS" -gt 0 ]; then
             echo ":x: **Found $ERRORS broken link(s)**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "<details>" >> $GITHUB_STEP_SUMMARY
+            echo "<summary>View broken links</summary>" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             grep -E "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
           elif [ "$TIMEOUTS" -gt 0 ]; then
             echo ":warning: **$TIMEOUTS link(s) timed out** (external sites may be slow)" >> $GITHUB_STEP_SUMMARY
           else
@@ -325,7 +408,6 @@ jobs:
           echo ":warning: No link check report found." >> $GITHUB_STEP_SUMMARY
         fi
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "</details>" >> $GITHUB_STEP_SUMMARY
     - name: Upload link check report
       if: ${{ !inputs.skip_linkcheck }}
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
@@ -344,10 +426,13 @@ jobs:
           bug
           documentation
     - name: Fail on link check error
-      # Exit codes: 0=success, 1=runtime errors/timeouts, 2=broken links found
-      # Only fail on actual broken links (exit code 2), not timeouts (exit code 1)
-      if: ${{ !inputs.skip_linkcheck && !cancelled() && steps.linkchecker.outputs.exit_code == '2' && env.INPUT_FAIL_ON_ERROR == 'true' }}
-      uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
-      with:
-        script: |
-          core.setFailed('Link checker detected broken or invalid links, read attached report.')
+      # Check report for actual broken links (ERROR, 4xx, 5xx), not timeouts
+      if: ${{ !inputs.skip_linkcheck && !cancelled() && env.INPUT_FAIL_ON_ERROR == 'true' }}
+      run: |
+        if [ -f "html-link-report.md" ]; then
+          ERRORS=$(grep -cE "^\[ERROR\]|^\[[45][0-9]{2}\]" html-link-report.md 2>/dev/null) || ERRORS=0
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::Link checker found $ERRORS broken link(s). See report for details."
+            exit 1
+          fi
+        fi
