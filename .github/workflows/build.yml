@@ -72,9 +72,8 @@ concurrency:
 env:
   INPUT_FAIL_ON_ERROR: ${{ inputs.linkcheck_fail_on_error || 'true' }}
   INPUT_ISSUE_ON_ERROR: ${{ inputs.linkcheck_create_issue || 'false' }}
-  # Effective ref for link checker remap: prefer inputs.ref if it looks like a branch name, else fall back to base_ref/ref_name
-  # Heuristic: use inputs.ref if provided, doesn't contain '/', and doesn't start with 'v' (likely a tag)
-  EFFECTIVE_REF: ${{ (inputs.ref && !contains(inputs.ref, '/') && !startsWith(inputs.ref, 'v')) && inputs.ref || github.base_ref || github.ref_name }}
+  # Effective ref for link checker remap: use inputs.ref if provided, else base_ref (PRs) or ref_name (pushes), fallback to develop
+  EFFECTIVE_REF: ${{ inputs.ref || github.base_ref || github.ref_name || 'develop' }}
   MAVEN_VERSION: 3.9.8
   JAVA_DISTRO: 'temurin'
   JAVA_VERSION_FILE: .java-version
