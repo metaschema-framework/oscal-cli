@@ -30,11 +30,14 @@ java -version
 
 ## Quick Start
 
-Download the latest release and run:
+Download the latest release and run. Replace `VERSION` with the actual version number from [Maven Central](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli-enhanced):
 
 ```bash
+# Set the version (check Maven Central for the latest)
+VERSION="2.0.0"
+
 # Download and extract
-curl -L https://repo1.maven.org/maven2/dev/metaschema/oscal/oscal-cli-enhanced/LATEST_VERSION/oscal-cli-enhanced-LATEST_VERSION-oscal-cli.zip -o oscal-cli.zip
+curl -L "https://repo1.maven.org/maven2/dev/metaschema/oscal/oscal-cli-enhanced/${VERSION}/oscal-cli-enhanced-${VERSION}-oscal-cli.zip" -o oscal-cli.zip
 unzip oscal-cli.zip
 
 # Run
@@ -118,6 +121,7 @@ The OSCAL CLI integrates easily into CI/CD pipelines to validate OSCAL documents
 
 ### GitHub Actions
 
+#[[
 ```yaml
 name: Validate OSCAL
 
@@ -135,6 +139,7 @@ jobs:
             ghcr.io/metaschema-framework/oscal-cli:latest \
             validate /data/ssp.json
 ```
+]]#
 
 ### GitLab CI
 
@@ -147,6 +152,7 @@ validate-oscal:
 
 ### Jenkins Pipeline
 
+#[[
 ```groovy
 pipeline {
     agent any
@@ -163,6 +169,7 @@ pipeline {
     }
 }
 ```
+]]#
 
 ## Shell Completion
 
@@ -178,6 +185,7 @@ oscal-cli shell-completion bash > oscal-cli-completion.bash
 source oscal-cli-completion.bash
 
 # Or install permanently
+mkdir -p ~/.local/share/bash-completion/completions
 oscal-cli shell-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
 ```
 
@@ -187,7 +195,8 @@ oscal-cli shell-completion bash > ~/.local/share/bash-completion/completions/osc
 # Generate completion script
 oscal-cli shell-completion zsh > _oscal-cli
 
-# Install to your fpath
+# Install to your fpath (create directory if needed)
+mkdir -p ~/.zsh/completions
 mv _oscal-cli ~/.zsh/completions/
 
 # Rebuild completion cache

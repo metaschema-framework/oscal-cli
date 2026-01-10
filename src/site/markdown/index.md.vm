@@ -120,9 +120,11 @@ Enable tab completion for Bash or Zsh:
 
 ```bash
 # Bash
+mkdir -p ~/.local/share/bash-completion/completions
 oscal-cli shell-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
 
 # Zsh
+mkdir -p ~/.zsh/completions
 oscal-cli shell-completion zsh > ~/.zsh/completions/_oscal-cli
 ```
 
@@ -145,4 +147,4 @@ This project includes plugins for [Claude Code](https://claude.ai/code) that pro
 Have questions or found an issue? Here's how to get help:
 
 - [GitHub Issues](${project.issueManagement.url}) - Report bugs or request features
-- [Contributing](${project.scm.url}/blob/develop/CONTRIBUTING.md) - Contribution guidelines
+- [Contributing](${project.scm.url}/blob/HEAD/CONTRIBUTING.md) - Contribution guidelines
