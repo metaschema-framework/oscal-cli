@@ -1,0 +1,182 @@
+# Building from Source
+
+This guide explains how to build the OSCAL CLI from source code.
+
+## Prerequisites
+
+| Requirement | Minimum Version | Notes |
+|-------------|-----------------|-------|
+| Java JDK    | 17              | Required for building (output JARs are JDK 11 compatible) |
+| Maven       | 3.9.0           | Required for building |
+| Git         | 2.0             | Required for cloning |
+
+Ensure `JAVA_HOME` is set correctly:
+
+```bash
+# Linux/macOS
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+
+# Windows
+set JAVA_HOME=C:\Program Files\Java\jdk-17
+```
+
+## Clone the Repository
+
+Clone the repository with submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/metaschema-framework/oscal-cli.git
+cd oscal-cli
+```
+
+If you already cloned without submodules, initialize them:
+
+```bash
+git submodule update --init --recursive
+```
+
+## Build Commands
+
+### Basic Build
+
+Build and install to your local Maven repository:
+
+```bash
+mvn install
+```
+
+This produces the CLI distribution in `target/oscal-cli-enhanced-*-oscal-cli.zip`.
+
+### Run Tests Only
+
+```bash
+mvn test
+```
+
+### Run a Single Test
+
+```bash
+# Run a single test class
+mvn test -Dtest=CLITest
+
+# Run a single test method
+mvn test -Dtest=CLITest#testValidate
+```
+
+### Skip Tests
+
+```bash
+mvn install -DskipTests
+```
+
+### CI/CD Build
+
+Replicate the full CI/CD build (recommended before pushing):
+
+```bash
+mvn install -PCI -Prelease
+```
+
+This enables additional checks including:
+
+- License header verification
+- Checkstyle code style checks
+- SpotBugs static analysis
+- Full test suite
+
+## Code Quality Commands
+
+### Check License Headers
+
+```bash
+mvn license:check
+```
+
+### Auto-format Source Code
+
+```bash
+mvn formatter:format
+```
+
+### Check for Checkstyle Issues
+
+```bash
+mvn checkstyle:check
+```
+
+## Running the Built CLI
+
+After building, you can run the CLI directly:
+
+```bash
+# Extract the distribution
+unzip target/oscal-cli-enhanced-*-oscal-cli.zip -d target/cli
+
+# Run the CLI
+target/cli/bin/oscal-cli --help
+```
+
+## Building Container Images
+
+To build a local container image:
+
+```bash
+# Build with Docker
+docker build -t oscal-cli:local .
+
+# Test the image
+docker run --rm oscal-cli:local --help
+```
+
+## Common Build Issues
+
+### Submodule Not Initialized
+
+**Symptom:** Build fails with missing OSCAL or Metaschema files.
+
+**Solution:** Initialize submodules:
+
+```bash
+git submodule update --init --recursive
+```
+
+### Java Version Mismatch
+
+**Symptom:** Compilation errors or "unsupported class file version" errors.
+
+**Solution:** Ensure you're using Java 17 or later for building:
+
+```bash
+java -version
+mvn -version
+```
+
+### Maven Version Too Old
+
+**Symptom:** Build fails with plugin compatibility errors or enforcer rule failures.
+
+**Solution:** Upgrade Maven to 3.9.0 or later:
+
+```bash
+mvn -version
+```
+
+### Out of Memory
+
+**Symptom:** Build fails with `OutOfMemoryError`.
+
+**Solution:** Increase Maven's heap size:
+
+```bash
+export MAVEN_OPTS="-Xmx2g"
+mvn install
+```
+
+## Contributing
+
+For contribution guidelines, including code style requirements and the pull request process, see [CONTRIBUTING.md](${project.scm.url}/blob/develop/CONTRIBUTING.md).
+
+## Next Steps
+
+- [Installation](installation.html) - Install the pre-built CLI
+- [CLI Reference](guides/cli-reference.html) - Complete command reference

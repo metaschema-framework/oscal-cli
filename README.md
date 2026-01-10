@@ -102,9 +102,40 @@ To disable colored output, use the `--no-color` flag:
 oscal-cli --no-color <command>
 ```
 
+### Shell Completion
+
+The CLI supports tab completion for Bash and Zsh shells, providing intelligent suggestions for commands, subcommands, and options.
+
+**Bash:**
+
+```bash
+# Generate and source completion (temporary, current session only)
+source <(oscal-cli shell-completion bash)
+
+# Or save to a file and source it in your ~/.bashrc for persistence
+oscal-cli shell-completion bash --to ~/.oscal-completion.bash
+echo 'source ~/.oscal-completion.bash' >> ~/.bashrc
+```
+
+**Zsh:**
+
+```zsh
+# Ensure your completions directory exists
+mkdir -p ~/.zsh/completions
+
+# Generate completion script
+oscal-cli shell-completion zsh > ~/.zsh/completions/_oscal-cli
+
+# Add to your ~/.zshrc if not already configured
+echo 'fpath=(~/.zsh/completions $fpath)' >> ~/.zshrc
+echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
+```
+
+After setting up completion, restart your shell or source the configuration file.
+
 ## Building
 
-This project can be built with [Apache Maven](https://maven.apache.org/) version 3.8.4 or greater.
+This project can be built with [Apache Maven](https://maven.apache.org/) version 3.9.0 or greater.
 
 The following instructions can be used to clone and build this project.
 

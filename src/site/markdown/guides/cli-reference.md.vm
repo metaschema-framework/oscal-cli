@@ -1,0 +1,275 @@
+# CLI Reference
+
+Complete reference for all oscal-cli commands.
+
+## Global Options
+
+These options are available for all commands:
+
+| Option | Description |
+|--------|-------------|
+| `--help`, `-h` | Show help for any command |
+| `--version`, `-V` | Show version information |
+| `--show-stack-trace` | Show detailed error information |
+| `--quiet`, `-q` | Suppress non-essential output |
+
+## Commands
+
+### validate
+
+Validate OSCAL documents for well-formedness and schema compliance.
+
+```bash
+oscal-cli validate [options] <file>
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `<file>` | Path or URL to OSCAL document |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--as=<format>` | Force input format: `xml`, `json`, `yaml` |
+
+**Examples:**
+
+```bash
+# Validate a JSON file
+oscal-cli validate ssp.json
+
+# Validate with explicit format
+oscal-cli validate --as=json document.txt
+
+# Validate remote file
+oscal-cli validate https://example.com/catalog.json
+
+# Validate with detailed errors
+oscal-cli validate --show-stack-trace ssp.json
+```
+
+**Exit Codes:**
+
+| Code | Meaning |
+|------|---------|
+| 0 | Validation passed |
+| 1 | Validation failed |
+| 2 | Invalid arguments |
+
+---
+
+### convert
+
+Convert OSCAL documents between XML, JSON, and YAML formats.
+
+```bash
+oscal-cli convert [options] <source> [destination]
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `<source>` | Input file path or URL |
+| `[destination]` | Output file path (optional, stdout if omitted) |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--to=<format>` | Output format: `xml`, `json`, `yaml` (required) |
+| `--as=<format>` | Input format: `xml`, `json`, `yaml` |
+| `--overwrite` | Overwrite existing output file |
+
+**Examples:**
+
+```bash
+# Convert XML to JSON
+oscal-cli convert --to=json catalog.xml catalog.json
+
+# Convert to stdout
+oscal-cli convert --to=json catalog.xml
+
+# Convert with overwrite
+oscal-cli convert --to=json --overwrite catalog.xml catalog.json
+```
+
+---
+
+### resolve-profile
+
+Resolve an OSCAL profile to a catalog.
+
+```bash
+oscal-cli resolve-profile [options] <profile> [catalog]
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `<profile>` | Input profile file or URL |
+| `[catalog]` | Output catalog file (optional, stdout if omitted) |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--to=<format>` | Output format: `xml`, `json`, `yaml` |
+| `--as=<format>` | Input format: `xml`, `json`, `yaml` |
+| `--overwrite` | Overwrite existing output file |
+
+**Examples:**
+
+```bash
+# Resolve profile to JSON catalog
+oscal-cli resolve-profile profile.json resolved-catalog.json
+
+# Resolve with format conversion
+oscal-cli resolve-profile --to=xml profile.json resolved-catalog.xml
+
+# Resolve to stdout
+oscal-cli resolve-profile --to=json profile.xml
+```
+
+---
+
+### metapath
+
+Work with Metapath expressions.
+
+#### metapath eval
+
+Evaluate a Metapath expression against a document.
+
+```bash
+oscal-cli metapath eval [options] -e <expression> <file>
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `<file>` | Input file to query |
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `-e <expression>` | Metapath expression to evaluate (required) |
+| `--to=<format>` | Output format: `xml`, `json`, `yaml` |
+
+**Examples:**
+
+```bash
+# Query all controls
+oscal-cli metapath eval -e "//control" catalog.json
+
+# Query with JSON output
+oscal-cli metapath eval -e "//control/title" --to=json catalog.json
+
+# Count elements
+oscal-cli metapath eval -e "count(//control)" catalog.json
+```
+
+---
+
+### generate-completion
+
+Generate shell completion scripts.
+
+```bash
+oscal-cli generate-completion <shell>
+```
+
+**Arguments:**
+
+| Argument | Description |
+|----------|-------------|
+| `<shell>` | Shell type: `bash` or `zsh` |
+
+**Examples:**
+
+```bash
+# Generate Bash completion
+oscal-cli generate-completion bash > oscal-cli-completion.bash
+
+# Generate Zsh completion
+oscal-cli generate-completion zsh > _oscal-cli
+```
+
+---
+
+## OSCAL Document Types
+
+The CLI recognizes these OSCAL document types automatically:
+
+| Type | Root Element |
+|------|--------------|
+| Catalog | `catalog` |
+| Profile | `profile` |
+| System Security Plan | `system-security-plan` |
+| Component Definition | `component-definition` |
+| Assessment Plan | `assessment-plan` |
+| Assessment Results | `assessment-results` |
+| POA&M | `plan-of-action-and-milestones` |
+
+## Format Detection
+
+File formats are detected by extension:
+
+| Extension | Format |
+|-----------|--------|
+| `.xml` | XML |
+| `.json` | JSON |
+| `.yaml`, `.yml` | YAML |
+
+Use `--as` to override detection for files with non-standard extensions.
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `JAVA_HOME` | Java installation directory |
+| `JAVA_OPTS` | JVM options (e.g., `-Xmx2g`) |
+
+## Container Reference
+
+### Image Tags
+
+| Tag | Description |
+|-----|-------------|
+| `latest` | Latest stable release |
+| `x.y.z` | Specific version |
+| `develop` | Latest development build |
+
+### Volume Mounting
+
+```bash
+# Mount current directory
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest ...
+
+# Mount specific directory
+docker run --rm -v "/path/to/files:/data" ghcr.io/metaschema-framework/oscal-cli:latest ...
+```
+
+### Resource Limits
+
+```bash
+# Limit memory
+docker run --rm -m 2g ghcr.io/metaschema-framework/oscal-cli:latest ...
+
+# Limit CPU
+docker run --rm --cpus 2 ghcr.io/metaschema-framework/oscal-cli:latest ...
+```
+
+## See Also
+
+- [Installation](../installation.html) - Install the CLI
+- [Validating OSCAL](validating-oscal.html) - Validation guide
+- [Converting Formats](converting-formats.html) - Conversion guide
+- [Resolving Profiles](resolving-profiles.html) - Profile resolution guide
+- [Working with Metaschema](working-with-metaschema.html) - Metapath queries

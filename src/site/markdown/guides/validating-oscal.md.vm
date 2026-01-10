@@ -1,0 +1,209 @@
+# Validating OSCAL Documents
+
+This guide explains how to validate OSCAL documents using the oscal-cli.
+
+## Overview
+
+The `validate` command checks OSCAL documents for:
+
+- **Well-formedness** - Valid XML, JSON, or YAML syntax
+- **Schema compliance** - Conformance to the OSCAL model structure
+- **Constraint validation** - Metaschema-defined validation rules (experimental)
+
+## Basic Validation
+
+### Validate a Single File
+
+```bash
+# Validate JSON
+oscal-cli validate ssp.json
+
+# Validate XML
+oscal-cli validate catalog.xml
+
+# Validate YAML
+oscal-cli validate profile.yaml
+```
+
+### Validate with Verbose Output
+
+```bash
+oscal-cli validate --show-stack-trace ssp.json
+```
+
+## Validation Modes
+
+### Well-formedness Only
+
+Check only that the document is valid XML/JSON/YAML:
+
+```bash
+oscal-cli validate --as=xml catalog.xml
+```
+
+### Full Validation
+
+Include Metaschema constraint validation (experimental):
+
+```bash
+oscal-cli validate catalog.json
+```
+
+## Working with Different Document Types
+
+### Catalogs
+
+```bash
+oscal-cli validate /path/to/catalog.json
+```
+
+### Profiles
+
+```bash
+oscal-cli validate /path/to/profile.json
+```
+
+### System Security Plans (SSPs)
+
+```bash
+oscal-cli validate /path/to/ssp.json
+```
+
+### Component Definitions
+
+```bash
+oscal-cli validate /path/to/component-definition.json
+```
+
+### Assessment Plans
+
+```bash
+oscal-cli validate /path/to/assessment-plan.json
+```
+
+### Assessment Results
+
+```bash
+oscal-cli validate /path/to/assessment-results.json
+```
+
+### POA&Ms
+
+```bash
+oscal-cli validate /path/to/poam.json
+```
+
+## Validating Remote Files
+
+Validate files directly from URLs:
+
+```bash
+oscal-cli validate https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json
+```
+
+## Understanding Validation Output
+
+### Success
+
+```
+Validation completed with 0 errors.
+```
+
+### Errors
+
+```
+[ERROR] /document/metadata/title: Required field 'title' is missing
+```
+
+Each error shows:
+- Severity level (ERROR, WARNING, INFO)
+- JSON Pointer or XPath location
+- Description of the issue
+
+## Common Validation Errors
+
+### Missing Required Fields
+
+```
+[ERROR] /catalog/metadata: Required property 'title' is missing
+```
+
+**Fix:** Add the required field to your document.
+
+### Invalid UUID Format
+
+```
+[ERROR] /catalog/uuid: Value 'not-a-uuid' is not a valid UUID
+```
+
+**Fix:** Use a valid UUID v4 format.
+
+### Invalid Date-Time
+
+```
+[ERROR] /catalog/metadata/last-modified: Value is not a valid date-time
+```
+
+**Fix:** Use ISO 8601 format: `2024-01-15T10:30:00Z`
+
+### Invalid Reference
+
+```
+[ERROR] /profile/imports/0/href: Referenced resource not found
+```
+
+**Fix:** Ensure the referenced file exists or URL is accessible.
+
+## Batch Validation
+
+Validate multiple files:
+
+```bash
+# Using shell expansion
+for f in *.json; do
+    echo "Validating $f"
+    oscal-cli validate "$f"
+done
+
+# Using find
+find . -name "*.json" -exec oscal-cli validate {} \;
+```
+
+## Container Usage
+
+```bash
+# Validate a local file
+docker run --rm -v "$(pwd):/data" \
+    ghcr.io/metaschema-framework/oscal-cli:latest \
+    validate /data/ssp.json
+
+# Validate multiple files
+docker run --rm -v "$(pwd):/data" \
+    ghcr.io/metaschema-framework/oscal-cli:latest \
+    sh -c 'for f in /data/*.json; do oscal-cli validate "$f"; done'
+```
+
+## CI/CD Integration
+
+### GitHub Actions
+
+```yaml
+- name: Validate OSCAL
+  run: |
+    for file in $(find . -name "*.json" -path "*/oscal/*"); do
+      oscal-cli validate "$file"
+    done
+```
+
+### Exit Codes
+
+| Code | Meaning |
+|------|---------|
+| 0    | Validation passed |
+| 1    | Validation failed |
+| 2    | Invalid arguments or file not found |
+
+## Next Steps
+
+- [Converting Formats](converting-formats.html) - Convert between XML, JSON, YAML
+- [CLI Reference](cli-reference.html) - Complete command reference

@@ -1,12 +1,106 @@
 # ${project.name}
 
-This open-source, tool offers a convenient way to manipulate OSCAL and Metaschema based
-content supporting the following operations:
+A command-line tool for working with [OSCAL](https://pages.nist.gov/OSCAL/) (Open Security Controls Assessment Language) and [Metaschema](https://pages.nist.gov/metaschema/) content.
 
-- Converting OSCAL content between the OSCAL XML, JSON, and YAML formats.
-- Validating an OSCAL resources to ensure it is well-formed and valid.
-- Resolving OSCAL Profiles.
-- Validating a Metaschema model definition to ensure it is well-formed and valid.
-- Generating XML and JSON Schemas from a Metaschema model definition.
+## Quick Start
 
-For usage instructions, please goto https://github.com/metaschema-framework/oscal-cli.
+### Using Docker
+
+```bash
+# Validate an OSCAL document
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest \
+    validate /data/ssp.json
+
+# Convert XML to JSON
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest \
+    convert --to=json /data/catalog.xml /data/catalog.json
+```
+
+### Using the CLI Directly
+
+```bash
+# Validate an OSCAL document
+oscal-cli validate ssp.json
+
+# Convert between formats
+oscal-cli convert --to=json catalog.xml catalog.json
+
+# Resolve a profile
+oscal-cli resolve-profile profile.json resolved-catalog.json
+```
+
+See the [Installation](installation.html) guide for download and setup instructions.
+
+## Key Features
+
+- **Validation** - Validate OSCAL documents for well-formedness and schema compliance
+- **Format Conversion** - Convert between XML, JSON, and YAML formats
+- **Profile Resolution** - Resolve OSCAL profiles to produce baseline catalogs
+- **Metapath Queries** - Query OSCAL content using Metapath expressions
+- **Schema Generation** - Generate XML and JSON schemas from Metaschema modules
+
+## Common Commands
+
+| Command | Description |
+|---------|-------------|
+| `validate` | Validate an OSCAL or Metaschema document |
+| `convert` | Convert between XML, JSON, and YAML formats |
+| `resolve-profile` | Resolve an OSCAL profile to a catalog |
+| `metapath eval` | Evaluate Metapath expressions |
+| `generate-completion` | Generate shell completion scripts |
+
+## Getting Started
+
+| Task | Guide |
+|------|-------|
+| Install the CLI | [Installation](installation.html) |
+| Build from source | [Building](building.html) |
+| Validate documents | [Validating OSCAL](guides/validating-oscal.html) |
+| Convert formats | [Converting Formats](guides/converting-formats.html) |
+| Resolve profiles | [Resolving Profiles](guides/resolving-profiles.html) |
+| Query with Metapath | [Working with Metaschema](guides/working-with-metaschema.html) |
+| Command reference | [CLI Reference](guides/cli-reference.html) |
+
+## Container Usage
+
+The CLI is available as a container image:
+
+```bash
+# Pull the image
+docker pull ghcr.io/metaschema-framework/oscal-cli:latest
+
+# Run with mounted volume
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest \
+    validate /data/document.json
+```
+
+See the [Installation](installation.html) guide for CI/CD integration examples.
+
+## Shell Completion
+
+Enable tab completion for Bash or Zsh:
+
+```bash
+# Bash
+oscal-cli generate-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
+
+# Zsh
+oscal-cli generate-completion zsh > ~/.zsh/completions/_oscal-cli
+```
+
+## Related Projects
+
+| Project | Description |
+|---------|-------------|
+| [liboscal-java](https://github.com/metaschema-framework/liboscal-java) | OSCAL Java library |
+| [metaschema-java](https://github.com/metaschema-framework/metaschema-java) | Core Metaschema framework |
+| [OSCAL](https://pages.nist.gov/OSCAL/) | OSCAL specification and documentation |
+
+## Using with Claude Code
+
+This project includes plugins for [Claude Code](https://claude.ai/code) that provide AI-assisted development. See the [Claude Integration](claude-integration.html) guide for details.
+
+## Support
+
+- [GitHub Issues](${project.issueManagement.url}) - Report bugs or request features
+- [Contributing](${project.scm.url}/blob/develop/CONTRIBUTING.md) - Contribution guidelines
