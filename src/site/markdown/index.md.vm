@@ -2,6 +2,30 @@
 
 A command-line tool for working with [OSCAL](https://pages.nist.gov/OSCAL/) (Open Security Controls Assessment Language) and [Metaschema](https://pages.nist.gov/metaschema/) content.
 
+## What is the OSCAL CLI?
+
+The OSCAL CLI is a cross-platform command-line tool that provides essential operations for working with OSCAL documents. Whether you're validating compliance artifacts, converting between formats, or resolving profiles, the CLI offers a straightforward interface that works in interactive sessions and automated pipelines alike.
+
+The CLI is particularly useful for:
+
+- **CI/CD integration** - Validate OSCAL documents automatically as part of your build pipeline
+- **Format standardization** - Convert OSCAL content to your organization's preferred format
+- **Profile resolution** - Generate resolved catalogs from OSCAL profiles
+- **Scripting and automation** - Incorporate OSCAL processing into shell scripts and workflows
+- **Learning OSCAL** - Experiment with OSCAL documents without writing code
+
+## Why Use This Tool?
+
+The OSCAL CLI provides a batteries-included approach to OSCAL processing:
+
+- **No coding required** - Perform common OSCAL operations without writing Java or other code
+- **Format agnostic** - Work with XML, JSON, and YAML interchangeably
+- **Standards compliant** - Built on the same libraries used by NIST for OSCAL reference implementations
+- **Container ready** - Available as a Docker/Podman image for easy deployment
+- **Cross-platform** - Runs anywhere Java runs: Linux, macOS, Windows
+
+For programmatic access to OSCAL functionality, see [liboscal-java](https://github.com/metaschema-framework/liboscal-java), the Java library this CLI is built on.
+
 ## Quick Start
 
 ### Using Docker
@@ -33,11 +57,25 @@ See the [Installation](installation.html) guide for download and setup instructi
 
 ## Key Features
 
-- **Validation** - Validate OSCAL documents for well-formedness and schema compliance
-- **Format Conversion** - Convert between XML, JSON, and YAML formats
-- **Profile Resolution** - Resolve OSCAL profiles to produce baseline catalogs
-- **Metapath Queries** - Query OSCAL content using Metapath expressions
-- **Schema Generation** - Generate XML and JSON schemas from Metaschema modules
+### Validation
+
+Validate OSCAL documents to ensure they conform to the OSCAL specification. The CLI checks for well-formedness, schema compliance, and optionally validates against Metaschema constraints that express business rules beyond basic schema requirements. Validation errors include detailed messages with line numbers and context to help you quickly identify and fix issues.
+
+### Format Conversion
+
+Convert OSCAL documents between XML, JSON, and YAML formats with full fidelity. The CLI preserves all data during conversion—you can round-trip documents through multiple format changes without data loss. This is useful for standardizing on a single format across your organization or for working with tools that require a specific format.
+
+### Profile Resolution
+
+Resolve OSCAL profiles to produce flattened catalogs. Profiles define control baselines by selecting controls from catalogs, modifying parameters, and adding organization-specific guidance. Profile resolution produces a "resolved catalog" that incorporates all these customizations into a single, self-contained document.
+
+### Metapath Queries
+
+Query OSCAL content using Metapath, an XPath-like expression language designed for Metaschema-based data. Metapath allows you to extract specific data from documents, count elements, and perform calculations—all from the command line.
+
+### Schema Generation
+
+Generate XML Schema (XSD) and JSON Schema files from Metaschema module definitions. This is primarily useful for developers working with custom Metaschema models beyond OSCAL.
 
 ## Common Commands
 
@@ -52,7 +90,7 @@ See the [Installation](installation.html) guide for download and setup instructi
 ## Getting Started
 
 | Task | Guide |
-|------|-------|
+|:-----|:------|
 | Install the CLI | [Installation](installation.html) |
 | Build from source | [Building](building.html) |
 | Validate documents | [Validating OSCAL](guides/validating-oscal.html) |
@@ -90,8 +128,10 @@ oscal-cli generate-completion zsh > ~/.zsh/completions/_oscal-cli
 
 ## Related Projects
 
+This CLI is part of a larger ecosystem of OSCAL and Metaschema tools:
+
 | Project | Description |
-|---------|-------------|
+|:--------|:------------|
 | [liboscal-java](https://github.com/metaschema-framework/liboscal-java) | OSCAL Java library |
 | [metaschema-java](https://github.com/metaschema-framework/metaschema-java) | Core Metaschema framework |
 | [OSCAL](https://pages.nist.gov/OSCAL/) | OSCAL specification and documentation |
@@ -101,6 +141,8 @@ oscal-cli generate-completion zsh > ~/.zsh/completions/_oscal-cli
 This project includes plugins for [Claude Code](https://claude.ai/code) that provide AI-assisted development. See the [Claude Integration](claude-integration.html) guide for details.
 
 ## Support
+
+Have questions or found an issue? Here's how to get help:
 
 - [GitHub Issues](${project.issueManagement.url}) - Report bugs or request features
 - [Contributing](${project.scm.url}/blob/develop/CONTRIBUTING.md) - Contribution guidelines

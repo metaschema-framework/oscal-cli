@@ -5,7 +5,7 @@ This guide explains how to build the OSCAL CLI from source code.
 ## Prerequisites
 
 | Requirement | Minimum Version | Notes |
-|-------------|-----------------|-------|
+|:------------|:----------------|:------|
 | Java JDK    | 17              | Required for building (output JARs are JDK 11 compatible) |
 | Maven       | 3.9.0           | Required for building |
 | Git         | 2.0             | Required for cloning |
@@ -127,6 +127,16 @@ docker build -t oscal-cli:local .
 # Test the image
 docker run --rm oscal-cli:local --help
 ```
+
+## Building the Site
+
+To build the project documentation site:
+
+```bash
+mvn site
+```
+
+The generated site appears in `target/site/`.
 
 ## Common Build Issues
 

@@ -15,7 +15,7 @@ Claude Code plugins provide specialized skills for:
 ## Prerequisites
 
 1. [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
-2. Ensure the OSCAL plugins are available in your configuration
+2. Install the [Metaschema plugins](https://github.com/metaschema-framework/claude-plugins/tree/main)
 
 ## Available Plugins
 
@@ -24,7 +24,7 @@ Claude Code plugins provide specialized skills for:
 Skills for working with OSCAL documents:
 
 | Skill | Description |
-|-------|-------------|
+|:------|:------------|
 | `oscal:oscal-basics` | OSCAL document types and structure |
 
 ### OSCAL Tools Plugin
@@ -32,7 +32,7 @@ Skills for working with OSCAL documents:
 Skills for using the CLI:
 
 | Skill | Description |
-|-------|-------------|
+|:------|:------------|
 | `oscal-tools:using-oscal-cli` | Running oscal-cli commands |
 
 ### Metaschema Plugin
@@ -40,7 +40,7 @@ Skills for using the CLI:
 Skills for understanding OSCAL's underlying structure:
 
 | Skill | Description |
-|-------|-------------|
+|:------|:------------|
 | `metaschema:metaschema-basics` | Introduction to Metaschema concepts |
 | `metaschema:metapath-expressions` | Writing Metapath queries |
 
@@ -107,6 +107,8 @@ oscal-cli metapath eval -e "//control" catalog.json
 ```
 
 ## Learn More
+
+For more information about Claude Code, OSCAL, and the CLI, see these resources:
 
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
 - [OSCAL Documentation](https://pages.nist.gov/OSCAL/)

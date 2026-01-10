@@ -12,7 +12,7 @@ The oscal-cli includes Metaschema functionality inherited from metaschema-cli, i
 
 ## Evaluating Metapath Expressions
 
-Metapath is an expression language for querying Metaschema-based documents.
+Metapath is an XPath-like expression language designed for querying Metaschema-based documents. Unlike XPath, which is XML-specific, Metapath works identically regardless of whether your document is in XML, JSON, or YAML format.
 
 ### Basic Query
 
@@ -27,6 +27,8 @@ oscal-cli metapath eval -e "//control/title" --to=json catalog.json
 ```
 
 ### Common Metapath Queries for OSCAL
+
+The following examples demonstrate frequently used queries for OSCAL documents. These patterns form the foundation for more complex queries:
 
 #### Find All Controls
 
@@ -66,10 +68,14 @@ oscal-cli metapath eval -e "//param" catalog.json
 
 ## Metapath Expression Syntax
 
+If you're familiar with XPath, Metapath syntax will feel natural. The following tables provide a quick reference for common patterns:
+
 ### Path Expressions
 
+Path expressions navigate the document structure. The `//` operator is particularly useful for finding elements at any depth:
+
 | Expression | Description |
-|------------|-------------|
+|:-----------|:------------|
 | `/catalog` | Root catalog element |
 | `//control` | All controls at any depth |
 | `control/part` | Parts within controls |
@@ -78,8 +84,10 @@ oscal-cli metapath eval -e "//param" catalog.json
 
 ### Predicates
 
+Predicates filter results based on conditions. They appear in square brackets after the element selector:
+
 | Expression | Description |
-|------------|-------------|
+|:-----------|:------------|
 | `control[@id='ac-1']` | Control with specific ID |
 | `control[1]` | First control |
 | `control[last()]` | Last control |
@@ -87,8 +95,10 @@ oscal-cli metapath eval -e "//param" catalog.json
 
 ### Functions
 
+Built-in functions perform calculations and string operations. They can be used in predicates or as the expression itself:
+
 | Function | Description |
-|----------|-------------|
+|:---------|:------------|
 | `count(//control)` | Count controls |
 | `string-length(title)` | Length of title |
 | `starts-with(@id, 'ac')` | ID starts with 'ac' |
@@ -96,12 +106,16 @@ oscal-cli metapath eval -e "//param" catalog.json
 
 ### OSCAL-Specific Functions
 
+These functions are specific to OSCAL and are registered by the OSCAL CLI:
+
 | Function | Description |
-|----------|-------------|
+|:---------|:------------|
 | `has-oscal-namespace(prop, 'https://fedramp.gov/ns/oscal')` | Check property namespace |
 | `resolve-profile(import)` | Resolve profile import |
 
 ## Container Usage
+
+Docker lets you run Metapath queries without installing Java. Mount your local directory to access your OSCAL documents:
 
 ```bash
 # Evaluate Metapath query
@@ -116,6 +130,8 @@ docker run --rm -v "$(pwd):/data" \
 ```
 
 ## Practical Examples
+
+The following examples show real-world query patterns you might use when working with OSCAL catalogs. These combine the path expressions, predicates, and functions covered above:
 
 ### List All Control IDs
 
@@ -149,18 +165,21 @@ oscal-cli metapath eval -e "//control[.//insert[@type='param'][@id-ref='ac-1_prm
 
 ## Understanding OSCAL's Metaschema
 
-OSCAL is defined using Metaschema, which specifies:
+Behind the scenes, OSCAL documents are defined by Metaschema module specifications. Understanding this foundation helps you write better queries and interpret validation errors. Metaschema specifies:
 
-- **Model structure** - Assemblies, fields, flags
-- **Data types** - UUID, date-time, markup
-- **Constraints** - Required fields, cardinality, patterns
+- **Model structure** - Assemblies, fields, flags that define the document hierarchy
+- **Data types** - UUID, date-time, markup-line, and other value constraints
+- **Constraints** - Required fields, cardinality limits, and validation patterns
 
 ### OSCAL Model Modules
 
+The OSCAL specification is divided into modules, each defining a specific document type:
+
 | Module | Content |
-|--------|---------|
+|:-------|:--------|
 | `oscal_catalog` | Catalogs, groups, controls |
 | `oscal_profile` | Profiles and imports |
+| `oscal_mapping` | Control mappings between frameworks |
 | `oscal_ssp` | System Security Plans |
 | `oscal_component-definition` | Component definitions |
 | `oscal_assessment-plan` | Assessment plans |
@@ -168,6 +187,8 @@ OSCAL is defined using Metaschema, which specifies:
 | `oscal_poam` | Plans of Action and Milestones |
 
 ## CI/CD Integration
+
+Metapath queries can extract data for use in CI/CD workflows—generating reports, validating control counts, or creating derived artifacts:
 
 ### Extract Control Information
 
@@ -183,6 +204,8 @@ OSCAL is defined using Metaschema, which specifies:
 ```
 
 ## Troubleshooting
+
+Common issues when working with Metapath expressions and their solutions:
 
 ### Invalid Expression
 
@@ -205,6 +228,8 @@ If the query returns nothing:
 3. Try a broader query first: `//control`
 
 ## Next Steps
+
+Continue learning about the OSCAL CLI with these related guides:
 
 - [Validating OSCAL](validating-oscal.html) - Validate with constraints
 - [CLI Reference](cli-reference.html) - Complete command reference

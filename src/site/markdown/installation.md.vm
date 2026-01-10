@@ -2,11 +2,25 @@
 
 This guide explains how to install and set up the OSCAL CLI tool.
 
+## Choosing an Installation Method
+
+The OSCAL CLI can be installed in several ways depending on your needs:
+
+| Method | Best for |
+|:-------|:---------|
+| **Container (Docker/Podman)** | CI/CD pipelines, isolated environments, quick testing without Java installation |
+| **Direct download** | Desktop use, permanent installation, shell completion support |
+| **Build from source** | Contributing to development, customizing the CLI, accessing unreleased features |
+
+For most users, the container image is the simplest way to get started—it requires no Java installation and works identically across all platforms. For regular desktop use, the direct download provides shell completion and faster startup times.
+
 ## Prerequisites
 
+If you're using the container image, you only need Docker or Podman installed. For direct installation, you'll need Java:
+
 | Requirement | Minimum Version | Notes |
-|-------------|-----------------|-------|
-| Java JRE    | 11              | JRE 17+ recommended |
+|:------------|:----------------|:------|
+| Java JRE    | 11              | JRE 17+ recommended for best performance |
 
 Ensure Java is installed and available on your PATH:
 
@@ -31,20 +45,26 @@ unzip oscal-cli.zip
 
 ### Download from Maven Central
 
+Release versions are published to Maven Central and provide the most stable experience:
+
 1. Go to [Maven Central](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli-enhanced)
-2. Download the `-oscal-cli.zip` distribution
-3. Extract to your preferred location
+2. Download the `-oscal-cli.zip` distribution (look for the file ending in `-oscal-cli.zip`)
+3. Extract to your preferred location (e.g., `/opt/oscal-cli` or `C:\Program Files\oscal-cli`)
 4. Add the extracted `bin/` directory to your PATH
+
+After installation, the `oscal-cli` command will be available from any terminal.
 
 ### Download Snapshot Versions
 
-For the latest development version:
+Snapshot versions contain the latest changes from the `develop` branch. These include new features and bug fixes that haven't been released yet, but may be less stable:
 
 1. Browse the [snapshot repository](https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main/dev/metaschema/oscal/oscal-cli-enhanced/)
 2. Download the latest `-oscal-cli.zip` file
 3. Extract and add to PATH
 
 ### Container Images
+
+Container images provide an isolated environment with no Java installation required. The image is built on a minimal base and includes everything needed to run the CLI.
 
 #### Docker
 
@@ -93,6 +113,8 @@ docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest 
 ```
 
 ## CI/CD Integration
+
+The OSCAL CLI integrates easily into CI/CD pipelines to validate OSCAL documents automatically. This ensures that compliance artifacts remain valid as they evolve and catches errors before they reach production.
 
 ### GitHub Actions
 
@@ -144,7 +166,7 @@ pipeline {
 
 ## Shell Completion
 
-The CLI supports tab completion for Bash and Zsh.
+Shell completion enables tab completion for commands, options, and file paths, making the CLI faster and easier to use. The CLI supports both Bash and Zsh.
 
 ### Bash
 
@@ -188,6 +210,8 @@ oscal-cli validate https://raw.githubusercontent.com/usnistgov/oscal-content/mai
 ```
 
 ## Next Steps
+
+Now that you have the CLI installed, explore these guides to start working with OSCAL:
 
 - [Validating OSCAL](guides/validating-oscal.html) - Validate OSCAL documents
 - [Converting Formats](guides/converting-formats.html) - Convert between XML, JSON, and YAML

@@ -2,13 +2,25 @@
 
 This guide explains how to validate OSCAL documents using the oscal-cli.
 
+## Why Validate?
+
+OSCAL documents are complex structured data that must conform to precise specifications. Validation catches problems early, before invalid documents cause issues in downstream tools or processes. Common problems validation detects include:
+
+- **Syntax errors** - Malformed XML, JSON, or YAML that can't be parsed
+- **Missing required fields** - Required elements like UUIDs, titles, or timestamps
+- **Invalid data formats** - UUIDs that aren't valid, dates in wrong formats, etc.
+- **Structural violations** - Elements in wrong locations or with invalid cardinality
+- **Constraint violations** - Business rules beyond basic schema requirements
+
+Integrating validation into your workflow—especially in CI/CD pipelines—ensures that OSCAL artifacts meet quality standards before they're used in production.
+
 ## Overview
 
-The `validate` command checks OSCAL documents for:
+The `validate` command checks OSCAL documents at multiple levels:
 
 - **Well-formedness** - Valid XML, JSON, or YAML syntax
 - **Schema compliance** - Conformance to the OSCAL model structure
-- **Constraint validation** - Metaschema-defined validation rules (experimental)
+- **Constraint validation** - Metaschema-defined validation rules that express business logic beyond basic schema requirements
 
 ## Basic Validation
 
@@ -51,6 +63,8 @@ oscal-cli validate catalog.json
 
 ## Working with Different Document Types
 
+The CLI automatically detects the OSCAL document type from the content. You can validate any type with the same command—the CLI inspects the root element to determine validation rules. The following examples demonstrate validation for each supported document type:
+
 ### Catalogs
 
 ```bash
@@ -61,6 +75,12 @@ oscal-cli validate /path/to/catalog.json
 
 ```bash
 oscal-cli validate /path/to/profile.json
+```
+
+### Mappings
+
+```bash
+oscal-cli validate /path/to/mapping.json
 ```
 
 ### System Security Plans (SSPs)
@@ -103,7 +123,11 @@ oscal-cli validate https://raw.githubusercontent.com/usnistgov/oscal-content/mai
 
 ## Understanding Validation Output
 
+The validator reports issues in a structured format that helps you locate and fix problems. Here's what to expect:
+
 ### Success
+
+A successful validation produces minimal output:
 
 ```
 Validation completed with 0 errors.
@@ -111,16 +135,20 @@ Validation completed with 0 errors.
 
 ### Errors
 
+When validation fails, each issue is reported with its location and description:
+
 ```
 [ERROR] /document/metadata/title: Required field 'title' is missing
 ```
 
-Each error shows:
+Each error message includes three pieces of information:
 - Severity level (ERROR, WARNING, INFO)
 - JSON Pointer or XPath location
 - Description of the issue
 
 ## Common Validation Errors
+
+The following examples show frequent validation errors and how to fix them. These cover the most common issues you'll encounter when working with OSCAL documents:
 
 ### Missing Required Fields
 
@@ -156,7 +184,7 @@ Each error shows:
 
 ## Batch Validation
 
-Validate multiple files:
+When managing multiple OSCAL documents, you can validate them in bulk using shell scripting. This is particularly useful for pre-commit checks or CI/CD pipelines:
 
 ```bash
 # Using shell expansion
@@ -170,6 +198,8 @@ find . -name "*.json" -exec oscal-cli validate {} \;
 ```
 
 ## Container Usage
+
+If you're using Docker, you can run the CLI without installing Java. Mount your local files into the container to validate them:
 
 ```bash
 # Validate a local file
@@ -185,6 +215,8 @@ docker run --rm -v "$(pwd):/data" \
 
 ## CI/CD Integration
 
+Integrating validation into your CI/CD pipeline ensures OSCAL artifacts are checked automatically on every commit or pull request. Here's an example for GitHub Actions:
+
 ### GitHub Actions
 
 ```yaml
@@ -197,13 +229,17 @@ docker run --rm -v "$(pwd):/data" \
 
 ### Exit Codes
 
+The CLI uses standard exit codes that work well with CI/CD systems—zero means success, non-zero means failure:
+
 | Code | Meaning |
-|------|---------|
+|:-----|:--------|
 | 0    | Validation passed |
 | 1    | Validation failed |
 | 2    | Invalid arguments or file not found |
 
 ## Next Steps
+
+Continue learning about the OSCAL CLI with these related guides:
 
 - [Converting Formats](converting-formats.html) - Convert between XML, JSON, YAML
 - [CLI Reference](cli-reference.html) - Complete command reference
