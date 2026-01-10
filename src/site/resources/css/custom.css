@@ -20,3 +20,10 @@ footer {
 code {
   color: #5f879b;
 }
+
+/* Fix table header alignment - flexmark doesn't apply alignment to <th> cells */
+/* Use higher specificity to override Bootstrap's .table th styles */
+.table th,
+table th {
+  text-align: left !important;
+}

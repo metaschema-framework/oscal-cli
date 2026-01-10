@@ -1,0 +1,253 @@
+# Resolving Profiles
+
+This guide explains how to resolve OSCAL profiles into baseline catalogs using the oscal-cli.
+
+## Why Resolve Profiles?
+
+OSCAL profiles are references to controls in external catalogs, combined with customizations. While profiles are powerful for defining baselines without duplicating content, many tools and workflows need a complete, self-contained catalog. Profile resolution solves this by:
+
+- **Flattening references** - Converting profile imports into actual control content
+- **Applying customizations** - Incorporating all parameter settings and modifications
+- **Creating portability** - Producing standalone documents that don't require network access
+- **Enabling comparison** - Making it easier to diff two baselines or audit changes
+- **Supporting downstream tools** - Many GRC tools expect catalogs, not profiles
+
+For example, your organization's security profile might import FedRAMP High and add custom parameters. Resolution produces a single catalog containing exactly the controls your organization uses, with your specific parameter values already set.
+
+## Overview
+
+OSCAL profiles select and customize controls from one or more catalogs. Profile resolution produces a **resolved catalog** containing only the selected controls with all customizations applied.
+
+## What Profile Resolution Does
+
+1. **Imports** controls from referenced catalogs
+2. **Selects** specific controls or control families
+3. **Excludes** unwanted controls
+4. **Modifies** control content (parameters, additions, alterations)
+5. **Merges** controls from multiple sources
+6. **Outputs** a single, self-contained catalog
+
+## Basic Resolution
+
+### Resolve a Profile
+
+```bash
+oscal-cli resolve-profile profile.json resolved-catalog.json
+```
+
+### Resolve XML Profile
+
+```bash
+oscal-cli resolve-profile profile.xml resolved-catalog.xml
+```
+
+## Output Formats
+
+By default, the resolved catalog uses the same format as the input profile. You can convert to a different format during resolution, avoiding a separate conversion step:
+
+### Convert Format During Resolution
+
+```bash
+# XML profile to JSON catalog
+oscal-cli resolve-profile --to=json profile.xml resolved-catalog.json
+
+# JSON profile to XML catalog
+oscal-cli resolve-profile --to=xml profile.json resolved-catalog.xml
+```
+
+### Output to Standard Out
+
+```bash
+oscal-cli resolve-profile --to=json profile.xml
+```
+
+## Resolving Common Profiles
+
+### NIST SP 800-53 Baselines
+
+```bash
+# Resolve FedRAMP High baseline
+oscal-cli resolve-profile \
+    fedramp-high-profile.json \
+    fedramp-high-resolved-catalog.json
+```
+
+### Custom Organizational Profiles
+
+```bash
+# Resolve your organization's profile
+oscal-cli resolve-profile \
+    org-baseline-profile.json \
+    org-baseline-catalog.json
+```
+
+## Profile Chaining
+
+Profiles can import other profiles, creating a layered customization chain. This is common in organizations where a base profile establishes core requirements and subsidiary profiles add further refinements. Resolution handles these chains automatically—it recursively resolves all imported profiles:
+
+```
+Catalog → Base Profile → Organization Profile → Project Profile
+                                                      ↓
+                                              Resolved Catalog
+```
+
+```bash
+# This resolves the entire chain
+oscal-cli resolve-profile project-profile.json resolved.json
+```
+
+## Working with Remote Resources
+
+Profiles often reference catalogs and other profiles hosted on external servers. The CLI fetches these resources automatically during resolution, so you don't need to download them manually:
+
+### Resolve Profile with Remote Catalog
+
+```bash
+oscal-cli resolve-profile profile.json resolved-catalog.json
+```
+
+The profile can reference remote catalogs via `href`:
+
+```json
+{
+  "import": {
+    "href": "https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json"
+  }
+}
+```
+
+### Resolve a Remote Profile
+
+```bash
+oscal-cli resolve-profile \
+    https://example.com/profiles/my-profile.json \
+    resolved-catalog.json
+```
+
+## Container Usage
+
+Docker provides a convenient way to resolve profiles without installing Java. Mount your working directory into the container to access your files:
+
+```bash
+# Resolve a profile with local files
+docker run --rm -v "$(pwd):/data" \
+    ghcr.io/metaschema-framework/oscal-cli:latest \
+    resolve-profile /data/profile.json /data/resolved.json
+
+# Resolve with format conversion
+docker run --rm -v "$(pwd):/data" \
+    ghcr.io/metaschema-framework/oscal-cli:latest \
+    resolve-profile --to=xml /data/profile.json /data/resolved.xml
+```
+
+## CI/CD Integration
+
+Automating profile resolution in CI/CD ensures resolved catalogs stay synchronized with their source profiles. Whenever a profile changes, the pipeline can automatically regenerate the resolved catalog:
+
+### Automated Resolution on Change
+
+#[[
+```yaml
+name: Resolve Profiles
+
+on:
+  push:
+    paths:
+      - 'profiles/**'
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve profiles
+        run: |
+          for profile in profiles/*.json; do
+            name=$(basename "$profile" .json)
+            oscal-cli resolve-profile "$profile" "resolved/${name}-catalog.json"
+          done
+
+      - name: Commit resolved catalogs
+        run: |
+          git add resolved/
+          git commit -m "Update resolved catalogs" || true
+          git push
+```
+]]#
+
+## Understanding Resolution Output
+
+After resolution completes, you have a standard OSCAL catalog with all profile customizations applied. The resolved catalog:
+
+- Contains only selected controls
+- Has all parameter values set
+- Includes all modifications and additions
+- Is a valid, standalone OSCAL catalog
+- Can be used as input to other profiles
+
+## Troubleshooting
+
+When resolution fails, the error messages help identify the issue. Here are solutions for common problems:
+
+### Import Not Found
+
+```
+Error: Unable to resolve import href 'catalog.json'
+```
+
+**Fix:** Ensure the referenced file exists or URL is accessible.
+
+### Circular Import
+
+```
+Error: Circular import detected
+```
+
+**Fix:** Check your profile chain for circular references.
+
+### Invalid Profile Structure
+
+```
+Error: Invalid profile structure
+```
+
+**Fix:** Validate the profile first:
+
+```bash
+oscal-cli validate profile.json
+```
+
+## Profile Resolution Details
+
+For advanced users who need to understand exactly how resolution works, the following tables describe the behavior of each profile element:
+
+### What Gets Resolved
+
+| Element | Resolution Behavior |
+|:--------|:--------------------|
+| `import/include-all` | All controls from catalog |
+| `import/include-controls` | Specific controls by ID |
+| `import/exclude-controls` | Remove specific controls |
+| `modify/set-parameters` | Set parameter values |
+| `modify/alters` | Add or modify control content |
+| `merge/combine` | Combine duplicate controls |
+| `merge/flat` | Flatten control hierarchy |
+
+### Resolution Order
+
+The resolver processes profile elements in a specific order. Understanding this sequence helps when debugging unexpected results:
+
+1. Process imports (recursively for profile chains)
+2. Apply inclusions and exclusions
+3. Apply modifications
+4. Apply merge settings
+5. Generate resolved catalog
+
+## Next Steps
+
+Continue learning about the OSCAL CLI with these related guides:
+
+- [Validating OSCAL](validating-oscal.html) - Validate resolved catalogs
+- [Converting Formats](converting-formats.html) - Convert between formats
+- [CLI Reference](cli-reference.html) - Complete command reference
