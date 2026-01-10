@@ -177,12 +177,12 @@ oscal-cli metapath eval -e "count(//control)" catalog.json
 
 ---
 
-### generate-completion
+### shell-completion
 
 Generate shell completion scripts.
 
 ```bash
-oscal-cli generate-completion <shell>
+oscal-cli shell-completion <shell>
 ```
 
 **Arguments:**
@@ -195,10 +195,10 @@ oscal-cli generate-completion <shell>
 
 ```bash
 # Generate Bash completion
-oscal-cli generate-completion bash > oscal-cli-completion.bash
+oscal-cli shell-completion bash > oscal-cli-completion.bash
 
 # Generate Zsh completion
-oscal-cli generate-completion zsh > _oscal-cli
+oscal-cli shell-completion zsh > _oscal-cli
 ```
 
 ---

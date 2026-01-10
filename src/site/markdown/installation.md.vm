@@ -172,20 +172,20 @@ Shell completion enables tab completion for commands, options, and file paths, m
 
 ```bash
 # Generate completion script
-oscal-cli generate-completion bash > oscal-cli-completion.bash
+oscal-cli shell-completion bash > oscal-cli-completion.bash
 
 # Source for current session
 source oscal-cli-completion.bash
 
 # Or install permanently
-oscal-cli generate-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
+oscal-cli shell-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
 ```
 
 ### Zsh
 
 ```zsh
 # Generate completion script
-oscal-cli generate-completion zsh > _oscal-cli
+oscal-cli shell-completion zsh > _oscal-cli
 
 # Install to your fpath
 mv _oscal-cli ~/.zsh/completions/

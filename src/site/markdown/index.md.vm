@@ -85,7 +85,7 @@ Generate XML Schema (XSD) and JSON Schema files from Metaschema module definitio
 | `convert` | Convert between XML, JSON, and YAML formats |
 | `resolve-profile` | Resolve an OSCAL profile to a catalog |
 | `metapath eval` | Evaluate Metapath expressions |
-| `generate-completion` | Generate shell completion scripts |
+| `shell-completion` | Generate shell completion scripts |
 
 ## Getting Started
 
@@ -120,10 +120,10 @@ Enable tab completion for Bash or Zsh:
 
 ```bash
 # Bash
-oscal-cli generate-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
+oscal-cli shell-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
 
 # Zsh
-oscal-cli generate-completion zsh > ~/.zsh/completions/_oscal-cli
+oscal-cli shell-completion zsh > ~/.zsh/completions/_oscal-cli
 ```
 
 ## Related Projects
