@@ -15,7 +15,6 @@ Claude Code plugins provide specialized skills for:
 ## Prerequisites
 
 1. [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
-2. Install the [Metaschema plugins](https://github.com/metaschema-framework/claude-plugins/tree/main)
 
 ## Available Plugins
 

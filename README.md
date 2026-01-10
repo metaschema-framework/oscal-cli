@@ -110,10 +110,10 @@ The CLI supports tab completion for Bash and Zsh shells, providing intelligent s
 
 ```bash
 # Generate and source completion (temporary, current session only)
-source <(oscal-cli shell-completion bash)
+source <(oscal-cli generate-completion bash)
 
 # Or save to a file and source it in your ~/.bashrc for persistence
-oscal-cli shell-completion bash --to ~/.oscal-completion.bash
+oscal-cli generate-completion bash > ~/.oscal-completion.bash
 echo 'source ~/.oscal-completion.bash' >> ~/.bashrc
 ```
 
@@ -124,7 +124,7 @@ echo 'source ~/.oscal-completion.bash' >> ~/.bashrc
 mkdir -p ~/.zsh/completions
 
 # Generate completion script
-oscal-cli shell-completion zsh > ~/.zsh/completions/_oscal-cli
+oscal-cli generate-completion zsh > ~/.zsh/completions/_oscal-cli
 
 # Add to your ~/.zshrc if not already configured
 echo 'fpath=(~/.zsh/completions $fpath)' >> ~/.zshrc

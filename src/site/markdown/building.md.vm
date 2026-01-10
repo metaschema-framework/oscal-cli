@@ -13,8 +13,11 @@ This guide explains how to build the OSCAL CLI from source code.
 Ensure `JAVA_HOME` is set correctly:
 
 ```bash
-# Linux/macOS
+# macOS
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+
+# Linux (adjust path to your installation)
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 
 # Windows
 set JAVA_HOME=C:\Program Files\Java\jdk-17

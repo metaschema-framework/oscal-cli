@@ -1,6 +1,6 @@
 # ${project.name}
 
-A command-line tool for working with [OSCAL](https://pages.nist.gov/OSCAL/) (Open Security Controls Assessment Language) and [Metaschema](https://pages.nist.gov/metaschema/) content.
+A command-line tool for working with [OSCAL](https://pages.nist.gov/OSCAL/) (Open Security Controls Assessment Language) and [Metaschema](https://framework.metaschema.dev/) content.
 
 ## What is the OSCAL CLI?
 

@@ -179,7 +179,6 @@ The OSCAL specification is divided into modules, each defining a specific docume
 |:-------|:--------|
 | `oscal_catalog` | Catalogs, groups, controls |
 | `oscal_profile` | Profiles and imports |
-| `oscal_mapping` | Control mappings between frameworks |
 | `oscal_ssp` | System Security Plans |
 | `oscal_component-definition` | Component definitions |
 | `oscal_assessment-plan` | Assessment plans |
@@ -233,4 +232,4 @@ Continue learning about the OSCAL CLI with these related guides:
 
 - [Validating OSCAL](validating-oscal.html) - Validate with constraints
 - [CLI Reference](cli-reference.html) - Complete command reference
-- [Metapath Reference](https://pages.nist.gov/metaschema/specification/metapath/) - Full Metapath specification
+- [Metapath Reference](https://framework.metaschema.dev/specification/metapath/) - Full Metapath specification
