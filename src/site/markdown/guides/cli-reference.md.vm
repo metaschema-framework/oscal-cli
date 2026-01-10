@@ -211,6 +211,7 @@ The CLI automatically detects the document type by examining the root element. Y
 |:-----|:-------------|
 | Catalog | `catalog` |
 | Profile | `profile` |
+| Mapping Collection | `mapping-collection` |
 | System Security Plan | `system-security-plan` |
 | Component Definition | `component-definition` |
 | Assessment Plan | `assessment-plan` |

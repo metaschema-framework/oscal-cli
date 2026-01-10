@@ -92,6 +92,12 @@ oscal-cli convert --to=json NIST_SP-800-53_catalog.xml NIST_SP-800-53_catalog.js
 oscal-cli convert --to=xml FedRAMP_HIGH_profile.json FedRAMP_HIGH_profile.xml
 ```
 
+### Mapping Collections
+
+```bash
+oscal-cli convert --to=json mapping.xml mapping.json
+```
+
 ### System Security Plans
 
 ```bash

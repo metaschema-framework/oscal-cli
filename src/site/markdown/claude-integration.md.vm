@@ -110,5 +110,6 @@ oscal-cli metapath eval -e "//control" catalog.json
 For more information about Claude Code, OSCAL, and the CLI, see these resources:
 
 - [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+- [Metaschema Claude Plugins](https://github.com/metaschema-framework/claude-plugins/tree/main) - Source for the skills mentioned above
 - [OSCAL Documentation](https://pages.nist.gov/OSCAL/)
 - [CLI Reference](guides/cli-reference.html)

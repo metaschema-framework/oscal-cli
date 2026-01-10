@@ -77,6 +77,12 @@ oscal-cli validate /path/to/catalog.json
 oscal-cli validate /path/to/profile.json
 ```
 
+### Mapping Collections
+
+```bash
+oscal-cli validate /path/to/mapping.json
+```
+
 ### System Security Plans (SSPs)
 
 ```bash
