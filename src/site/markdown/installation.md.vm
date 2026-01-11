@@ -1,0 +1,228 @@
+# Installation
+
+This guide explains how to install and set up the OSCAL CLI tool.
+
+## Choosing an Installation Method
+
+The OSCAL CLI can be installed in several ways depending on your needs:
+
+| Method | Best for |
+|:-------|:---------|
+| **Container (Docker/Podman)** | CI/CD pipelines, isolated environments, quick testing without Java installation |
+| **Direct download** | Desktop use, permanent installation, shell completion support |
+| **Build from source** | Contributing to development, customizing the CLI, accessing unreleased features |
+
+For most users, the container image is the simplest way to get started—it requires no Java installation and works identically across all platforms. For regular desktop use, the direct download provides shell completion and faster startup times.
+
+## Prerequisites
+
+If you're using the container image, you only need Docker or Podman installed. For direct installation, you'll need Java:
+
+| Requirement | Minimum Version | Notes |
+|:------------|:----------------|:------|
+| Java JRE    | 11              | JRE 17+ recommended for best performance |
+
+Ensure Java is installed and available on your PATH:
+
+```bash
+java -version
+```
+
+## Quick Start
+
+Download the latest release and run. Replace `VERSION` with the actual version number from [Maven Central](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli-enhanced):
+
+```bash
+# Set the version (check Maven Central for the latest)
+VERSION="2.0.0"
+
+# Download and extract
+curl -L "https://repo1.maven.org/maven2/dev/metaschema/oscal/oscal-cli-enhanced/${VERSION}/oscal-cli-enhanced-${VERSION}-oscal-cli.zip" -o oscal-cli.zip
+unzip oscal-cli.zip
+
+# Run
+./oscal-cli --help
+```
+
+## Installation Methods
+
+### Download from Maven Central
+
+Release versions are published to Maven Central and provide the most stable experience:
+
+1. Go to [Maven Central](https://central.sonatype.com/artifact/dev.metaschema.oscal/oscal-cli-enhanced)
+2. Download the `-oscal-cli.zip` distribution (look for the file ending in `-oscal-cli.zip`)
+3. Extract to your preferred location (e.g., `/opt/oscal-cli` or `C:\Program Files\oscal-cli`)
+4. Add the extracted `bin/` directory to your PATH
+
+After installation, the `oscal-cli` command will be available from any terminal.
+
+### Download Snapshot Versions
+
+Snapshot versions contain the latest changes from the `develop` branch. These include new features and bug fixes that haven't been released yet, but may be less stable:
+
+1. Browse the [snapshot repository](https://raw.githubusercontent.com/metaschema-framework/maven2/refs/heads/main/dev/metaschema/oscal/oscal-cli-enhanced/)
+2. Download the latest `-oscal-cli.zip` file
+3. Extract and add to PATH
+
+### Container Images
+
+Container images provide an isolated environment with no Java installation required. The image is built on a minimal base and includes everything needed to run the CLI.
+
+#### Docker
+
+```bash
+# Pull the image
+docker pull ghcr.io/metaschema-framework/oscal-cli:latest
+
+# Run a command
+docker run --rm ghcr.io/metaschema-framework/oscal-cli:latest --help
+
+# Validate a file (with volume mount)
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest \
+    validate /data/ssp.json
+```
+
+#### Podman
+
+```bash
+# Pull the image
+podman pull ghcr.io/metaschema-framework/oscal-cli:latest
+
+# Run a command
+podman run --rm ghcr.io/metaschema-framework/oscal-cli:latest --help
+
+# Validate a file
+podman run --rm -v "$(pwd):/data:Z" ghcr.io/metaschema-framework/oscal-cli:latest \
+    validate /data/ssp.json
+```
+
+### Working with Mounted Volumes
+
+When using containers, mount your working directory to access local files:
+
+```bash
+# Mount current directory as /data
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest \
+    validate /data/my-catalog.xml
+
+# Convert with output file
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest \
+    convert --to=json /data/catalog.xml /data/catalog.json
+
+# Resolve a profile
+docker run --rm -v "$(pwd):/data" ghcr.io/metaschema-framework/oscal-cli:latest \
+    resolve-profile /data/profile.xml /data/resolved-catalog.xml
+```
+
+## CI/CD Integration
+
+The OSCAL CLI integrates easily into CI/CD pipelines to validate OSCAL documents automatically. This ensures that compliance artifacts remain valid as they evolve and catches errors before they reach production.
+
+### GitHub Actions
+
+#[[
+```yaml
+name: Validate OSCAL
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate OSCAL files
+        run: |
+          docker run --rm -v "${{ github.workspace }}:/data" \
+            ghcr.io/metaschema-framework/oscal-cli:latest \
+            validate /data/ssp.json
+```
+]]#
+
+### GitLab CI
+
+```yaml
+validate-oscal:
+  image: ghcr.io/metaschema-framework/oscal-cli:latest
+  script:
+    - oscal-cli validate ssp.json
+```
+
+### Jenkins Pipeline
+
+#[[
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Validate OSCAL') {
+            steps {
+                sh '''
+                    docker run --rm -v "${WORKSPACE}:/data" \
+                        ghcr.io/metaschema-framework/oscal-cli:latest \
+                        validate /data/ssp.json
+                '''
+            }
+        }
+    }
+}
+```
+]]#
+
+## Shell Completion
+
+Shell completion enables tab completion for commands, options, and file paths, making the CLI faster and easier to use. The CLI supports both Bash and Zsh.
+
+### Bash
+
+```bash
+# Generate completion script
+oscal-cli shell-completion bash > oscal-cli-completion.bash
+
+# Source for current session
+source oscal-cli-completion.bash
+
+# Or install permanently
+mkdir -p ~/.local/share/bash-completion/completions
+oscal-cli shell-completion bash > ~/.local/share/bash-completion/completions/oscal-cli
+```
+
+### Zsh
+
+```zsh
+# Generate completion script
+oscal-cli shell-completion zsh > _oscal-cli
+
+# Install to your fpath (create directory if needed)
+mkdir -p ~/.zsh/completions
+mv _oscal-cli ~/.zsh/completions/
+
+# Rebuild completion cache
+rm -f ~/.zcompdump && compinit
+```
+
+## Verifying Installation
+
+Verify the CLI is working correctly:
+
+```bash
+# Check version
+oscal-cli --version
+
+# View available commands
+oscal-cli --help
+
+# Validate a sample file
+oscal-cli validate https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json
+```
+
+## Next Steps
+
+Now that you have the CLI installed, explore these guides to start working with OSCAL:
+
+- [Validating OSCAL](guides/validating-oscal.html) - Validate OSCAL documents
+- [Converting Formats](guides/converting-formats.html) - Convert between XML, JSON, and YAML
+- [Resolving Profiles](guides/resolving-profiles.html) - Resolve profiles to catalogs
+- [CLI Reference](guides/cli-reference.html) - Complete command reference

@@ -1,0 +1,115 @@
+# Using with Claude Code
+
+[Claude Code](https://claude.ai/code) is an AI-powered coding assistant that can help you work with OSCAL CLI more effectively.
+
+## Overview
+
+Claude Code plugins provide specialized skills for:
+
+- **OSCAL document validation** - Validating catalogs, profiles, SSPs, and other OSCAL artifacts
+- **Format conversion** - Converting between XML, JSON, and YAML formats
+- **Profile resolution** - Resolving profiles to produce baseline catalogs
+- **Metapath queries** - Writing expressions to query OSCAL content
+- **CLI assistance** - Running commands and interpreting output
+
+## Prerequisites
+
+1. [Install Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+
+## Available Plugins
+
+### OSCAL Plugin
+
+Skills for working with OSCAL documents:
+
+| Skill | Description |
+|:------|:------------|
+| `oscal:oscal-basics` | OSCAL document types and structure |
+
+### OSCAL Tools Plugin
+
+Skills for using the CLI:
+
+| Skill | Description |
+|:------|:------------|
+| `oscal-tools:using-oscal-cli` | Running oscal-cli commands |
+
+### Metaschema Plugin
+
+Skills for understanding OSCAL's underlying structure:
+
+| Skill | Description |
+|:------|:------------|
+| `metaschema:metaschema-basics` | Introduction to Metaschema concepts |
+| `metaschema:metapath-expressions` | Writing Metapath queries |
+
+## Example Workflows
+
+### Validate an OSCAL Document
+
+Ask Claude:
+> "Validate my SSP at `ssp.json` and explain any errors"
+
+Claude will run the validation and help you understand and fix issues.
+
+### Convert Between Formats
+
+Ask Claude:
+> "Convert my catalog from XML to JSON"
+
+Claude will guide you through the conversion process.
+
+### Resolve a Profile
+
+Ask Claude:
+> "Help me resolve my NIST 800-53 profile to a baseline catalog"
+
+Claude will explain profile resolution and run the appropriate command.
+
+### Query OSCAL Content
+
+Ask Claude:
+> "Write a Metapath expression to find all controls with a specific label"
+
+Claude will construct the expression and show how to use it with the CLI.
+
+### Debug Validation Errors
+
+Ask Claude:
+> "I'm getting validation errors on my component definition. Can you help?"
+
+Claude will analyze the errors and suggest fixes.
+
+## Tips for Effective Use
+
+1. **Be specific** - Mention file paths and exact error messages
+2. **Provide context** - Share the OSCAL document type you're working with
+3. **Ask for explanations** - Claude can explain OSCAL concepts and requirements
+4. **Request examples** - Ask for sample OSCAL snippets or CLI commands
+
+## Common Commands
+
+Here are CLI commands that Claude can help you with:
+
+```bash
+# Validate OSCAL content
+oscal-cli validate document.json
+
+# Convert formats
+oscal-cli convert --to=json catalog.xml catalog.json
+
+# Resolve a profile
+oscal-cli resolve-profile profile.xml resolved-catalog.xml
+
+# Evaluate Metapath expressions
+oscal-cli metapath eval -e "//control" catalog.json
+```
+
+## Learn More
+
+For more information about Claude Code, OSCAL, and the CLI, see these resources:
+
+- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+- [Metaschema Claude Plugins](https://github.com/metaschema-framework/claude-plugins/tree/main) - Source for the skills mentioned above
+- [OSCAL Documentation](https://pages.nist.gov/OSCAL/)
+- [CLI Reference](guides/cli-reference.html)

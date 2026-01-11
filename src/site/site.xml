@@ -49,6 +49,18 @@
       <item name="Home" href="./"/>
       <item name="GitHub" href="${this.scm.url}"/>
     </menu>
+    <menu name="Documentation" inherit="top">
+        <item name="Installation" href="installation.html" />
+        <item name="Building" href="building.html" />
+        <item name="Claude Integration" href="claude-integration.html" />
+    </menu>
+    <menu name="Guides" inherit="top">
+        <item name="Validating OSCAL" href="guides/validating-oscal.html" />
+        <item name="Converting Formats" href="guides/converting-formats.html" />
+        <item name="Resolving Profiles" href="guides/resolving-profiles.html" />
+        <item name="Working with Metaschema" href="guides/working-with-metaschema.html" />
+        <item name="CLI Reference" href="guides/cli-reference.html" />
+    </menu>
     <menu name="Modules" ref="modules"/>
     <menu name="Contribute" inherit="bottom">
       <item name="Contribute" href="${this.scm.url}/CONTRIBUTING.md"/>

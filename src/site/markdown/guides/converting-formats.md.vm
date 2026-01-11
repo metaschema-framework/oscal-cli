@@ -1,0 +1,252 @@
+# Converting Formats
+
+This guide explains how to convert OSCAL documents between XML, JSON, and YAML formats.
+
+## Why Convert?
+
+OSCAL supports three serialization formats—XML, JSON, and YAML—with identical semantics across all three. Organizations often need to convert between formats for various reasons:
+
+- **Tooling requirements** - Different tools in your workflow may require specific formats
+- **Standardization** - Establishing a single canonical format for your organization
+- **Human readability** - YAML is often preferred for manual editing, XML for transformation
+- **Integration** - APIs and web services typically prefer JSON
+- **Storage efficiency** - JSON is generally more compact than XML
+
+The OSCAL CLI makes conversion simple. Because OSCAL defines format-agnostic semantics, you can convert documents without data loss—the information remains identical regardless of format.
+
+## Overview
+
+The `convert` command transforms OSCAL documents between supported formats while preserving all content and structure. The command reads the input document, validates it against the OSCAL model, and writes it in the target format.
+
+## Basic Conversion
+
+### XML to JSON
+
+```bash
+oscal-cli convert --to=json catalog.xml catalog.json
+```
+
+### JSON to XML
+
+```bash
+oscal-cli convert --to=xml ssp.json ssp.xml
+```
+
+### JSON to YAML
+
+```bash
+oscal-cli convert --to=yaml profile.json profile.yaml
+```
+
+### YAML to JSON
+
+```bash
+oscal-cli convert --to=json component.yaml component.json
+```
+
+## Format Detection
+
+The CLI determines the input format automatically by examining the file extension. This makes typical conversions simple—you only need to specify the desired output format:
+
+| Extension | Format |
+|:----------|:-------|
+| `.xml`    | XML    |
+| `.json`   | JSON   |
+| `.yaml`, `.yml` | YAML |
+
+If your file uses a non-standard extension (or no extension), you can override automatic detection:
+
+```bash
+oscal-cli convert --as=xml --to=json input.txt output.json
+```
+
+## Output Options
+
+### Write to Standard Output
+
+Omit the output file to write to stdout:
+
+```bash
+oscal-cli convert --to=json catalog.xml
+```
+
+### Overwrite Existing Files
+
+```bash
+oscal-cli convert --to=json --overwrite catalog.xml catalog.json
+```
+
+## Converting All OSCAL Document Types
+
+Conversion works the same way for all OSCAL document types. The CLI detects the document type from the content and applies the appropriate conversion rules. Here are examples for each type:
+
+### Catalogs
+
+```bash
+oscal-cli convert --to=json NIST_SP-800-53_catalog.xml NIST_SP-800-53_catalog.json
+```
+
+### Profiles
+
+```bash
+oscal-cli convert --to=xml FedRAMP_HIGH_profile.json FedRAMP_HIGH_profile.xml
+```
+
+### Mapping Collections
+
+```bash
+oscal-cli convert --to=json mapping.xml mapping.json
+```
+
+### System Security Plans
+
+```bash
+oscal-cli convert --to=yaml ssp.json ssp.yaml
+```
+
+### Component Definitions
+
+```bash
+oscal-cli convert --to=json component-definition.xml component-definition.json
+```
+
+### Assessment Artifacts
+
+```bash
+# Assessment Plans
+oscal-cli convert --to=json assessment-plan.xml assessment-plan.json
+
+# Assessment Results
+oscal-cli convert --to=json assessment-results.xml assessment-results.json
+
+# POA&Ms
+oscal-cli convert --to=json poam.xml poam.json
+```
+
+## Batch Conversion
+
+When migrating a collection of documents to a new format, shell scripting handles the repetitive work. The following examples show how to convert multiple files at once:
+
+### Convert All XML to JSON
+
+#[[
+```bash
+for f in *.xml; do
+    oscal-cli convert --to=json "$f" "${f%.xml}.json"
+done
+```
+]]#
+
+### Convert Using Find
+
+#[[
+```bash
+find . -name "*.xml" -exec sh -c '
+    oscal-cli convert --to=json "$1" "${1%.xml}.json"
+' _ {} \;
+```
+]]#
+
+## Container Usage
+
+Docker provides a convenient way to run conversions without installing Java locally. Mount your working directory into the container to access your files:
+
+#[[
+```bash
+# Convert a single file
+docker run --rm -v "$(pwd):/data" \
+    ghcr.io/metaschema-framework/oscal-cli:latest \
+    convert --to=json /data/catalog.xml /data/catalog.json
+
+# Convert all XML files to JSON
+docker run --rm -v "$(pwd):/data" \
+    ghcr.io/metaschema-framework/oscal-cli:latest \
+    sh -c 'for f in /data/*.xml; do
+        oscal-cli convert --to=json "$f" "${f%.xml}.json"
+    done'
+```
+]]#
+
+## CI/CD Integration
+
+Automated format conversion is useful when publishing artifacts—for example, generating JSON versions of XML source files when creating a release:
+
+### GitHub Actions - Convert on Release
+
+#[[
+```yaml
+- name: Generate JSON from XML
+  run: |
+    for xml in src/oscal/*.xml; do
+      json="${xml%.xml}.json"
+      oscal-cli convert --to=json "$xml" "$json"
+    done
+
+- name: Upload JSON artifacts
+  uses: actions/upload-artifact@v4
+  with:
+    name: oscal-json
+    path: src/oscal/*.json
+```
+]]#
+
+## Format Considerations
+
+Choosing a format depends on your use case. Each format has trade-offs that may influence your decision. The following tables summarize the key differences:
+
+### XML vs JSON
+
+| Aspect | XML | JSON |
+|:-------|:----|:-----|
+| Human readability | Good with formatting | Good |
+| File size | Larger | Smaller |
+| Comments | Supported | Not supported |
+| Namespace support | Full | Via properties |
+| Tool support | XPath, XSLT | Widespread |
+
+### YAML vs JSON
+
+| Aspect | YAML | JSON |
+|:-------|:-----|:-----|
+| Human readability | Excellent | Good |
+| Editing | Easy | Standard |
+| Comments | Supported | Not supported |
+| Whitespace | Significant | Ignored |
+| Parsing speed | Slower | Faster |
+
+## Troubleshooting
+
+When conversion fails, the error messages point to the issue. Here are solutions for common problems:
+
+### Invalid Input Format
+
+```
+Error: Unable to determine format for file 'document.txt'
+```
+
+**Fix:** Use `--as` to specify input format:
+
+```bash
+oscal-cli convert --as=json --to=xml document.txt output.xml
+```
+
+### Conversion Errors
+
+```
+Error: Failed to parse input document
+```
+
+**Fix:** Validate the input first:
+
+```bash
+oscal-cli validate input.json
+oscal-cli convert --to=xml input.json output.xml
+```
+
+## Next Steps
+
+Continue learning about the OSCAL CLI with these related guides:
+
+- [Validating OSCAL](validating-oscal.html) - Validate before converting
+- [Resolving Profiles](resolving-profiles.html) - Resolve profiles to catalogs
+- [CLI Reference](cli-reference.html) - Complete command reference
