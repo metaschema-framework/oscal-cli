@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dev.metaschema</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>9</version>
+		<version>10</version>
 	</parent>
 	<groupId>dev.metaschema.oscal</groupId>
 	<artifactId>oscal-cli-enhanced</artifactId>
@@ -73,8 +73,8 @@
 	
 	<properties>
 		<!-- metaschema dependencies -->
-		<dependency.metaschema-framework.version>3.0.0-SNAPSHOT</dependency.metaschema-framework.version>
-		<dependency.liboscal-java.version>7.0.0-SNAPSHOT</dependency.liboscal-java.version>
+		<dependency.metaschema-framework.version>3.0.0.M2</dependency.metaschema-framework.version>
+		<dependency.liboscal-java.version>7.0.0</dependency.liboscal-java.version>
 
 		<!-- site configuration -->
 		<site.url>https://oscal-cli.metaschema.dev</site.url>
