@@ -7,17 +7,17 @@ package dev.metaschema.oscal.tools.cli.core;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.IBoundLoader;
-import dev.metaschema.oscal.lib.OscalBindingContext;
-import dev.metaschema.oscal.lib.model.AssessmentResults;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IBoundLoader;
+import dev.metaschema.oscal.lib.OscalBindingContext;
+import dev.metaschema.oscal.lib.model.AssessmentResults;
 
 class NullYamlValuesTest {
   private static OscalBindingContext bindingContext;

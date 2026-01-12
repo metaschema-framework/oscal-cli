@@ -5,6 +5,13 @@
 
 package dev.metaschema.oscal.tools.cli.core.commands.assessmentresults;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.xml.transform.Source;
+
 import dev.metaschema.core.model.util.JsonUtil;
 import dev.metaschema.core.model.util.XmlUtil;
 import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
@@ -13,13 +20,6 @@ import dev.metaschema.core.util.CollectionUtil;
 import dev.metaschema.core.util.ObjectUtils;
 import dev.metaschema.oscal.lib.OscalBindingContext;
 import dev.metaschema.oscal.tools.cli.core.commands.AbstractDeprecatedOscalValidationSubcommand;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.xml.transform.Source;
 
 class ValidateSubcommand
     extends AbstractDeprecatedOscalValidationSubcommand {

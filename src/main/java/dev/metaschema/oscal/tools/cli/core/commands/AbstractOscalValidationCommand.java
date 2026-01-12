@@ -5,6 +5,14 @@
 
 package dev.metaschema.oscal.tools.cli.core.commands;
 
+import org.apache.commons.cli.CommandLine;
+import org.json.JSONObject;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Set;
+
 import dev.metaschema.cli.commands.AbstractValidateContentCommand;
 import dev.metaschema.cli.processor.CallingContext;
 import dev.metaschema.cli.processor.ExitCode;
@@ -19,15 +27,6 @@ import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.IBindingContext.ISchemaValidationProvider;
 import dev.metaschema.oscal.lib.OscalBindingContext;
 import dev.metaschema.oscal.lib.model.OscalCompleteModule;
-
-import org.apache.commons.cli.CommandLine;
-import org.json.JSONObject;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

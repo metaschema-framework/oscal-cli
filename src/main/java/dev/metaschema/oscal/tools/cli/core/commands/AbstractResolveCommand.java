@@ -5,6 +5,17 @@
 
 package dev.metaschema.oscal.tools.cli.core.commands;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
+
 import dev.metaschema.cli.commands.MetaschemaCommands;
 import dev.metaschema.cli.processor.CallingContext;
 import dev.metaschema.cli.processor.ExitCode;
@@ -28,18 +39,6 @@ import dev.metaschema.oscal.lib.model.Profile;
 import dev.metaschema.oscal.lib.profile.resolver.ProfileResolutionException;
 import dev.metaschema.oscal.lib.profile.resolver.ProfileResolver;
 import dev.metaschema.oscal.tools.cli.core.utils.PrettyPrinter;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

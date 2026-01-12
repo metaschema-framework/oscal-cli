@@ -5,16 +5,6 @@
 
 package dev.metaschema.oscal.tools.cli.core.commands;
 
-import dev.metaschema.cli.commands.AbstractConvertSubcommand;
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.command.CommandExecutionException;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-import dev.metaschema.core.model.IBoundObject;
-import dev.metaschema.databind.IBindingContext;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.databind.io.IBoundLoader;
-import dev.metaschema.oscal.lib.OscalBindingContext;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +14,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
 
+import dev.metaschema.cli.commands.AbstractConvertSubcommand;
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.core.model.IBoundObject;
+import dev.metaschema.databind.IBindingContext;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.databind.io.IBoundLoader;
+import dev.metaschema.oscal.lib.OscalBindingContext;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

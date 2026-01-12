@@ -5,6 +5,14 @@
 
 package dev.metaschema.oscal.tools.cli.core.commands;
 
+import org.apache.commons.cli.CommandLine;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+import java.net.URI;
+
 import dev.metaschema.cli.commands.AbstractConvertSubcommand;
 import dev.metaschema.cli.processor.CallingContext;
 import dev.metaschema.cli.processor.command.ICommandExecutor;
@@ -16,15 +24,6 @@ import dev.metaschema.databind.io.IBoundLoader;
 import dev.metaschema.databind.io.ISerializer;
 import dev.metaschema.databind.io.ModelDetector;
 import dev.metaschema.oscal.lib.OscalBindingContext;
-
-import org.apache.commons.cli.CommandLine;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
-import java.net.URI;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

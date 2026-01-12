@@ -8,9 +8,8 @@ package dev.metaschema.oscal.tools.cli.core.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import javax.xml.transform.TransformerFactory;
-
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +21,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.SAXException;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 

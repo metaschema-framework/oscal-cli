@@ -5,14 +5,13 @@
 
 package dev.metaschema.oscal.tools.cli.core.commands.profile;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.command.CommandExecutionException;
-import dev.metaschema.oscal.tools.cli.core.commands.AbstractResolveCommand;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.command.CommandExecutionException;
+import dev.metaschema.oscal.tools.cli.core.commands.AbstractResolveCommand;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class ResolveSubcommand

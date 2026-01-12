@@ -5,16 +5,6 @@
 
 package dev.metaschema.oscal.tools.cli.core.commands;
 
-import dev.metaschema.cli.processor.CallingContext;
-import dev.metaschema.cli.processor.command.ICommandExecutor;
-import dev.metaschema.core.model.util.JsonUtil;
-import dev.metaschema.core.model.util.XmlUtil;
-import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
-import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
-import dev.metaschema.core.util.CollectionUtil;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.oscal.lib.OscalBindingContext;
-
 import org.apache.commons.cli.CommandLine;
 
 import java.io.IOException;
@@ -24,6 +14,15 @@ import java.util.List;
 
 import javax.xml.transform.Source;
 
+import dev.metaschema.cli.processor.CallingContext;
+import dev.metaschema.cli.processor.command.ICommandExecutor;
+import dev.metaschema.core.model.util.JsonUtil;
+import dev.metaschema.core.model.util.XmlUtil;
+import dev.metaschema.core.model.validation.JsonSchemaContentValidator;
+import dev.metaschema.core.model.validation.XmlSchemaContentValidator;
+import dev.metaschema.core.util.CollectionUtil;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.oscal.lib.OscalBindingContext;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**

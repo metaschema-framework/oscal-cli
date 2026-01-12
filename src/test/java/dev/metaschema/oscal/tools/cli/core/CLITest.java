@@ -12,12 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.metaschema.cli.processor.ExitCode;
-import dev.metaschema.cli.processor.ExitStatus;
-import dev.metaschema.core.util.ObjectUtils;
-import dev.metaschema.databind.io.Format;
-import dev.metaschema.oscal.lib.profile.resolver.ProfileResolutionException;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -36,6 +30,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import dev.metaschema.cli.processor.ExitCode;
+import dev.metaschema.cli.processor.ExitStatus;
+import dev.metaschema.core.util.ObjectUtils;
+import dev.metaschema.databind.io.Format;
+import dev.metaschema.oscal.lib.profile.resolver.ProfileResolutionException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 
 class CLITest {
