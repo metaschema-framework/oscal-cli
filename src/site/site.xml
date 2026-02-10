@@ -37,7 +37,31 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta http-equiv="Content-Type" content="text/html; charset=${outputEncoding}" />
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous" />
-      <link rel="stylesheet" href="./css/custom.css" />
+      <style>
+        a.externalLink[href^=https],a.externalLink[href^=http] {
+          background: none;
+          padding-right: 0;
+        }
+        a.externalLink[href^=https]::after,a.externalLink[href^=http]::after {
+          font-family: 'Font Awesome 5 Free';
+          display: inline-block;
+          content: "\f35d";
+          font-size: .5rem;
+          font-weight: 900;
+          margin-left: 3px;
+        }
+        footer {
+          text-align: center;
+          padding-bottom: 10px;
+        }
+        code {
+          color: #5f879b;
+        }
+        /* Fix table header alignment - flexmark doesn't apply alignment to th cells */
+        .table th, table th {
+          text-align: left !important;
+        }
+      </style>
     ]]>
 		</head>
 

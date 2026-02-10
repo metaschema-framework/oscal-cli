@@ -210,6 +210,8 @@ jobs:
         format: 'sarif'
         output: 'trivy-results.sarif'
         severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'
+        # Exclude maven2 artifact repo checkout (has its own security scanning)
+        skip-dirs: 'maven2'
     - name: Trivy Summary
       if: ${{ !inputs.skip_code_scans }}
       run: |
