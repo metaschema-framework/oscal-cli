@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1768191535421">
-    <module artifactId="oscal-cli-enhanced" groupId="dev.metaschema.oscal" version="3.0.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1770753419144">
+    <module artifactId="oscal-cli-enhanced" groupId="dev.metaschema.oscal" version="3.1.0"/>
     <files>
         <file path="src/test/java/dev/metaschema/oscal/tools/cli/core/CLITest.java" result="NOOP"/>
         <file path="src/test/java/dev/metaschema/oscal/tools/cli/core/NullYamlValuesTest.java" result="NOOP"/>
