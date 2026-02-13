@@ -120,7 +120,7 @@ jobs:
         cache: 'maven'
     - name: Initialize CodeQL
       if: ${{ !inputs.skip_code_scans }}
-      uses: github/codeql-action/init@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2
+      uses: github/codeql-action/init@9e907b5e64f6b83e7804b09294d44122997950d6
       with:
         languages: java
     # -------------------------
@@ -146,7 +146,7 @@ jobs:
         git push --force-with-lease
     - name: Perform CodeQL Analysis
       if: ${{ !inputs.skip_code_scans }}
-      uses: github/codeql-action/analyze@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2
+      uses: github/codeql-action/analyze@9e907b5e64f6b83e7804b09294d44122997950d6
       with:
         upload: 'never'
         output: codeql-results
@@ -252,13 +252,13 @@ jobs:
         fi
     - name: Upload CodeQL scan results to GitHub Security tab
       if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
-      uses: github/codeql-action/upload-sarif@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2
+      uses: github/codeql-action/upload-sarif@9e907b5e64f6b83e7804b09294d44122997950d6
       with:
         sarif_file: codeql-results
         category: 'codeql'
     - name: Upload Trivy scan results to GitHub Security tab
       if: ${{ !inputs.skip_code_scans && env.UPLOAD_SCAN_SARIF == 'true' }}
-      uses: github/codeql-action/upload-sarif@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2
+      uses: github/codeql-action/upload-sarif@9e907b5e64f6b83e7804b09294d44122997950d6
       with:
         sarif_file: 'trivy-results.sarif'
         category: 'trivy'
