@@ -368,7 +368,7 @@ jobs:
     - id: linkchecker
       name: Link Checker
       if: ${{ !inputs.skip_linkcheck }}
-      uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0
+      uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411
       with:
         args: --verbose --no-progress --accept 200,206,429,503 './target/staging/**/*.html'  --remap "https://github.com/metaschema-framework/oscal-cli/tree/${{ env.EFFECTIVE_REF }}/ file://${GITHUB_WORKSPACE}/" --remap "https://oscal-cli.metaschema.dev/ file://${GITHUB_WORKSPACE}/target/staging/"
         format: markdown
