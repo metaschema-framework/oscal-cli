@@ -80,7 +80,7 @@ public class ListAllowedValuesCommand
           .hasArgs()
           .argName("URL")
           .desc("additional constraint definitions")
-          .build());
+          .get());
 
   @Override
   public String getName() {
