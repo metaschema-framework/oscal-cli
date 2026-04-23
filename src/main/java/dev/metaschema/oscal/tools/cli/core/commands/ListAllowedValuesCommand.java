@@ -42,6 +42,8 @@ import dev.metaschema.cli.processor.command.ExtraArgument;
 import dev.metaschema.cli.processor.command.ICommandExecutor;
 import dev.metaschema.core.metapath.DynamicContext;
 import dev.metaschema.core.metapath.StaticContext;
+import dev.metaschema.core.metapath.item.node.AllowedValueCollectingNodeItemVisitor;
+import dev.metaschema.core.metapath.item.node.AllowedValueCollectingNodeItemVisitor.AllowedValuesRecord;
 import dev.metaschema.core.metapath.item.node.IDefinitionNodeItem;
 import dev.metaschema.core.metapath.item.node.IModuleNodeItem;
 import dev.metaschema.core.metapath.item.node.INodeItemFactory;
@@ -55,8 +57,6 @@ import dev.metaschema.databind.IBindingContext;
 import dev.metaschema.databind.model.IBoundModule;
 import dev.metaschema.oscal.lib.OscalBindingContext;
 import dev.metaschema.oscal.lib.model.OscalCompleteModule;
-import dev.metaschema.oscal.lib.model.util.AllowedValueCollectingNodeItemVisitor;
-import dev.metaschema.oscal.lib.model.util.AllowedValueCollectingNodeItemVisitor.AllowedValuesRecord;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
