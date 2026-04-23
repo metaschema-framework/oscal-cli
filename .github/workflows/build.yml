@@ -204,7 +204,7 @@ jobs:
     # -------------------------
     - name: Run Trivy security scanner
       if: ${{ !inputs.skip_code_scans }}
-      uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
+      uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
       with:
         # Pin a Trivy version whose release artifacts are still published.
         # Older versions (including the action's default v0.65.0) had their
