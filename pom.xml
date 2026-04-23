@@ -98,10 +98,10 @@
 		<dependency.commons-cli.version>1.9.0</dependency.commons-cli.version>
 		<dependency.commons-io.version>2.21.0</dependency.commons-io.version>
 		<dependency.everit-json.version>1.14.6</dependency.everit-json.version>
-		<dependency.jansi.version>2.4.2</dependency.jansi.version>
+		<dependency.jansi.version>2.4.3</dependency.jansi.version>
 		<dependency.jline.version>3.21.0</dependency.jline.version>
 		<dependency.json.version>20251224</dependency.json.version>
-		<dependency.junit5.version>6.0.2</dependency.junit5.version>
+		<dependency.junit5.version>6.0.3</dependency.junit5.version>
 		<dependency.log4j2.version>2.25.3</dependency.log4j2.version>
 		<dependency.pmd.version>7.10.0</dependency.pmd.version>
 		<dependency.spotbugs-annotations.version>4.9.1</dependency.spotbugs-annotations.version>
