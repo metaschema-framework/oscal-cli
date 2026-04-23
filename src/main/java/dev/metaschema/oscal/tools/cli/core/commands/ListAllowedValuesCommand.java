@@ -63,7 +63,12 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 /**
  * A CLI command that provides a listing of allowed values constraints by
  * targeted node.
+ *
+ * @deprecated Use the {@code list-allowed-values} command in
+ *             {@code metaschema-cli} instead. This command will be removed in a
+ *             future release.
  */
+@Deprecated(since = "3.0.0")
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class ListAllowedValuesCommand
     extends AbstractTerminalCommand {
@@ -80,7 +85,7 @@ public class ListAllowedValuesCommand
           .hasArgs()
           .argName("URL")
           .desc("additional constraint definitions")
-          .build());
+          .get());
 
   @Override
   public String getName() {
@@ -89,7 +94,8 @@ public class ListAllowedValuesCommand
 
   @Override
   public String getDescription() {
-    return "List allowed values constraints for the provided Metaschema module";
+    return "[Deprecated: use metaschema-cli list-allowed-values] "
+        + "List allowed values constraints for the provided Metaschema module";
   }
 
   @SuppressWarnings("null")
