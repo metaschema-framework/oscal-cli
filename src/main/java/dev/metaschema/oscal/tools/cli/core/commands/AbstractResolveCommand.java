@@ -54,11 +54,11 @@ public abstract class AbstractResolveCommand
       .longOpt("relative-to")
       .desc("Generate URI references relative to this resource")
       .hasArg()
-      .build();
+      .get();
   private static final Option PRETTY_PRINT_OPTION = Option.builder()
       .longOpt("pretty-print")
       .desc("Enable pretty-printing of the output for better readability")
-      .build();
+      .get();
 
   @NonNull
   private static final List<Option> OPTIONS = ObjectUtils.notNull(
