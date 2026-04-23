@@ -10,6 +10,10 @@ on:
         required: false
         default: false
         type: boolean
+env:
+  REGISTRY: ghcr.io
+  OWNER: metaschema-framework
+  IMAGE_NAME: oscal-cli
 jobs:
   cleanup-images:
     name: Prune Old Container Images
@@ -17,14 +21,56 @@ jobs:
     permissions:
       packages: write
     steps:
+    # GHCR's packages API reports per-platform sub-manifests and attestation
+    # manifests of a multi-platform image as standalone untagged versions. The
+    # retention policy action, per the workaround documented at
+    # https://github.com/snok/container-retention-policy#safely-handling-multi-platform-multi-arch-packages,
+    # cannot infer which sub-manifests are referenced by which tagged index.
+    # Without this pre-step, cleanup prunes the sub-manifests of `:latest` and
+    # `v*` tags while leaving the index intact, leaving pulls broken with
+    # "manifest ... not found" (oscal-cli#254). Collect the referenced digests
+    # here and pass them through `skip-shas`.
+    - name: Collect sub-manifest digests of protected tags
+      id: protected
+      shell: bash
+      run: |
+        set -euo pipefail
+        token=$(curl -fsSL "https://${REGISTRY}/token?service=${REGISTRY}&scope=repository:${OWNER}/${IMAGE_NAME}:pull" | jq -r '.token')
+        accept='application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
+
+        tags_file=$(mktemp)
+        printf 'latest\n' > "$tags_file"
+        gh api --paginate "orgs/${OWNER}/packages/container/${IMAGE_NAME}/versions" \
+          --jq '.[].metadata.container.tags[]?' \
+          | grep -E '^v[0-9]' \
+          >> "$tags_file" || true
+        sort -u "$tags_file" -o "$tags_file"
+
+        digests_file=$(mktemp)
+        while IFS= read -r tag; do
+          [ -z "$tag" ] && continue
+          manifest=$(curl -fsSL -H "Authorization: Bearer $token" -H "Accept: $accept" \
+            "https://${REGISTRY}/v2/${OWNER}/${IMAGE_NAME}/manifests/$tag" 2>/dev/null || true)
+          [ -z "$manifest" ] && continue
+          echo "$manifest" | jq -r '.manifests[]?.digest // empty' >> "$digests_file"
+        done < "$tags_file"
+
+        sort -u "$digests_file" -o "$digests_file"
+        count=$(wc -l < "$digests_file" | tr -d ' ')
+        skip_shas=$(paste -sd ',' "$digests_file")
+        echo "Protecting $count sub-manifest digest(s) across $(wc -l < "$tags_file" | tr -d ' ') tag(s)"
+        echo "skip-shas=$skip_shas" >> "$GITHUB_OUTPUT"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Delete old container images
       uses: snok/container-retention-policy@3b0972b2276b171b212f8c4efbca59ebba26eceb
       with:
-        account: metaschema-framework
-        image-names: oscal-cli
+        account: ${{ env.OWNER }}
+        image-names: ${{ env.IMAGE_NAME }}
         cut-off: 7d
         keep-n-most-recent: 5
         image-tags: "!latest !v*"
         tag-selection: both
+        skip-shas: ${{ steps.protected.outputs.skip-shas }}
         dry-run: ${{ inputs.dry-run || false }}
         token: ${{ secrets.GITHUB_TOKEN }}

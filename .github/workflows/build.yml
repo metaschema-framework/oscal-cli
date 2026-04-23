@@ -5,6 +5,8 @@ on:
     - release/**
     - develop
     - feature/**
+    tags:
+    - 'v*'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
