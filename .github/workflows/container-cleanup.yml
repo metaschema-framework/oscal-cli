@@ -58,7 +58,7 @@ jobs:
         sort -u "$digests_file" -o "$digests_file"
         count=$(wc -l < "$digests_file" | tr -d ' ')
         skip_shas=$(paste -sd ',' "$digests_file")
-        echo "Protecting $count sub-manifest digest(s) across $(wc -l < $tags_file | tr -d ' ') tag(s)"
+        echo "Protecting $count sub-manifest digest(s) across $(wc -l < "$tags_file" | tr -d ' ') tag(s)"
         echo "skip-shas=$skip_shas" >> "$GITHUB_OUTPUT"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
