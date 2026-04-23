@@ -204,6 +204,11 @@ jobs:
       if: ${{ !inputs.skip_code_scans }}
       uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
       with:
+        # Pin a Trivy version whose release artifacts are still published.
+        # Older versions (including the action's default v0.65.0) had their
+        # release assets removed, breaking install.sh. See
+        # https://github.com/aquasecurity/trivy/discussions/10265
+        version: 'v0.69.3'
         scan-type: 'fs'
         scan-ref: '.'
         scanners: 'vuln,secret,misconfig'
