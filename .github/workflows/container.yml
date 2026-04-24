@@ -43,7 +43,7 @@ jobs:
         platforms: linux/amd64,linux/arm64/v8
     - name: Container image login
       id: image_login
-      uses: docker/login-action@3227f5311cb93ffd14d13e65d8cc400d30f4dd8a
+      uses: docker/login-action@174f89633e6ee03e08ee79f448bcd513fee14c11
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
