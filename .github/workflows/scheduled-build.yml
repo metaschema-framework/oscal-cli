@@ -4,15 +4,34 @@ on:
     # Nightly build at 4:00 AM UTC (after liboscal-java)
     - cron: '0 4 * * *'
   workflow_dispatch:
-permissions:
-  actions: read
-  contents: write
-  security-events: write
+    inputs:
+      ref:
+        description: 'Git ref to checkout (branch, tag, or SHA)'
+        required: false
+        default: 'develop'
+        type: string
+      skip_code_scans:
+        description: 'Skip CodeQL and Trivy security scans'
+        required: false
+        default: true
+        type: boolean
+      skip_linkcheck:
+        description: 'Skip website link checker'
+        required: false
+        default: true
+        type: boolean
 jobs:
   nightly:
+    permissions:
+      actions: read
+      contents: write
+      security-events: write
+      packages: write
+      attestations: write
+      id-token: write
     uses: ./.github/workflows/build.yml
     with:
-      ref: develop
-      skip_code_scans: true
-      skip_linkcheck: true
+      ref: ${{ inputs.ref || 'develop' }}
+      skip_code_scans: ${{ github.event_name == 'schedule' || inputs.skip_code_scans }}
+      skip_linkcheck: ${{ github.event_name == 'schedule' || inputs.skip_linkcheck }}
     secrets: inherit
